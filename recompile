@@ -1,0 +1,9 @@
+#!/bin/bash
+service bkcservices stop&&./compile&&service bkcservices start&&service bkcservices status
+echo ""
+read -p "Attach to screen? " -n 1 ans
+if [ "$ans" == "y" ]
+then
+	screen -r BKCS
+fi
+echo ""
