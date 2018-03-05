@@ -94,7 +94,7 @@ class Module(common.BaseModule):
 					else:
 						await self.send(pmsg.channel, "We have determined that you are not eligible for admin at this time. If you believe this is a mistake, please ask Azi, Timberwolf, or Dark for clarification.")
 				else:
-					await self.send(pmsg.author, "Before you can apply for admin, you must link you account. You may do so here: http://zenforic.com/link/?did={}".format(pmsg.author.id))
+					await self.send(pmsg.author, "Before you can apply for admin, you must link you account. You may do so here: http://bkcservice.zenforic.com/link/?did={}".format(pmsg.author.id))
 		else:
 			await self.send(pmsg.channel, "Your account was locked from applying.")
 	async def letters(self, args, pmsg):

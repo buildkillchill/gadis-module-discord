@@ -15,7 +15,7 @@ class Module(common.BaseModule):
 		self.addcmd("+.5inf", self.infract, "Add a half-infraction to user(s).", rank=10)
 		self.addcmd("testinf", self.testinf, "Test infraction demotion message", rank=9)
 	async def link(self, args, message):
-		await self.send(message.author, "To finish the linking process, open this link in your browser: http://zenforic.com/link/?did={}".format(message.author.id))
+		await self.send(message.author, "To finish the linking process, open this link in your browser: http://bkcservice.zenforic.com/link/?did={}".format(message.author.id))
 	async def infract(self, args, message):
 		if "+1inf" in message.content:
 			amt=1
