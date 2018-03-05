@@ -18,7 +18,7 @@ class Module(common.BaseModule):
 		self.client.loop.create_task(self.silence(person, time))
 	async def punish(self, author, message):
 		await self.client.delete_message(message)
-		if self.violations[author.id] == None:
+		if author.id not in self.violations:
 			await self.client.send_message(message.channel, "There is no need to spam your keyboard {}. Your message will be removed.".format(author.mention))
 			self.violations[author.id] = 0
 		elif self.violations[author.id] < 5:
