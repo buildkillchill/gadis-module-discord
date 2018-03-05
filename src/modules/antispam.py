@@ -1,5 +1,6 @@
 import re
 import discord
+import asyncio
 import common
 
 class Module(common.BaseModule):
