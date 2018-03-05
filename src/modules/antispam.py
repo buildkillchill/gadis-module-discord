@@ -26,16 +26,15 @@ class Module(common.BaseModule):
 		elif self.violations[author.id] < 5:
 			await self.client.send_message(message.channel, "There is no need to spam your keyboard {}. Your message will be removed and you will be silenced for 5 minutes.".format(author.mention))
 			self.run_punishment(author, 5)
-		elif self.violations[author.id] < 7:
-			await self.client.send_message(message.channel, "There is no need to spam your keyboard {}. Your message will be removed and you will be silenced for 30 minutes.".format(author.mention))
-			self.run_punishment(author, 30)
-		elif self.violations[author.id] < 8:
-			await self.client.send_message(message.channel, "There is no need to spam your keyboard {}. Your message will be removed and you will be silenced for 1 hour.".format(author.mention))
-			self.run_punishment(author, 60)
-		elif self.violations[author.id] < 9:
-			await self.client.send_message(message.channel, "There is no need to spam your keyboard {}. Your message will be removed and you will be silenced for 5 hours.".format(author.mention))
-			self.run_punishment(author, 5 * 60)
-		elif self.violations[author.id] >= 10:
+		elif self.violations[author.id] < 15:
+			time = (self.violations[author.id] - 4) * 5
+			await self.client.send_message(message.channel, "There is no need to spam your keyboard {}. Your message will be removed and you will be silenced for {} minutes.".format(author.mention, time))
+			self.run_punishment(author, time)
+		elif self.violations[author.id] < 25:
+			time = self.violations[author.id] * 12.5
+			await self.client.send_message(message.channel, "There is no need to spam your keyboard {}. Your message will be removed and you will be silenced for {} minutes.".format(author.mention, time))
+			self.run_punishment(author, time)
+		elif self.violations[author.id] >= 25:
 			server = common.getserver(self.client)
 			silenced = discord.utils.get(server.roles, id="347946970385743889")
 			await self.client.add_roles(author, silenced)
