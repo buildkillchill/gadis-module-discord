@@ -1,4 +1,5 @@
 import re
+import discord
 import common
 
 class Module(common.BaseModule):
