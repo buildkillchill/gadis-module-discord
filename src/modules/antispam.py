@@ -45,9 +45,9 @@ class Module(common.BaseModule):
 				time = time - 1
 				await asyncio.sleep(1)
 				await self.client.edit_message(msg, "{} will be kicked for spamming 30+ times in {}s".format(author.mention, time))
-			await self.self.client.edit_message(msg, "Kicking {}...".format(author.mention, time))
+			await self.client.edit_message(msg, "Kicking {}...".format(author.mention, time))
 			await self.client.kick(author)
-			await self.self.client.edit_message(msg, "Kicked {} right in the nut sack. Let 'em brew in pain for a bit. :wink:".format(author.mention, time))
+			await self.client.edit_message(msg, "Kicked {} right in the nut sack. Let 'em brew in pain for a bit. :wink:".format(author.mention, time))
 		self.violations[author.id] = self.violations[author.id] + 1
 	async def match_del(self, pattern, message):
 		match = re.search(pattern, message.content.lower())
