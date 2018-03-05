@@ -4,6 +4,16 @@ class Settings():
 	HoursForAdmin = 168
 	RemoteHost = "127.0.0.1"
 	RemotePort = 9525
+	MySQL = {}
+	MySQL["Host"] = "127.0.0.1"
+	MySQL["Port"] = 3335
+	MySQL["Data"] = "bkcservices"
+	MySQL["User"] = "bkcservices"
+	MySQL["Pass"] = "KguKchYSKsh87J5s87"
+	RCON = {}
+	RCON["Host"] = "gmod.zenforic.com"
+	RCON["Port"] = 27015
+	RCON["Pass"] = "anamous12"
 	RankName = {}
 	RankName[1]  = "Anyone"
 	RankName[2]  = "Operator or higher"

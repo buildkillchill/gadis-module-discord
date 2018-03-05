@@ -63,7 +63,7 @@ class Module(common.BaseModule):
 		for role in member.roles:
 			if str(role) != "everyone" and str(role) != "@everyone":
 				await self.client.remove_role(member, role)
-		valve.rcon.execute(("gmod.zenforic.com", 27015), "anamous12", "ulx removeuserid {}".format(user.steamID()))
+		valve.rcon.execute((Settings.RCON["Host"], Settings.RCON["Port"]), Settings.RCON["Pass"], "ulx removeuserid {}".format(user.steamID()))
 	async def apply(self, args, pmsg):
 		usr = common.User.from_discord_id(self.client, pmsg.author.id)
 		taken = len(self.db.query("SELECT `id` FROM `linked` WHERE `rank` >= 7"))

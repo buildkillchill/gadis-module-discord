@@ -1,7 +1,8 @@
 import MySQLdb
+from settings import Settings
 
 def default():
-	return MySQLWrapper("bkcservices", "bkcservices", "KguKchYSKsh87J5s87", "127.0.0.1", 3335)
+	return MySQLWrapper(Settings.MySQL["Data"], Settings.MySQL["User"], Settings.MySQL["Pass"], Settings.MySQL["Host"], Settings.MySQL["Port"])
 
 class MySQLWrapper():
 	def __init__(self, DATABASE, USER, PASS, HOST, PORT=3306):
