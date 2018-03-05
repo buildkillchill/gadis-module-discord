@@ -9,7 +9,7 @@ class Module(common.BaseModule):
 		self.cancer_channels.append("cancer")
 		self.violations = {}
 	async def silence(self, person, time):
-		server = Common.getserver(self.client)
+		server = common.getserver(self.client)
 		silenced = discord.utils.get(server.roles, id="347946970385743889")
 		await self.client.add_roles(person, silenced)
 		await asyncio.sleep(time * 60)
