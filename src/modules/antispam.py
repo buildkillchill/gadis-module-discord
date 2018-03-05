@@ -36,12 +36,15 @@ class Module(common.BaseModule):
 			await self.client.send_message(message.channel, "There is no need to spam your keyboard {}. Your message will be removed and you will be silenced for 5 hours.".format(author.mention))
 			self.run_punishment(author, 5 * 60)
 		elif self.violations[author.id] >= 10:
+			server = common.getserver(self.client)
+			silenced = discord.utils.get(server.roles, id="347946970385743889")
+			await self.client.add_roles(author, silenced)
 			msg = await self.client.send_message(message.channel, "{} will be kicked for spamming in 5s".format(author.mention))
 			time = 5
 			while time > 0:
 				time = time - 1
 				await asyncio.sleep(1)
-				await self.self.client.edit_message(msg, "{} will be kicked for spamming 30+ times in {}s".format(author.mention, time))
+				await self.client.edit_message(msg, "{} will be kicked for spamming 30+ times in {}s".format(author.mention, time))
 			await self.self.client.edit_message(msg, "Kicking {}...".format(author.mention, time))
 			await self.client.kick(author)
 			await self.self.client.edit_message(msg, "Kicked {} right in the nut sack. Let 'em brew in pain for a bit. :wink:".format(author.mention, time))
