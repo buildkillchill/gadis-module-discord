@@ -26,17 +26,17 @@ class Module(common.BaseModule):
 		elif self.violations[author.id] < 5:
 			await self.client.send_message(message.channel, "There is no need to spam your keyboard {}. Your message will be removed and you will be silenced for 5 minutes.".format(author.mention))
 			self.run_punishment(author, 5)
-		elif self.violations[author.id] < 10:
+		elif self.violations[author.id] < 7:
 			await self.client.send_message(message.channel, "There is no need to spam your keyboard {}. Your message will be removed and you will be silenced for 30 minutes.".format(author.mention))
 			self.run_punishment(author, 30)
-		elif self.violations[author.id] < 20:
+		elif self.violations[author.id] < 8:
 			await self.client.send_message(message.channel, "There is no need to spam your keyboard {}. Your message will be removed and you will be silenced for 1 hour.".format(author.mention))
 			self.run_punishment(author, 60)
-		elif self.violations[author.id] < 30:
+		elif self.violations[author.id] < 9:
 			await self.client.send_message(message.channel, "There is no need to spam your keyboard {}. Your message will be removed and you will be silenced for 5 hours.".format(author.mention))
 			self.run_punishment(author, 5 * 60)
-		elif self.violations[author.id] >= 30:
-			msg = await self.self.client.send_message(message.channel, "{} will be kicked for spamming in 5s".format(author.mention))
+		elif self.violations[author.id] >= 10:
+			msg = await self.client.send_message(message.channel, "{} will be kicked for spamming in 5s".format(author.mention))
 			time = 5
 			while time > 0:
 				time = time - 1
