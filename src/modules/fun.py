@@ -31,5 +31,5 @@ class Module(common.BaseModule):
 			elif self.horses[message.author.id] == 5:
 				await self.send(message.author, "Your prayers to the :horse: God, Azicus, have been ANSWERED!!!!")
 				await self.send(self.client.get_channel("347437194488840202"), ".award 150 {}".format(message.author.mention))
-			elif re.search(r'(\@here)', msg):
-				await self.send(message.channel, "Fuck off {}".format(message.author.mention))
+		elif re.search(r'(@here)', msg):
+			await self.send(message.channel, "Fuck off {}".format(message.author.mention))
