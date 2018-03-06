@@ -8,10 +8,7 @@ class Module(common.BaseModule):
 		common.BaseModule.__init__(self, enabled, client, True)
 	async def on_message(self, message):
 		if not await common.BaseModule.on_message(self, message): return
-		restrip = re.compile('[\W_]--[ @]]')
-		msg = restrip.sub('', message.content.lower())
-#		restrip = re.compile("’")
-#		msg = restrip.sub('', msg)
+		msg = re.sub('[^a-z0-9 ]', '', message.content.lower(), flags=re.UNICODE)
 		print(msg)
 		for trigger in self.db.query("SELECT * FROM `insult_triggers`"):
 			if re.search(trigger[0], msg):
