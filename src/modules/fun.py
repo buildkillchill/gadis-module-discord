@@ -33,5 +33,6 @@ class Module(common.BaseModule):
 				await self.send(self.client.get_channel("347437194488840202"), ".award 150 {}".format(message.author.mention))
 		elif len(message.mentions) > 0:
 			for mention in message.mentions:
+				print(mention)
 				if str(mention) == "@here":
 					await self.send(message.channel, "Fuck off {}".format(message.author.mention))
