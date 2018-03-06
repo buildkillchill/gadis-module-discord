@@ -24,14 +24,14 @@ help = Help(True, client, modules)
 
 @client.event
 async def on_ready():
-	fun = Fun(True, client)
-	modules.append(Accounts(True, client))
-	modules.append(Utility(True, client))
-	modules.append(Ranks(True, client))
+	fun = Fun(common.modulestatus(Fun.__name__), client)
+	modules.append(Accounts(common.modulestatus(Accounts.__name__), client))
+	modules.append(Utility(common.modulestatus(Utility.__name__), client))
+	modules.append(Ranks(common.modulestatus(Ranks.__name__), client))
 	modules.append(fun)
 	advanced.append(fun)
-	advanced.append(AntiSpam(True, client))
-	advanced.append(InsultReply(True, client))
+	advanced.append(AntiSpam(common.modulestatus(AntiSpam.__name__), client))
+	advanced.append(InsultReply(common.modulestatus(InsultReply.__name__), client))
 	help.set(True, client, modules)
 
 @client.event

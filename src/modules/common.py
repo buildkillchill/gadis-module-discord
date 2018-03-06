@@ -6,6 +6,17 @@ import valve.rcon
 import mysql
 from settings import Settings
 
+def modulestatus(name):
+	db = mysql.default()
+	db.run("INSERT IGNORE INTO `modules` (`name`) VALUES (%s)")
+	status = db.query("SELECT `enabled` FROM `modules` WHERE `name`=%s", [name])
+	status = status[0][0]
+	return status
+
+def setmodulestatus(name, enabled):
+	db = mysql.default()
+	db.run("INSERT INTO `modules` (`name`,`enabled`) VALUES (%s, %s) ON DUPLICATE KEY UPDATE `enabled`=%s", [name, enabled, enabled])
+
 def getserver(client):
 	return client.get_server("312405305759760394")
 
