@@ -29,7 +29,7 @@ async def on_ready():
 		cls = getattr(mod, "Module")
 		init = cls(common.getmodulestatus(key), client)
 		print("Discovered module: {}".format(init.__name__))
-		print("\tEnabled: {}".format(common.getmodulestatus(key))
+		print("\tEnabled: {}".format(common.getmodulestatus(key)))
 		if init.has_commands():
 			modules[key] = init
 		if init.bind_on_message():
