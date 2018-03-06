@@ -1,6 +1,7 @@
 import discord
 import asyncio
 
+import os
 import sys
 sys.path.append('/usr/local/share/bkc-services')
 
@@ -17,7 +18,7 @@ help = Help(True, client, modules)
 @client.event
 async def on_ready():
 	files = {}
-	for filename in os.listdir('/usr/local/share/bkc-services/modules')
+	for filename in os.listdir('/usr/local/share/bkc-services/modules'):
 		if (filename[0] != '_' and filename[0] != '.'):
 			files[filename.rstrip('.pyc')] = None
 	sys.path.append('/usr/local/share/bkc-services/modules')
