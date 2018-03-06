@@ -111,6 +111,7 @@ class Module(common.BaseModule):
 		if match:
 			await self.punish(message)
 	async def on_message(self, message):
+		if not await common.BaseModule.on_message(self, message): return
 		if message.author == self.client.user or message.channel.is_private:
 			return
 		if message.channel.name in Settings.cancer_channels:

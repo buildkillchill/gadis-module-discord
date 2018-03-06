@@ -18,6 +18,7 @@ class Module(common.BaseModule):
 		url = "https://random.dog/{}".format(resp.text)
 		await self.send(pmsg.channel, url)
 	async def on_message(self, message):
+		if not await common.BaseModule.on_message(self, message): return
 		msg = message.content.lower()
 		if re.search(r'((🐴\s?)\2{4,})', msg):
 			print(self.horses)

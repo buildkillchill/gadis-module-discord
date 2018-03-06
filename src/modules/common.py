@@ -47,6 +47,11 @@ class BaseModule():
 		self.usage = {}
 		self.private = []
 		self.db = mysql.default()
+	async def on_message(self, message):
+		if self.enabled and message.author is not self.client.user:
+			return True
+		else:
+			return False
 	def receive(self, cmd, args, pmsg):
 		if cmd in self.commands and self.enabled:
 			self.client.loop.create_task(self.commands[cmd](args, pmsg))

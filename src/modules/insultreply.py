@@ -8,8 +8,7 @@ class Module(common.BaseModule):
 		common.BaseModule.__init__(self, enabled, client)
 		self.db = mysql.default()
 	async def on_message(self, message):
-		if self.client.user == message.author:
-			return
+		if not await common.BaseModule.on_message(self, message): return
 		msg = message.content.lower()
 		for trigger in self.db.query("SELECT * FROM `insult_triggers`"):
 			if re.search(trigger[0], msg):
