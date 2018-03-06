@@ -29,7 +29,7 @@ class logger():
 		self.entry = "{}\n".format(self.entry)
 		return self
 	def tab(self):
-		self.entry = "{}\t".format(self.entry)
+		self.entry = "{}\t\t".format(self.entry)
 		return self
 	def log(self, entry=None):
 		if entry == None:
