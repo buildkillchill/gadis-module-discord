@@ -6,6 +6,7 @@ import os
 import sys
 sys.path.append('/usr/local/share/bkc-services')
 
+from modules import Module as ModManager
 from remote import Module as Remote
 from help import Module as Help
 from settings import Settings
@@ -17,6 +18,7 @@ client = discord.Client()
 modules = {}
 advanced = {}
 help = Help(True, client, modules)
+mm = ModManager(True, client, modules)
 
 class logger():
 	def __init__(self, func):
