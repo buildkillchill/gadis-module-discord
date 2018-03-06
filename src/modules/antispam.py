@@ -34,12 +34,14 @@ class SpamTables():
 		self.increment("violations")
 	def messaged(self, contents):
 		will_punish = False
+		print("curr: {}\tlast: {}\tdiff: {}".format(int(time.time()), self.time(), int(time.time()) - self.time()))
 		if int(time.time()) - self.time() < 15:
 			self.increment("fast")
 		else:
 			self.zero("fast")
 		if self.fastmsg() > 3:
 			will_punish = will_punish or True
+
 		self.db.run("UPDATE `antispam` SET `timestamp`='{}' WHERE `id`={}".format(int(time.time()), self.id))
 		if contents.encode('utf-8', "ignore") == self.message() and int(time.time()) - self.time() < 300:
 			self.increment("identical")
