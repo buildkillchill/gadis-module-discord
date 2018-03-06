@@ -48,6 +48,7 @@ l = logger(log)
 @client.event
 async def on_ready():
 	l.append("Logged in with ID ").append(client.user.id).log()
+	modules["modules"] = mm
 	files = {}
 	for filename in os.listdir('/usr/local/share/bkc-services/modules'):
 		if (filename[0] != '_' and filename[0] != '.'):
