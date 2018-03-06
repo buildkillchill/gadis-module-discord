@@ -31,7 +31,6 @@ class SpamTables():
 	def spammed(self):
 		self.increment("violations")
 	def messaged(self, contents):
-		print("{} \n\t\\\\=> {}\t\n\t{} violations\t{} identical messages\n".format(self.message(), contents.encode('utf-8', "ignore"), self.count(), self.identical()))
 		self.db.run("UPDATE `antispam` SET `timestamp`='{}' WHERE `id`={}".format(int(time.time()), self.id))
 		if contents.encode('utf-8', "ignore") == self.message() and int(time.time()) - self.time() < 300:
 			self.increment("identical")
@@ -94,8 +93,8 @@ class Module(common.BaseModule):
 				await self.client.delete_message(message)
 			else:
 				return
-		await self.match_del(r'((\S\s?)\2{4,})', message)
-		await self.match_del(r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{4,})', message)
+		await self.match_del(r'((\S\s?)\2{5,})', message)
+		await self.match_del(r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{3,})', message)
 		user = SpamTables(message.author.id)
 		if user.messaged(message.content) and user.identical() > 3:
 			await self.punish(message)
