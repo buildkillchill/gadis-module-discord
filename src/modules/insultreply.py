@@ -13,3 +13,6 @@ class Module(common.BaseModule):
 			await self.send(message.channel, "Fuck off {}".format(message.author.mention))
 		elif re.search(r'(who is)', msg):
 			await self.send(message.channel, "Who gives a fuck {}? No one, so shut up.".format(message.author.mention))
+		elif re.search(r'(fuck you)', msg):
+			await self.send(message.channel, "And why the fuck would anyone want to fuck a bot. Damn, you really are a retard {}.".format(message.author.mention))
+
