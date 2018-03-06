@@ -22,6 +22,7 @@ async def on_ready():
 	for filename in os.listdir('/usr/local/share/bkc-services/modules'):
 		if (filename[0] != '_' and filename[0] != '.'):
 			files[filename.rstrip('.pyc')] = None
+	print(files.keys())
 	sys.path.append('/usr/local/share/bkc-services/modules')
 	for key in files.keys():
 		mod = __import__(key)
@@ -31,14 +32,6 @@ async def on_ready():
 			modules.append(init)
 		if init.bind_on_message():
 			advanced.append(init)
-#	fun = Fun(common.modulestatus(Fun.__name__), client)
-#	modules.append(Accounts(common.modulestatus(Accounts.__name__), client))
-#	modules.append(Utility(common.modulestatus(Utility.__name__), client))
-#	modules.append(Ranks(common.modulestatus(Ranks.__name__), client))
-#	modules.append(fun)
-#	advanced.append(fun)
-#	advanced.append(AntiSpam(common.modulestatus(AntiSpam.__name__), client))
-#	advanced.append(InsultReply(common.modulestatus(InsultReply.__name__), client))
 	help.set(True, client, modules)
 
 @client.event
