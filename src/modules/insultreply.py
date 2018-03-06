@@ -5,8 +5,7 @@ import mysql
 class Module(common.BaseModule):
 	__name__ = "Insult Reply"
 	def __init__(self, enabled, client=None):
-		common.BaseModule.__init__(self, enabled, client)
-		self.db = mysql.default()
+		common.BaseModule.__init__(self, enabled, client, True)
 	async def on_message(self, message):
 		if not await common.BaseModule.on_message(self, message): return
 		msg = message.content.lower()
