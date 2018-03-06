@@ -4,7 +4,7 @@ import common
 class Module(common.BaseModule):
 	__name__ = "Mod Manager"
 	def __init__(self, enabled, client=None):
-		common.BaseModule.__init__(self, enabled, client, True)
+		common.BaseModule.__init__(self, enabled, client)
 		self.addcmd("enmod", self.enable, "Enable module", rank=9)
 		self.addcmd("dismod", self.disable, "Disable module", rank=9)
 	async def enable(self, args, pmsg):
