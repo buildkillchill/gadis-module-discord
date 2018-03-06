@@ -8,7 +8,7 @@ from settings import Settings
 
 def modulestatus(name):
 	db = mysql.default()
-	db.run("INSERT IGNORE INTO `modules` (`name`) VALUES (%s)")
+	db.run("INSERT IGNORE INTO `modules` (`name`) VALUES (%s)", [name])
 	status = db.query("SELECT `enabled` FROM `modules` WHERE `name`=%s", [name])
 	status = status[0][0]
 	return status
