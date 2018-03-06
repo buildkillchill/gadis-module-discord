@@ -59,7 +59,7 @@ class BaseModule():
 		self.private = []
 		self.db = mysql.default()
 	async def on_message(self, message):
-		if self.enabled and message.author is not self.client.user:
+		if self.enabled and not message.author == self.client.user:
 			return True
 		else:
 			return False
