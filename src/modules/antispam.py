@@ -2,6 +2,7 @@ import re
 import time
 import discord
 import asyncio
+import datetime
 
 import common
 import mysql
@@ -20,6 +21,8 @@ class SpamTables():
 		self.db.run("UPDATE `antispam` SET `{0}`=`{0}`+1 WHERE `id`={1}".format(name, self.id))
 	def zero(self, name):
 		self.db.run("UPDATE `antispam` SET `{}`=0 WHERE `id`={}".format(name, self.id))
+	def mute_until(self, time):
+		self.db.run("UPDATE `antispam` SET `mute_until`={} WHERE `id`={}".format(time, self.id))
 	def count(self):
 		return self.column("violations")
 	def identical(self):
@@ -30,6 +33,8 @@ class SpamTables():
 		return self.column("message")
 	def time(self):
 		return int(self.column("timestamp"))
+	def muted_until(self):
+		return int(self.column("mute_until"))
 	def spammed(self):
 		self.increment("violations")
 	def messaged(self, contents):
@@ -57,10 +62,19 @@ class Module(common.BaseModule):
 		common.BaseModule.__init__(self, enabled, client, True)
 		self.server = common.getserver(self.client)
 		self.silenced = discord.utils.get(self.server.roles, id="347946970385743889")
-	async def silence(self, person, time):
+		self.client.loop.create_task(self.unsilence())
+	async def unsilence(self):
+		while True:
+			for person in self.server.members:
+				user = SpamTables(person.id)
+				if user.muted_until() <= int(time.time()) and self.silenced in person.roles:
+					await self.client.remove_roles(person, self.silenced)
+			dt = datetime.datetime.now()
+			await asyncio.sleep((60-dt.second)*60)
+	async def silence(self, person, t):
 		await self.client.add_roles(person, self.silenced)
-		await asyncio.sleep(time * 60)
-		await self.client.remove_roles(person, self.silenced)
+		user = SpamTables(person.id)
+		user.mute_until(int(time.time()) + (t * 60))
 	def run_punishment(self, person, time):
 		self.client.loop.create_task(self.silence(person, time))
 	async def punish(self, message):
