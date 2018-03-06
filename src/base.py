@@ -26,7 +26,7 @@ async def on_ready():
 	for key in files.keys():
 		mod = __import__(key)
 		cls = getattr(mod, "Module")
-		init = cls(False, client)
+		init = cls(True, client)
 		if init.has_commands():
 			modules.append(init)
 		if init.bind_on_message():
