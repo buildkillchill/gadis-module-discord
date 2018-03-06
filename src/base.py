@@ -5,6 +5,7 @@ import os
 import sys
 sys.path.append('/usr/local/share/bkc-services')
 
+from remote import Module as Remote
 from help import Module as Help
 from settings import Settings
 
