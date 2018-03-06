@@ -31,6 +31,7 @@ class SpamTables():
 	def spammed(self):
 		self.increment("violations")
 	def messaged(self, contents):
+		print("{} => {}".format(self.message(), contents))
 		self.db.run("UPDATE `antispam` SET `timestamp`='{}' WHERE `id`={}".format(int(time.time()), self.id))
 		if contents == self.message() and int(time.time()) - self.time() < 300:
 			self.increment("identical")
