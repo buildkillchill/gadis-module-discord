@@ -1,4 +1,5 @@
 import MySQLdb
+from warnings import filterwarnings
 from settings import Settings
 
 def default():
@@ -10,6 +11,7 @@ class MySQLWrapper():
 		self.connection.autocommit(True)
 		self.connection.ping(True)
 		self.cursor = self.connection.cursor()
+		filterwarnings('ignore', category = MySQLdb.Warning)
 	def query(self, sql, replacements=None):
 		if replacements == None:
 			self.cursor.execute(sql)
