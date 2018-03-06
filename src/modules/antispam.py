@@ -33,7 +33,7 @@ class SpamTables():
 	def messaged(self, contents):
 		print("{} => {}".format(self.message(), contents.encode('utf-8', "ignore")))
 		self.db.run("UPDATE `antispam` SET `timestamp`='{}' WHERE `id`={}".format(int(time.time()), self.id))
-		if contents == self.message() and int(time.time()) - self.time() < 300:
+		if contents.encode('utf-8', "ignore") == self.message() and int(time.time()) - self.time() < 300:
 			self.increment("identical")
 			return True
 		else:
