@@ -36,7 +36,7 @@ class logger():
 	def nlt(self):
 		return self.nl().tab()
 	def took(self, time):
-		self.nlt().append("Took ").append(time).append("s")
+		return self.nlt().append("Took ").append(time).append("s")
 	def log(self, entry=None):
 		if entry == None:
 			self.func(self.entry)
