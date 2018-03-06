@@ -11,6 +11,7 @@ from help import Module as Help
 from settings import Settings
 
 import common
+import mysql
 
 client = discord.Client()
 modules = {}
