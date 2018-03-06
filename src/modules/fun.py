@@ -33,3 +33,5 @@ class Module(common.BaseModule):
 				await self.send(self.client.get_channel("347437194488840202"), ".award 150 {}".format(message.author.mention))
 		elif re.search(r'(@here)', msg):
 			await self.send(message.channel, "Fuck off {}".format(message.author.mention))
+		elif re.search(r'(who is)', msg):
+			await self.send(message.channel, "Who gives a fuck {}? No one, so shut up.".format(message.author.mention))
