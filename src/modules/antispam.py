@@ -39,7 +39,7 @@ class SpamTables():
 			self.increment("fast")
 		else:
 			self.zero("fast")
-		if self.fastmsg() > 3:
+		if self.fastmsg() > 0:
 			will_punish = will_punish or True
 
 		self.db.run("UPDATE `antispam` SET `timestamp`='{}' WHERE `id`={}".format(int(time.time()), self.id))
@@ -108,5 +108,5 @@ class Module(common.BaseModule):
 		await self.match_del(r'((\S\s?)\2{5,})', message)
 		await self.match_del(r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{3,})', message)
 		user = SpamTables(message.author.id)
-		if user.messaged(message.content) and user.identical() > 3:
+		if user.messaged(message.content) and (user.identical() > 3 or user.fastmsg() > 3):
 			await self.punish(message)
