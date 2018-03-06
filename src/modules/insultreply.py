@@ -8,7 +8,8 @@ class Module(common.BaseModule):
 		common.BaseModule.__init__(self, enabled, client, True)
 	async def on_message(self, message):
 		if not await common.BaseModule.on_message(self, message): return
-		msg = message.content.lower()
+		restrip = rc.compile('[\W_]+')
+		msg = restrip.sub('', message.content.lower())
 		for trigger in self.db.query("SELECT * FROM `insult_triggers`"):
 			if re.search(trigger[0], msg):
 				reply = self.db.query("SELECT * FROM `insult_replies` WHERE `id`={}".format(trigger[1]))
