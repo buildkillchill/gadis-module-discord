@@ -12,6 +12,7 @@ class Module(common.BaseModule):
 		for trigger in self.db.query("SELECT * FROM `insult_triggers`"):
 			if re.search(trigger[0], msg):
 				reply = self.db.query("SELECT * FROM `insult_replies` WHERE `id`={}".format(trigger[1]))
+				print(reply)
 				if reply[2]:
 					reply_text = reply[1].format(message.author.mention)
 				else:
