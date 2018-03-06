@@ -69,6 +69,10 @@ class BaseModule():
 			return True
 		else:
 			return False
+	def enable(self):
+		self.enabled = True
+	def disable(self):
+		self.enabled = False
 	async def send(self, channel, message):
 		return await self.client.send_message(channel, message)
 	async def edit(self, message, new_message):
