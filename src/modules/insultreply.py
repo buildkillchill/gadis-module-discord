@@ -9,7 +9,6 @@ class Module(common.BaseModule):
 	async def on_message(self, message):
 		if not await common.BaseModule.on_message(self, message): return
 		msg = re.sub('[^a-z0-9 ]', '', message.content.lower(), flags=re.UNICODE)
-		print(msg)
 		for trigger in self.db.query("SELECT * FROM `insult_triggers`"):
 			if re.search(trigger[0], msg):
 				reply = self.db.query("SELECT * FROM `insult_replies` WHERE `id`={}".format(trigger[1]))
