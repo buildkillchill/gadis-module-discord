@@ -41,7 +41,7 @@ async def on_message(message):
 	args = message.content.split(" ")
 	cmd = args[0].lower()
 	handled = False
-	for module in modules:
+	for n, module in modules:
 		if module.has_command(cmd) and module.permissible(cmd, common.getrank(message.author.id), message.channel.is_private):
 			handled = module.receive(cmd, args, message)
 			break
@@ -53,7 +53,7 @@ async def on_message(message):
 			if (message.content.lower().startswith("help") or message.content.lower().endswith("help")) and client.user in message.mentions:
 				handled = True
 				await help.show(message.channel)
-	for module in advanced:
+	for n, module in advanced:
 		await module.on_message(message)
 
 remote_handler = Remote(client)
