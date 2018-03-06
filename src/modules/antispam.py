@@ -25,13 +25,13 @@ class SpamTables():
 	def identical(self):
 		return self.column("identical")
 	def message(self):
-		return str(self.column("message"))
+		return self.column("message")
 	def time(self):
 		return int(self.column("timestamp"))
 	def spammed(self):
 		self.increment("violations")
 	def messaged(self, contents):
-		print("{} => {}\t{} violations\t{} identical messages".format(self.message(), contents.encode('utf-8', "ignore"), self.count(), self.identical()))
+		print("{} \n\t\\\\=> {}\t\n\t{} violations\t{} identical messages\n".format(self.message(), contents.encode('utf-8', "ignore"), self.count(), self.identical()))
 		self.db.run("UPDATE `antispam` SET `timestamp`='{}' WHERE `id`={}".format(int(time.time()), self.id))
 		if contents.encode('utf-8', "ignore") == self.message().encode('utf-8', "ignore") and int(time.time()) - self.time() < 300:
 			self.increment("identical")
