@@ -19,6 +19,8 @@ modules = {}
 advanced = {}
 help = Help(True, client, modules)
 mm = ModManager(True, client, modules)
+t = 0
+diff = 0
 
 class logger():
 	def __init__(self, func):
@@ -28,11 +30,13 @@ class logger():
 		self.entry = "{}{}".format(self.entry, text)
 		return self
 	def nl(self):
-		self.entry = "{}\n".format(self.entry)
-		return self
+		return self.append("\n")
 	def tab(self):
-		self.entry = "{}\t\t".format(self.entry)
-		return self
+		return self.append("\t\t")
+	def nlt(self):
+		return self.nl().tab()
+	def took(self, time):
+		self.nlt().append("Took ").append(time).append("s")
 	def log(self, entry=None):
 		if entry == None:
 			self.func(self.entry)
@@ -47,8 +51,10 @@ l = logger(log)
 
 @client.event
 async def on_ready():
-	l.append("Logged in with ID ").append(client.user.id).log()
+	diff = int(time.time()) - t
+	l.append("Logged in with ID ").append(client.user.id).took(diff).log()
 	modules["modules"] = mm
+	t = int(time.time())
 	files = {}
 	for filename in os.listdir('/usr/local/share/bkc-services/modules'):
 		if (filename[0] != '_' and filename[0] != '.'):
@@ -59,24 +65,26 @@ async def on_ready():
 		mod = __import__(key)
 		cls = getattr(mod, "Module")
 		init = cls(common.getmodulestatus(key), client)
-		l.append("Discovered module: ").append(init.__name__).nl().tab().append("Status: ")
+		l.append("Discovered module: ").append(init.__name__).nlt().append("Status: ")
 		if common.getmodulestatus(key):
 			l.append("Enabled")
 		else:
 			l.append("Disabled")
-		l.nl().tab().append("Commands: ")
+		l.nlt().append("Commands: ")
 		if init.has_commands():
 			l.append("Yes")
 			modules[key] = init
 		else:
 			l.append("No")
-		l.nl().tab().append("Bound: ")
+		l.nlt().append("Bound: ")
 		if init.bind_on_message():
 			l.append("Yes")
 			advanced[key] = init
 		else:
 			l.append("No")
 		l.log()
+	diff = int(time.time()) - t
+	l.append("All modules loaded").took(diff).log()
 	help.set(True, client, modules)
 
 @client.event
@@ -87,11 +95,11 @@ async def on_message(message):
 	for n in modules:
 		module = modules[n]
 		if module.has_command(cmd) and module.permissible(cmd, common.getrank(message.author.id), message.channel.is_private):
-			l.append("'").append(cmd).append("' is handled by the ").append(n).append(" module.").nl().tab()
+			l.append("'").append(cmd).append("' is handled by the ").append(n).append(" module.")
 			t = int(time.time())
 			handled = module.receive(cmd, args, message)
 			secs = int(time.time()) - t
-			l.append("Took ").append(secs).append("s").nl().tab().append("Status: ")
+			l.took(secs).nlt().append("Status: ")
 			if handled:
 				l.append("Success")
 			else:
@@ -109,10 +117,13 @@ async def on_message(message):
 	for n in advanced:
 		await advanced[n].on_message(message)
 
-l.append("Starting BKC Services").nl().tab()
-l.append("Version:  3.02").nl().tab()
+l.append("Starting BKC Services").nlt()
+l.append("Version:  3.02").nlt()
 l.append("Codename: DynaFly").log()
+t = int(time.time())
 remote_handler = Remote(client)
 remote = client.loop.create_server(lambda: remote_handler, Settings.RemoteHost, Settings.RemotePort)
-l.log(entry="Remote Command Thread Started")
+diff = int(time.time()) - t
+l.append("Remote Command Thread Started").took(diff).log()
+t = int(time.time())
 client.run("NDAyNjQxMTg1MDQwMTA1NDg1.DUyHfQ.FBIo0DYfGHc2ZZ840UgAof9XB4U")
