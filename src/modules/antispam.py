@@ -12,7 +12,7 @@ class SpamTables():
 	def __init__(self, userID):
 		self.id = userID
 		self.db = mysql.default()
-		self.db.run("INSERT INTO `antispam` (`id`, `timestamp`) VALUES ({0}, {1}) ON DUPLICATE KEY UPDATE SET `timestamp`={1}".format(self.id, int(time.time())))
+		self.db.run("INSERT INTO `antispam` (`id`, `timestamp`) VALUES ({0}, {1}) ON DUPLICATE KEY UPDATE `timestamp`={1}".format(self.id, int(time.time())))
 	def column(self, name):
 		value = self.db.query("SELECT `{}` FROM `antispam` WHERE `id`={}".format(name, self.id))
 		return value[0][0]
