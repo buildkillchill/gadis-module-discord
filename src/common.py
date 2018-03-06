@@ -6,7 +6,7 @@ import valve.rcon
 import mysql
 from settings import Settings
 
-def modulestatus(name):
+def getmodulestatus(name):
 	db = mysql.default()
 	db.run("INSERT IGNORE INTO `modules` (`name`) VALUES (%s)", [name])
 	status = db.query("SELECT `enabled` FROM `modules` WHERE `name`=%s", [name])
