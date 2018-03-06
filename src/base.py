@@ -54,7 +54,7 @@ async def on_ready():
 	diff = int(time.time()) - t
 	l.append("Logged in with ID ").append(client.user.id).took(diff).log()
 	modules["modules"] = mm
-	t = int(time.time())
+	ti = int(time.time())
 	files = {}
 	for filename in os.listdir('/usr/local/share/bkc-services/modules'):
 		if (filename[0] != '_' and filename[0] != '.'):
@@ -83,7 +83,7 @@ async def on_ready():
 		else:
 			l.append("No")
 		l.log()
-	diff = int(time.time()) - t
+	diff = int(time.time()) - ti
 	l.append("All modules loaded").took(diff).log()
 	help.set(True, client, modules)
 
