@@ -34,7 +34,7 @@ class SpamTables():
 		self.increment("violations")
 	def messaged(self, contents):
 		will_punish = False
-		if int(time.time()) - self.time() < 15:
+		if int(time.time()) - self.time() < 5:
 			self.increment("fast")
 		else:
 			self.zero("fast")
