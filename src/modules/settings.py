@@ -36,3 +36,4 @@ class Settings():
 	MaxInfractions[8]  = 2
 	MaxInfractions[9]  = 9999
 	MaxInfractions[10] = 9999
+	cancer_channels = ("cancer")
