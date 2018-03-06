@@ -45,7 +45,7 @@ class Module(common.BaseModule):
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client, True)
 		self.server = common.getserver(self.client)
-		self.silenced = discord.utils.get(server.roles, id="347946970385743889")
+		self.silenced = discord.utils.get(self.server.roles, id="347946970385743889")
 	async def silence(self, person, time):
 		await self.client.add_roles(person, self.silenced)
 		await asyncio.sleep(time * 60)
