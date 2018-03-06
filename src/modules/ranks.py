@@ -19,7 +19,6 @@ class Module(common.BaseModule):
 		self.addcmd("letters", self.letters, "View the admin's letters of recommendation or disapproval of applicants", rank=9, private=True)
 		self.addcmd("approveid", self.approve, "Approve application", rank=10)
 		self.addcmd("striprank", self.strip, "Strip user of rank and title", rank=10)
-		self.db = mysql.default()
 		client.loop.create_task(self.auto_update())
 	def char_fix(self, s):
 		return s.encode('ascii', 'ignore').decode('ascii')
