@@ -4,7 +4,7 @@ import common
 class Module(common.BaseModule):
 	__name__ = "Fun"
 	def __init__(self, enabled, client=None):
-		common.BaseModule.__init__(self, enabled, client)
+		common.BaseModule.__init__(self, enabled, client, True)
 		self.addcmd("woof", self.woof, "Lovely puppies...")
 		self.addcmd("meow", self.meow, "Lovely kitties...")
 		self.horses = {}
