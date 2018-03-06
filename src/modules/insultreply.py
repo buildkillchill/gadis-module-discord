@@ -12,6 +12,7 @@ class Module(common.BaseModule):
 		msg = restrip.sub('', message.content.lower())
 #		restrip = re.compile("’")
 #		msg = restrip.sub('', msg)
+		print(msg)
 		for trigger in self.db.query("SELECT * FROM `insult_triggers`"):
 			if re.search(trigger[0], msg):
 				reply = self.db.query("SELECT * FROM `insult_replies` WHERE `id`={}".format(trigger[1]))
