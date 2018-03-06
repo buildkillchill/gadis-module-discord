@@ -4,6 +4,7 @@ import asyncio
 import sys
 sys.path.append('/usr/local/share/bkc-services')
 
+from insultreply import Module as InsultReply
 from accounts import Module as Accounts
 from antispam import Module as AntiSpam
 from utility import Module as Utility
@@ -30,6 +31,7 @@ async def on_ready():
 	modules.append(fun)
 	advanced.append(fun)
 	advanced.append(AntiSpam(True, client))
+	advanced.append(InsultReply(True, client))
 	help.set(True, client, modules)
 
 @client.event
