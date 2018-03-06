@@ -17,7 +17,7 @@ client = discord.Client()
 modules = {}
 advanced = {}
 help = Help(True, client, modules)
-mm = ModManager(True, client, modules)
+mm = ModManager(True, client, modules, advanced)
 t = 0
 diff = 0
 
