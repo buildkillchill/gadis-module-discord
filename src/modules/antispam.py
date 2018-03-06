@@ -98,4 +98,4 @@ class Module(common.BaseModule):
 		await self.match_del(r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{4,})', message)
 		user = SpamTables(message.author.id)
 		if user.messaged(message.content) and user.identical() > 3:
-			self.punish(message)
+			await self.punish(message)
