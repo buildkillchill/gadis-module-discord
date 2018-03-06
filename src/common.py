@@ -98,6 +98,8 @@ class BaseModule():
 		return self.db.query("SELECT `rank` FROM `linked` WHERE `did`={}".format(id))[0][0]
 	def has_command(self, command):
 		return command in self.commands
+	def has_commands(self):
+		return len(self.commands) > 0
 	def getmember(self, id):
 		server = self.client.get_server("312405305759760394")
 		return discord.utils.get(server.members, id=str(id))

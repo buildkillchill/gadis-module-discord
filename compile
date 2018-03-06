@@ -69,7 +69,11 @@ shutil.rmtree("src/modules/__pycache__")
 install = boolquestion("Install it now?")
 if install:
 	if os.path.exists("/usr/local/share/bkc-services"): shutil.rmtree("/usr/local/share/bkc-services")
-	shutil.move("bin/modules", "/usr/local/share/bkc-services")
+	os.makedirs("/usr/local/share/bkc-services")
+	shutil.move("bin/modules", "/usr/local/share/bkc-services/modules")
 	if os.path.exists("/usr/local/bin/bkc-services"): os.remove("/usr/local/bin/bkc-services")
 	shutil.move("bin/bkc-services", "/usr/local/bin/")
 	os.chmod("/usr/local/bin/bkc-services", 0o755)
+	files = [f for f in listdir("bin/bkc-services") if isfile(join("bin/bkc-services", f))]
+	for file in files:
+		shutil.move(join("bin/bkc-services", file), join("/usr/local/share/bkc-services", file))

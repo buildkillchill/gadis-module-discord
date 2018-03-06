@@ -4,15 +4,7 @@ import asyncio
 import sys
 sys.path.append('/usr/local/share/bkc-services')
 
-from insultreply import Module as InsultReply
-from accounts import Module as Accounts
-from antispam import Module as AntiSpam
-from utility import Module as Utility
-from remote import Module as Remote
-from ranks import Module as Ranks
 from help import Module as Help
-from fun import Module as Fun
-
 from settings import Settings
 
 import common
@@ -24,14 +16,27 @@ help = Help(True, client, modules)
 
 @client.event
 async def on_ready():
-	fun = Fun(common.modulestatus(Fun.__name__), client)
-	modules.append(Accounts(common.modulestatus(Accounts.__name__), client))
-	modules.append(Utility(common.modulestatus(Utility.__name__), client))
-	modules.append(Ranks(common.modulestatus(Ranks.__name__), client))
-	modules.append(fun)
-	advanced.append(fun)
-	advanced.append(AntiSpam(common.modulestatus(AntiSpam.__name__), client))
-	advanced.append(InsultReply(common.modulestatus(InsultReply.__name__), client))
+	files = {}
+	for filename in os.listdir('/usr/local/share/bkc-services/modules')
+		if (filename[0] != '_' and filename[0] != '.'):
+			files[filename.rstrip('.pyc')] = None
+	sys.path.append('/usr/local/share/bkc-services/modules')
+	for key in files.keys():
+		mod = __import__(key)
+		cls = getattr(mod, "Module")
+		init = cls(False, client)
+		if init.has_commands():
+			modules.append(init)
+		if init.bind_on_message():
+			advanced.append(init)
+#	fun = Fun(common.modulestatus(Fun.__name__), client)
+#	modules.append(Accounts(common.modulestatus(Accounts.__name__), client))
+#	modules.append(Utility(common.modulestatus(Utility.__name__), client))
+#	modules.append(Ranks(common.modulestatus(Ranks.__name__), client))
+#	modules.append(fun)
+#	advanced.append(fun)
+#	advanced.append(AntiSpam(common.modulestatus(AntiSpam.__name__), client))
+#	advanced.append(InsultReply(common.modulestatus(InsultReply.__name__), client))
 	help.set(True, client, modules)
 
 @client.event
