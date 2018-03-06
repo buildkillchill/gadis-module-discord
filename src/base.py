@@ -12,7 +12,6 @@ from help import Module as Help
 from settings import Settings
 
 import common
-import mysql
 
 client = discord.Client()
 modules = {}
@@ -45,7 +44,6 @@ class logger():
 			self.func(entry)
 def log(msg):
 	print("[{}] {}".format(int(time.time()), msg))
-	mysql.default().run("INSERT INTO `log` (`message`) VALUES (%s)", [msg])
 
 l = logger(log)
 
