@@ -24,6 +24,8 @@ class SpamTables():
 		return self.column("violations")
 	def identical(self):
 		return self.column("identical")
+	def fastmsg(self):
+		return self.column("fast")
 	def message(self):
 		return self.column("message")
 	def time(self):
@@ -31,14 +33,22 @@ class SpamTables():
 	def spammed(self):
 		self.increment("violations")
 	def messaged(self, contents):
+		will_punish = False
+		if int(time.time()) - self.time() < 15:
+			self.increment("fast")
+		else:
+			self.zero("fast")
+		if self.fastmsg() > 3:
+			will_punish = will_punish or True
 		self.db.run("UPDATE `antispam` SET `timestamp`='{}' WHERE `id`={}".format(int(time.time()), self.id))
 		if contents.encode('utf-8', "ignore") == self.message() and int(time.time()) - self.time() < 300:
 			self.increment("identical")
-			return True
+			will_punish = will_punish or True
 		else:
 			self.db.run("UPDATE `antispam` SET `message`=%s WHERE `id`={}".format(self.id), [contents.encode('utf-8', "ignore")])
 			self.zero("identical")
-			return False
+			will_punish = will_punish or False
+		return will_punish
 
 class Module(common.BaseModule):
 	__name__ = "Anti-Spam"
