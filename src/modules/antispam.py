@@ -37,7 +37,7 @@ class SpamTables():
 			self.increment("identical")
 			return True
 		else:
-			self.db.run("UPDATE `antispam` SET `message`=%s WHERE `id`={}".format(self.id), (contents))
+			self.db.run("UPDATE `antispam` SET `message`=%s WHERE `id`={}".format(self.id), (contents.encode('utf-8', "ignore")))
 			self.zero("identical")
 			return False
 
