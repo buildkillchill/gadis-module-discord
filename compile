@@ -74,6 +74,6 @@ if install:
 	if os.path.exists("/usr/local/bin/bkc-services"): os.remove("/usr/local/bin/bkc-services")
 	shutil.move("bin/bkc-services", "/usr/local/bin/")
 	os.chmod("/usr/local/bin/bkc-services", 0o755)
-	files = [f for f in listdir("bin/bkc-services") if isfile(join("bin/bkc-services", f))]
+	files = [f for f in listdir("bin") if isfile(join("bin", f))]
 	for file in files:
-		shutil.move(join("bin/bkc-services", file), join("/usr/local/share/bkc-services", file))
+		shutil.move(join("bin", file), join("/usr/local/share/bkc-services", file))
