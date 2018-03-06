@@ -19,7 +19,8 @@ class Module(common.BaseModule):
 		if not self.enabled:
 			return
 		await self.send(channel, "You have triggered the Help Module.")
-		for module in self.modules:
+		for n in self.modules:
+			module = self.modules[n]
 			mod = discord.Embed(title="{} Module:".format(module.__name__))
 			mod.set_author(name="BKC Services", icon_url=self.client.user.avatar_url)
 			for command in module.getcommands():
