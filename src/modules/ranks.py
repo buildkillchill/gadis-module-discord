@@ -31,8 +31,8 @@ class Module(common.BaseModule):
 	async def testsr(self, args, pmsg):
 		user = common.User.from_discord_id(self.client, pmsg.mentions[0].id)
 		rank = user.rank()
-		user.setrank(user.previous_rank())
-		user.setrank(rank)
+		await user.setrank(user.previous_rank())
+		await user.setrank(rank)
 	async def update(self, args=None, pmsg=None):
 		server = common.getserver(self.client)
 		for member in server.members:
