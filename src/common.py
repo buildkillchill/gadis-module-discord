@@ -201,7 +201,7 @@ class User(BaseModule):
 	def getfcol(self, name, table, id):
 		value = self.db.query("SELECT `{}` FROM `{}` WHERE `id`={}".format(name, table, id))
 		return value[0][0]
-	async def setrank(self, rank):
+	async def setrank(self, rank, reason=None, activate_lock=True):
 		if self.rank() == rank:
 			return
 		elif self.rank() < rank and not self.locked():
@@ -210,8 +210,12 @@ class User(BaseModule):
 			member = getmember(self.client, self)
 			await self.client.add_roles(member, role)
 		elif self.rank() > rank:
-			await self.send(await self.discord(), "You have been demoted.")
-			self.lock()
+			if reason == None:
+				await self.send(await self.discord(), "You have been demoted.")
+			else:
+				await self.send(await self.discord(), reason)
+			if activate_lock:
+				self.lock()
 			member = getmember(self.client, self)
 			if rank > 1:
 				role = getrole(self.client, rank)
