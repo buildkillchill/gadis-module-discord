@@ -71,11 +71,10 @@ class Module(common.BaseModule):
 			for person in self.server.members:
 				if self.silenced not in person.roles: continue
 				user = SpamTables(person.id)
-				print(person.id)
 				if int(user.muted_until()) <= int(time.time()):
 					await self.client.remove_roles(person, self.silenced)
 			dt = datetime.datetime.now()
-			await asyncio.sleep((60-dt.second)*60)
+			await asyncio.sleep(60-dt.second)
 	async def silence(self, person, t):
 		await self.client.add_roles(person, self.silenced)
 		user = SpamTables(person.id)
