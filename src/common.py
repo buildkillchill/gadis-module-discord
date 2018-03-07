@@ -195,6 +195,7 @@ class User(BaseModule):
 		value = self.db.query("SELECT `{}` FROM `{}` WHERE `id`={}".format(name, table, id))
 		return value[0][0]
 	async def setrank(self, rank, reason=None, activate_lock=True):
+		print("{} is {} and will be set to {}".format(self.id["id"], self.rank(), rank)
 		if self.rank() == rank:
 			return
 		elif self.rank() < rank and not self.locked():
