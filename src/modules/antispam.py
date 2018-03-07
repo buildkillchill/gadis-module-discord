@@ -121,11 +121,19 @@ class Module(common.BaseModule):
 				val = "FALSE"
 			sql = "INSERT INTO `antispam` (`id`,`ignore`) VALUES ({0},{1}) ON DUPLICATE KEY UPDATE `ignore`={1}".format(person.id, val)
 			self.db.run(sql)
+	async def ignore_channel(self, args, pmsg):
+		for channel in pmsg.channel_mentions:
+			val = "FALSE"
+			if args[1] == "on":
+				sql = "INSERT IGNORE INTO `antispam_ignore` (`id`) VALUES ({})".format(channel.id)
+			elif args[1] == "off":
+				sql = "DELETE FROM `antispam_ignore` WHERE `id`={}".format(channel.id)
+			self.db.run(sql)
 	async def on_message(self, message):
 		if not await common.BaseModule.on_message(self, message): return
 		if message.author == self.client.user or message.channel.is_private or len(self.db.query("SELECT * FROM `antispam` WHERE `id`={} AND `ignore`=TRUE".format(message.author.id))) > 0:
 			return
-		if message.channel.name in Settings.cancer_channels:
+		if len(self.db.query("SELECT * FROM `antispam_ignore` WHERE `id`={}".format(message.channel.id)) > 0:
 			if len(message.mentions) > 0:
 				await self.client.delete_message(message)
 			else:
