@@ -44,16 +44,19 @@ class Module(common.BaseModule):
 		ver = "```\nVersion : {}\nCodename: {}```"
 		em = discord.Embed(title="Version Info", description=ver.format(Settings.version, Settings.codename))
 		em.set_author(name=creator.nick, icon_url=creator.avatar_url)
-		ver = "```\nVersion : {}\nBound   : {}\nCommands: {}```"
+		ver = "```\nSafe Name: {}\nVersion  : {}\nBound    : {}\nCommands : {}```"
 		for mod in list:
+			n = mod
 			v = "0.00"
 			b = False
 			c = False
 			if mod in self.advm:
 				b = True
 				v = self.advm[mod].__version__
+				n = self.advm[mod].__name__
 			if mod in self.mods:
 				c = True
 				v = self.mods[mod].__version__
-			em.add_field(name=mod, value=ver.format(v, b, c), inline=True)
+				n = self.advm[mod].__name__
+			em.add_field(name=n, value=ver.format(mod, v, b, c), inline=True)
 		await self.client.send_message(pmsg.channel, embed=em)
