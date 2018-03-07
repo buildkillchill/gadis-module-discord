@@ -111,7 +111,7 @@ class Module(common.BaseModule):
 		for role in member.roles:
 			if str(role) != "everyone" and str(role) != "@everyone":
 				await self.client.remove_role(member, role)
-		valve.rcon.execute((Settings.RCON["Host"], Settings.RCON["Port"]), Settings.RCON["Pass"], "ulx removeuserid {}".format(user.steamID()))
+		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx removeuserid {}".format(user.steamID()))
 	async def apply(self, args, pmsg):
 		usr = common.User.from_discord_id(self.client, pmsg.author.id)
 		taken = len(self.db.query("SELECT `id` FROM `linked` WHERE `rank` >= 7"))
@@ -119,13 +119,13 @@ class Module(common.BaseModule):
 		if usr.rank() >= 7:
 			await self.send(pmsg.channel, "Nice try, we don't accept applications for superadmin or developer.")
 		elif not usr.locked():
-			if Settings.Positions <= taken or Settings.MaxApplications <= appcount:
+			if Settings.Admin["positions"] <= taken or Settings.Admin["max_apps"] <= appcount:
 				await self.send(pmsg.channel, "We are not currently accepting applications for admin.")
 			else:
 				linked = len(self.db.query("SELECT `id` FROM `linked` WHERE `sid` IS NOT NULL AND `did`={}".format(pmsg.author.id)))
 				if linked > 0:
 					aid = int(pmsg.author.id)
-					time=Settings.HoursForAdmin
+					time=Settings.Admin["req_hours"]
 					id=self.db.query("SELECT `id` FROM `linked` WHERE `did`=%s AND `hours` >= %s", [aid,time])
 					if len(id) > 0:
 						id=int(id[0][0])

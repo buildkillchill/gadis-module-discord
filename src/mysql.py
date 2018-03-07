@@ -3,7 +3,7 @@ from warnings import filterwarnings
 from settings import Settings
 
 def default():
-	return MySQLWrapper(Settings.MySQL["Data"], Settings.MySQL["User"], Settings.MySQL["Pass"], Settings.MySQL["Host"], Settings.MySQL["Port"])
+	return MySQLWrapper(Settings.MySQL["data"], Settings.MySQL["user"], Settings.MySQL["pass"], Settings.MySQL["host"], Settings.MySQL["port"])
 
 class MySQLWrapper():
 	def __init__(self, DATABASE, USER, PASS, HOST, PORT=3306):

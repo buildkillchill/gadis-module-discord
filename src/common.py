@@ -229,7 +229,7 @@ class User(BaseModule):
 		else:
 			return
 		self.db.run("UPDATE `linked` SET `rank`={} WHERE `id`={}".format(rank, self.id["id"]))
-		valve.rcon.execute((Settings.RCON["Host"], Settings.RCON["Port"]), Settings.RCON["Pass"], "ulx adduserid {} {}".format(self.steamID(), getgmodrank(self.client, rank, self.donated())))
+		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx adduserid {} {}".format(self.steamID(), getgmodrank(self.client, rank, self.donated())))
 	def infract(self, amt):
 		self.db.run("UPDATE `linked` SET `infractions`=`infractions`+{} WHERE `id`={}".format(amt, self.id["id"]))
 	@staticmethod

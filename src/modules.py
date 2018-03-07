@@ -42,9 +42,9 @@ class Module(common.BaseModule):
 	async def version(self, args, pmsg):
 		l = list(set(list(self.mods.keys()) + list(self.advm.keys())))
 		server = common.getserver(self.client)
-		creator = discord.utils.get(server.members, id=str(Settings.creatorid))
+		creator = discord.utils.get(server.members, id=str(Settings.People["creator"]))
 		ver = "```\nVersion : {}\nCodename: {}```"
-		em = discord.Embed(title="Version Info", description=ver.format(Settings.version, Settings.codename))
+		em = discord.Embed(title="Version Info", description=ver.format(Settings.Version["code"], Settings.Version["name"]))
 		em.set_author(name=creator.nick, icon_url=creator.avatar_url)
 		ver = "```\nSafe Name: {}\nVersion  : {}\nBound    : {}\nCommands : {}```"
 		em.add_field(name=self.__name__,value=ver.format(__name__, self.__version__, __name__ in self.advm, __name__ in self.mods), inline=False)
