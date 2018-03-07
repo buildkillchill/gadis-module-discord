@@ -34,7 +34,7 @@ class Module(common.BaseModule):
 		rank = user.rank()
 		t = int(time.time())
 		await self.send(pmsg.channel, "Setting {}'s rank to {} at {}".format(pmsg.mentions[0].mention, user.previous_rank(), t))
-		await user.setrank(user.previous_rank(), "You are being subjected to a test. Your rank will be restored, so do not panic.")
+		await user.setrank(user.previous_rank(), "You are being subjected to a test. Your rank will be restored, so do not panic.", False)
 		await self.send(pmsg.channel, "Done. Took {}s".format(int(time.time())-t))
 		t = int(time.time())
 		await self.send(pmsg.channel, "Sleeping for 10 seconds")
