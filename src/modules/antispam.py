@@ -116,22 +116,26 @@ class Module(common.BaseModule):
 	async def ignore(self, args, pmsg):
 		for person in pmsg.mentions:
 			val = "FALSE"
+			cos = "ON"
 			if args[1] == "on":
+				cos = "OFF"
 				val = "TRUE"
 			elif args[1] == "off":
 				val = "FALSE"
 			sql = "INSERT INTO `antispam` (`id`,`ignore`) VALUES ({0},{1}) ON DUPLICATE KEY UPDATE `ignore`={1}".format(person.id, val)
 			self.db.run(sql)
-		await self.send(pmsg.channel, "Anti-Spam have been turned **{}** for mentioned people.".format(args[1].upper()))
+		await self.send(pmsg.channel, "Anti-Spam has been turned **{}** for mentioned people.".format(cos))
 	async def ignore_channel(self, args, pmsg):
 		for channel in pmsg.channel_mentions:
 			val = "FALSE"
+			cos = "ON"
 			if args[1] == "on":
+				cos = "OFF"
 				sql = "INSERT IGNORE INTO `antispam_ignore` (`id`) VALUES ({})".format(channel.id)
 			elif args[1] == "off":
 				sql = "DELETE FROM `antispam_ignore` WHERE `id`={}".format(channel.id)
 			self.db.run(sql)
-		await self.send(pmsg.channel, "Anti-Spam have been turned **{}** for mentioned channels.".format(args[1].upper()))
+		await self.send(pmsg.channel, "Anti-Spam has been turned **{}** for mentioned channels.".format(cos))
 	async def on_message(self, message):
 		if not await common.BaseModule.on_message(self, message): return
 		if message.author == self.client.user or message.channel.is_private or len(self.db.query("SELECT * FROM `antispam` WHERE `id`={} AND `ignore`=TRUE".format(message.author.id))) > 0:
