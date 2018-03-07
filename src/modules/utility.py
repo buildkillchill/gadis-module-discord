@@ -45,11 +45,4 @@ class Module(common.BaseModule):
 	async def csay(self, args, pmsg=None):
 		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx csay \"{}\"".format(" ".join(args[1:])))
 	async def tsayc(self, args, pmsg=None):
-		msg = ""
-		for arg in args[1:]:
-			if arg.endswith("\""):
-				msg = "{} {}".format(msg, arg)
-				break
-			msg = "{} {}".format(msg, arg)
-		cmd = "ulx tsaycolor {} {}".format(msg, args[-1])
-		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], cmd)
+		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx tsaycolor {}".format(" ".join(args[1:])))
