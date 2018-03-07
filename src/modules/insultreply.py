@@ -10,6 +10,7 @@ class Module(common.BaseModule):
 		common.BaseModule.__init__(self, enabled, client, True)
 	async def on_message(self, message):
 		if not await common.BaseModule.on_message(self, message): return
+		if message.channel.is_private: return
 		server = common.getserver(self.client)
 		notilt = discord.utils.get(server.roles, id="420779120352296960")
 		if notilt not in message.author.roles: return

@@ -49,4 +49,5 @@ class Module(common.BaseModule):
 		for arg in args[1:]:
 			if arg.endswith("\""): break
 			msg = "{} {}".format(msg, arg)
+		print("ulx tsaycolor \"{}\" {}".format(msg, args[-1]))
 		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx tsaycolor \"{}\" {}".format(msg, args[-1]))
