@@ -13,6 +13,7 @@ class MySQLWrapper():
 		self.cursor = self.connection.cursor()
 		filterwarnings('ignore', category = MySQLdb.Warning)
 	def query(self, sql, replacements=None):
+		print(sql)
 		if replacements == None:
 			self.cursor.execute(sql)
 		else:
