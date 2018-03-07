@@ -3,6 +3,8 @@ import discord
 
 import common
 
+from settings import Settings
+
 class Module(common.BaseModule):
 	__name__ = "Utility"
 	def __init__(self, enabled, client=None):
@@ -30,3 +32,10 @@ class Module(common.BaseModule):
 			await self.send(self.getchannel("admin"), "<@&312417207911186433>: {} is filing a _confidential_ report against {} for '{}'".format(pmsg.author.mention, perp, reason.content))
 			await self.send(pmsg.channel, "Thank you for reporting the incident, {}. I have filed it to the Admins.".format(pmsg.author.mention))
 
+	async def version(self, args, pmsg):
+		server = common.getserver(self.client)
+		creator = discord.utils.get(server.members, id=str(Settings.creatorid))
+		ver = "```\nVersion : {}\nCodename: {}```".format(Settings.version, Settings.codename)
+		em = discord.Embed(title="BKC Services", description=ver)
+		em.set_author(name=creator.nick, icon_url=creator.avatar_url)
+		await self.client.send_message(pmsg.channel, embed=em)
