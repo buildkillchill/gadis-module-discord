@@ -38,7 +38,7 @@ class Module(common.BaseModule):
 		else:
 			await self.send(pmsg.channel, "{} does not exist".format(mod))
 	async def version(self, args, pmsg):
-		l = list(set(self.mods.keys() + self.advm.keys()))
+		l = list(set(list(self.mods.keys()) + list(self.advm.keys())))
 		server = common.getserver(self.client)
 		creator = discord.utils.get(server.members, id=str(Settings.creatorid))
 		ver = "```\nVersion : {}\nCodename: {}```"
