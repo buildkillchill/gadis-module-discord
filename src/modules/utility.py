@@ -1,5 +1,7 @@
 import asyncio
 import discord
+import valve
+import valve.rcon
 
 import common
 
