@@ -65,6 +65,7 @@ class Module(common.BaseModule):
 		self.silenced = discord.utils.get(self.server.roles, id="347946970385743889")
 		self.client.loop.create_task(self.unsilence())
 		self.addcmd("asignore", self.ignore, "Adds or removes people from the anti-spam ignore list.", rank=9, usage="asignore on|off @mention1 .. @mentionN")
+		self.addcmd("ignorechan", self.ignore_channel, "Adds or removes channels from the anti-spam ignore list.", rank=9, usage="ignorechan on|off #channel1 .. #channelN")
 	async def unsilence(self):
 		while True:
 			for person in self.server.members:
