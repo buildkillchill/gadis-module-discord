@@ -38,14 +38,14 @@ class Module(common.BaseModule):
 		else:
 			await self.send(pmsg.channel, "{} does not exist".format(mod))
 	async def version(self, args, pmsg):
-		list = list(set(self.mods.keys() + self.advm.keys()))
+		l = list(set(self.mods.keys() + self.advm.keys()))
 		server = common.getserver(self.client)
 		creator = discord.utils.get(server.members, id=str(Settings.creatorid))
 		ver = "```\nVersion : {}\nCodename: {}```"
 		em = discord.Embed(title="Version Info", description=ver.format(Settings.version, Settings.codename))
 		em.set_author(name=creator.nick, icon_url=creator.avatar_url)
 		ver = "```\nSafe Name: {}\nVersion  : {}\nBound    : {}\nCommands : {}```"
-		for mod in list:
+		for mod in l:
 			n = mod
 			v = "0.00"
 			b = False
