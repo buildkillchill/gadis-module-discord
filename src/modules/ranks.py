@@ -53,7 +53,7 @@ class Module(common.BaseModule):
 			await self.edit(msg, message.format(remains))
 	async def retire(self, args, pmsg):
 		admin = common.User.from_discord_id(self.client, pmsg.author.id)
-		self.client.create_task(self.tick_down(pmsg.channel, 60, "{} are you sure you want to retire? You will have to go through the whole application process again if you want your position back. You have \{\} seconds to reply with _EXACTLY_ `I HEREBY FORFEIT MY POSITION AND GO INTO RETIREMENT`. This is case sensitive.".format(pmsg.author.mention))
+		self.client.create_task(self.tick_down(pmsg.channel, 60, "{} are you sure you want to retire? You will have to go through the whole application process again if you want your position back. You have \{\} seconds to reply with _EXACTLY_ `I HEREBY FORFEIT MY POSITION AND GO INTO RETIREMENT`. This is case sensitive.".format(pmsg.author.mention)))
 		reply = await self.getreply(60, pmsg.author, pmsg.channel)
 		if reply == "I HEREBY FORFEIT MY POSITION AND GO INTO RETIREMENT":
 			admin.setrank(admin.previous_rank(), "Thank you for your service. We're sorry to see you have chosen to step down.", False)
