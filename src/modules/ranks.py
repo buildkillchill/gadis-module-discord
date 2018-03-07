@@ -61,8 +61,12 @@ class Module(common.BaseModule):
 			await self.send(pmsg.channel, "Glad to see you reconsidered, {}. Thank you for your ongoing service!".format(author.mention))
 	async def demote(self, args, pmsg):
 		reason = ""
+		lock = False
 		if args[1].lower() == "lock":
 			lock = True
+			for arg in args[2:]:
+				if not re.match("(@.*#[0-9]{4}|\<@[0-9]+\>)", arg):
+					reason = "{} {}".format(reason, arg)
 		else:
 			for arg in args[1:]:
 				if not re.match("(@.*#[0-9]{4}|\<@[0-9]+\>)", arg):
@@ -83,7 +87,7 @@ class Module(common.BaseModule):
 			for m in pmsg.mentions:
 				p = common.User.from_discord_id(self.client, pmsg.author.id)
 				await self.edit(msg, "Demoting {}".format(m.mention))
-				p.setrank(p.previous_rank(), reason)
+				p.setrank(p.previous_rank(), reason, lock)
 			await self.edit(msg, "Demotion complete.")
 	async def approve(self, args, pmsg):
 		applicant = common.User.from_discord_id(self.client, args[1])
