@@ -11,7 +11,7 @@ import mysql
 from settings import Settings
 
 class Module(common.BaseModule):
-	__name__ = "Ranks"
+	__name__ = "Rank Manager"
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client)
 		self.addcmd("apply", self.apply, "Apply for admin")
@@ -19,6 +19,9 @@ class Module(common.BaseModule):
 		self.addcmd("letters", self.letters, "View the admin's letters of recommendation or disapproval of applicants", rank=9, private=True)
 		self.addcmd("approveid", self.approve, "Approve application", rank=10)
 		self.addcmd("striprank", self.strip, "Strip user of rank and title", rank=10)
+		self.addcmd("retire", self.retire, "Step down from your position", rank=8)
+		self.addcmd("stepdown", self.retire, "Step down from your position", rank=8)
+		self.addcmd("demote", self.demote, "Demote person", rank=10)
 		client.loop.create_task(self.auto_update())
 	def char_fix(self, s):
 		return s.encode('ascii', 'ignore').decode('ascii')
@@ -41,10 +44,51 @@ class Module(common.BaseModule):
 					await self.client.add_roles(member, donor)
 			dt = datetime.datetime.now()
 			await asyncio.sleep((60-dt.minute)*60)
+	async def tick_down(self, channel, seconds, message):
+		msg = await self.send(channel, message.format(time))
+		remains = seconds
+		while remains > 0:
+			asyncio.sleep(1)
+			remains = remains - 1
+			await self.edit(msg, message.format(remains))
+	async def retire(self, args, pmsg):
+		admin = common.User.from_discord_id(self.client, pmsg.author.id)
+		self.client.create_task(self.tick_down(pmsg.channel, 60, "{} are you sure you want to retire? You will have to go through the whole application process again if you want your position back. You have \{\} seconds to reply with _EXACTLY_ `I HEREBY FORFEIT MY POSITION AND GO INTO RETIREMENT`. This is case sensitive.".format(pmsg.author.mention))
+		reply = await self.getreply(60, pmsg.author, pmsg.channel)
+		if reply == "I HEREBY FORFEIT MY POSITION AND GO INTO RETIREMENT":
+			admin.setrank(admin.previous_rank(), "Thank you for your service. We're sorry to see you have chosen to step down.", False)
+		else:
+			await self.send(pmsg.channel, "Glad to see you reconsidered, {}. Thank you for your ongoing service!".format(author.mention))
+	async def demote(self, args, pmsg):
+		reason = ""
+		if args[1].lower() == "lock":
+			lock = True
+		else:
+			for arg in args[1:]:
+				if not re.match("(@.*#[0-9]{4}|\<@[0-9]+\>)", arg):
+					reason = "{} {}".format(reason, arg)
+		text = "Are you sure you want to demote "
+		first = True
+		for m in pmsg.mentions:
+			if first:
+				first = False
+				text = "{}{}".format(text, m.mention)
+			else:
+				text = "{}, {}".format(text, m.mention)
+		text = "{}?".format(text)
+		await self.send(pmsg.channel, text)
+		reply = await self.getreply(60, pmsg.author, pmsg.channel)
+		if reply.lower() == "y" or reply.lower() == "yes":
+			msg = await self.send(pmsg.channel, "Plugging potato into battery terminals...")
+			for m in pmsg.mentions:
+				p = common.User.from_discord_id(self.client, pmsg.author.id)
+				await self.edit(msg, "Demoting {}".format(m.mention))
+				p.setrank(p.previous_rank(), reason)
+			await self.edit(msg, "Demotion complete.")
 	async def approve(self, args, pmsg):
 		applicant = common.User.from_discord_id(self.client, args[1])
-		self.db.run("UPDATE `applications` SET `accepted`=True WHERE `id`={}".format(applicant.ID()))
 		if IsApplicant(applicant.ID()):
+			self.db.run("UPDATE `applications` SET `accepted`=True WHERE `id`={}".format(applicant.ID()))
 			last = await self.send(pmsg.author, "Setting Rank...")
 			await applicant.setrank(7)
 			await self.edit(last, "Cleaning up...")
