@@ -175,12 +175,8 @@ class User(BaseModule):
 	def rank(self):
 		return self.getcol("rank")
 	def role(self):
-		server = getserver(self.client)
 		rank = self.rank()
-		roleid = int(self.getfcol("discord", "ranks", rank))
-		for role in server.roles:
-			if roleid == int(role.id):
-				return role
+		return list(Settings.Ranks[rank])
 	def lock(self):
 		self.db.run("UPDATE `linked` SET `locked`=True WHERE `id`={}".format(self.id["id"]))
 	def locked(self):
