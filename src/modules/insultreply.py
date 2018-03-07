@@ -10,7 +10,7 @@ class Module(common.BaseModule):
 	async def on_message(self, message):
 		if not await common.BaseModule.on_message(self, message): return
 		server = common.getserver(self.client)
-		emo = discord.util.get(server.roles, id="420779120352296960")
+		emo = discord.utils.get(server.roles, id="420779120352296960")
 		if emo in message.author.roles: return
 		msg = re.sub('[^a-z0-9 ]', '', message.content.lower(), flags=re.UNICODE)
 		for trigger in self.db.query("SELECT * FROM `insult_triggers`"):
