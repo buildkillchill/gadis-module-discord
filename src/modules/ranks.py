@@ -24,9 +24,15 @@ class Module(common.BaseModule):
 		self.addcmd("stepdown", self.retire, "Step down from your position", rank=8)
 		self.addcmd("demote", self.demote, "Demote person", rank=10)
 		self.addcmd("updateranks", self.update, "Force update ranks", rank=9)
+		self.addcmd("testsetrank", self.testsr, "Test User.setrank", rank=9)
 		client.loop.create_task(self.auto_update())
 	def char_fix(self, s):
 		return s.encode('ascii', 'ignore').decode('ascii')
+	async def testsr(self, args, pmsg):
+		user = common.User.from_discord_id(self.client, pmsg.mentions[0].id)
+		rank = user.rank()
+		user.setrank(user.previous_rank())
+		user.setrank(rank)
 	async def update(self, args=None, pmsg=None):
 		server = common.getserver(self.client)
 		for member in server.members:
