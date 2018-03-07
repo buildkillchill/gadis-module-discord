@@ -47,8 +47,7 @@ class Module(common.BaseModule):
 		em = discord.Embed(title="Version Info", description=ver.format(Settings.version, Settings.codename))
 		em.set_author(name=creator.nick, icon_url=creator.avatar_url)
 		ver = "```\nSafe Name: {}\nVersion  : {}\nBound    : {}\nCommands : {}```"
-		n = os.path.splitext(os.path.basename(__file__))[0]
-		em.add_field(name=__name__,value=ver.format(n, self.__version__, n in self.advm, n in self.mods), inline=False)
+		em.add_field(name=self.__name__,value=ver.format(__name__, self.__version__, n in self.advm, n in self.mods), inline=False)
 		for mod in l:
 			if mod == "modules": continue
 			n = mod
