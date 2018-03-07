@@ -63,5 +63,5 @@ class Module(common.BaseModule):
 				n = self.mods[mod].__name__
 			em.add_field(name=n, value=ver.format(mod, v, b, c), inline=True)
 		n = __file__[:-4]
-		em.add_field(name=__name__,value=ver.format(n, __version__, n in self.advm, n in self.mods))
+		em.add_field(name=__name__,value=ver.format(n, self.__version__, n in self.advm, n in self.mods))
 		await self.client.send_message(pmsg.channel, embed=em)
