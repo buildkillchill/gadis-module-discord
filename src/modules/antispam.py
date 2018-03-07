@@ -58,6 +58,7 @@ class SpamTables():
 
 class Module(common.BaseModule):
 	__name__ = "Anti-Spam"
+	__version__ = "4.26"
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client, True)
 		self.server = common.getserver(self.client)

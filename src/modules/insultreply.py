@@ -5,6 +5,7 @@ import mysql
 
 class Module(common.BaseModule):
 	__name__ = "Insult Reply"
+	__version__ = "2.42"
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client, True)
 	async def on_message(self, message):

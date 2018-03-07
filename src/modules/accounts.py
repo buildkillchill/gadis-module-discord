@@ -8,6 +8,7 @@ from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Accounts"
+	__version__ = "2.04"
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client)
 		self.addcmd("link", self.link, "Link your Steam and Discord to me. This allows for applying for admin and future features.", private=True)

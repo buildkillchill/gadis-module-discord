@@ -12,6 +12,7 @@ from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Rank Manager"
+	__version__ = "4.22"
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client)
 		self.addcmd("apply", self.apply, "Apply for admin")
