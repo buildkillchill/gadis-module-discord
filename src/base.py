@@ -116,8 +116,8 @@ async def on_message(message):
 		await advanced[n].on_message(message)
 
 l.append("Starting BKC Services").nlt()
-l.append("Version:  3.02").nlt()
-l.append("Codename: DynaFly").log()
+l.append("Version:  ").append(Settings.version).nlt()
+l.append("Codename: ").append(Settings.codename).log()
 t = int(time.time())
 remote_handler = Remote(client)
 remote = client.loop.create_server(lambda: remote_handler, Settings.RemoteHost, Settings.RemotePort)
