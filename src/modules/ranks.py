@@ -34,7 +34,7 @@ class Module(common.BaseModule):
 			user = common.User.from_discord_id(self.client, member.id)
 			if user == None: continue
 			donor = discord.utils.get(common.getserver(self.client).roles, name="Donator")
-			if len(roles) == 0 or len(user.role) == 0:
+			if len(roles) == 0 or len(user.role()) == 0:
 				continue
 			await self.client.add_roles(member, common.getroles(self.client, user.previous_rank()))
 			if donor in roles and not donor in member.roles:
