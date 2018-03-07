@@ -18,23 +18,17 @@ def setmodulestatus(name, enabled):
 	db.run("INSERT INTO `modules` (`name`,`enabled`) VALUES (%s, %s) ON DUPLICATE KEY UPDATE `enabled`=%s", [name, enabled, enabled])
 
 def getserver(client):
-	return client.get_server("312405305759760394")
+	return client.get_server(str(Settings.ServerID))
 
 def getrole(client, rank):
 	db = mysql.default()
-	rankthing = db.query("SELECT `discord` FROM `ranks` WHERE `id`={}".format(rank))
 	server = getserver(client)
-	for role in server.roles:
-		if rankthing[0][0] == int(role.id):
-			return role
+	return discord.utils.get(server.roles, id=str(Settings.Rank[rank]))
 
-def getgmodrank(client, rank, donated):
+def getgmodrank(rank):
 	db = mysql.default()
-	append = ""
-	if rank == 4 and donated:
-		append = "_Donator"
-	rank = db.query("SELECT `gmod` FROM `ranks` WHERE `id`={}".format(rank))
-	return "{}{}".format(rank[0][0], append)
+	rank = db.query("SELECT `name` FROM `ranks` WHERE `id`={}".format(rank))
+	return rank[0][0]
 
 def getmember(client, user):
 	server = getserver(client)
@@ -229,7 +223,7 @@ class User(BaseModule):
 		else:
 			return
 		self.db.run("UPDATE `linked` SET `rank`={} WHERE `id`={}".format(rank, self.id["id"]))
-		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx adduserid {} {}".format(self.steamID(), getgmodrank(self.client, rank, self.donated())))
+		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx adduserid {} {}".format(self.steamID(), getgmodrank(rank))))
 	def infract(self, amt):
 		self.db.run("UPDATE `linked` SET `infractions`=`infractions`+{} WHERE `id`={}".format(amt, self.id["id"]))
 	@staticmethod
