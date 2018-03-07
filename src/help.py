@@ -11,7 +11,6 @@ class Module(common.BaseModule):
 		self.enabled = enabled
 		self.client = client
 		self.modules = modules
-		print(__file__)
 	def set(self, enabled=True, client=None, modules={}):
 		self.enabled = enabled
 		self.client = client
