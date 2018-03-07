@@ -1,4 +1,4 @@
-import json, requests, re
+import json, requests, re, os
 import discord
 import common
 from settings import Settings
@@ -62,6 +62,6 @@ class Module(common.BaseModule):
 				v = self.mods[mod].__version__
 				n = self.mods[mod].__name__
 			em.add_field(name=n, value=ver.format(mod, v, b, c), inline=True)
-		n = __file__[:-4]
+		n = os.path.splitext(os.path.basename(__file__))[0]
 		em.add_field(name=__name__,value=ver.format(n, self.__version__, n in self.advm, n in self.mods))
 		await self.client.send_message(pmsg.channel, embed=em)
