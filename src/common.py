@@ -71,8 +71,10 @@ class BaseModule():
 			return False
 	def enable(self):
 		self.enabled = True
+		setmodstatus(__file__[:-4], True)
 	def disable(self):
 		self.enabled = False
+		setmodstatus(__file__[:-4], False)
 	async def send(self, channel, message):
 		return await self.client.send_message(channel, message)
 	async def edit(self, message, new_message):
