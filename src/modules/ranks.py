@@ -36,13 +36,13 @@ class Module(common.BaseModule):
 			donor = discord.utils.get(common.getserver(self.client).roles, name="Donator")
 			if len(roles) == 0 or len(user.role()) == 0:
 				continue
-			await self.client.add_roles(member, common.getroles(self.client, user.previous_rank()))
+			await self.client.add_roles(member, *common.getroles(self.client, user.previous_rank()))
 			if donor in roles and not donor in member.roles:
 				await self.send(self.getchannel("general"), "Thank you, {}, for donating. It's donations, like yours, that keep this server running.".format(member.id))
 			for role in roles:
 				if role == donor: continue
 				await self.send(self.getchannel("general"), "Congratulations on making {}, {}!".format(role.mention, member.mention))
-			await self.client.add_roles(member, roles)
+			await self.client.add_roles(member, *roles)
 	async def auto_update(self):
 		while True:
 			await self.update()
