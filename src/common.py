@@ -196,7 +196,6 @@ class User(BaseModule):
 		return value[0][0]
 	async def setrank(self, rank, reason=None, activate_lock=True):
 		if (self.rank() < rank and self.locked()) or self.rank() == rank: return
-		print("{} is {} and will be set to {}".format(self.id["id"], self.rank(), rank))
 
 		if self.rank() < rank:
 			await self.send(self.getchannel("general"), "Congratulations for your promotion, <@{}>!".format(self.discordID()))

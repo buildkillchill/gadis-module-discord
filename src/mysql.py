@@ -19,7 +19,6 @@ class MySQLWrapper():
 			self.cursor.execute(sql,replacements)
 		return self.cursor.fetchall()
 	def run(self, sql, replacements=None):
-		if "linked" in sql: print(sql)
 		if replacements == None:
 			self.cursor.execute(sql)
 		else:
