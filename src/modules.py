@@ -48,6 +48,7 @@ class Module(common.BaseModule):
 		em.set_author(name=creator.nick, icon_url=creator.avatar_url)
 		ver = "```\nSafe Name: {}\nVersion  : {}\nBound    : {}\nCommands : {}```"
 		for mod in l:
+			if mod == "modules": continue
 			n = mod
 			v = "0.00"
 			b = False
@@ -61,4 +62,6 @@ class Module(common.BaseModule):
 				v = self.mods[mod].__version__
 				n = self.mods[mod].__name__
 			em.add_field(name=n, value=ver.format(mod, v, b, c), inline=True)
+		n = __file__[:-4]
+		em.add_field(name=__name__,value=ver.format(n, __version__, n in self.advm, n in self.mods))
 		await self.client.send_message(pmsg.channel, embed=em)
