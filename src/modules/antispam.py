@@ -133,7 +133,7 @@ class Module(common.BaseModule):
 		if not await common.BaseModule.on_message(self, message): return
 		if message.author == self.client.user or message.channel.is_private or len(self.db.query("SELECT * FROM `antispam` WHERE `id`={} AND `ignore`=TRUE".format(message.author.id))) > 0:
 			return
-		if len(self.db.query("SELECT * FROM `antispam_ignore` WHERE `id`={}".format(message.channel.id)) > 0:
+		if len(self.db.query("SELECT * FROM `antispam_ignore` WHERE `id`={}".format(message.channel.id))) > 0:
 			if len(message.mentions) > 0:
 				await self.client.delete_message(message)
 			else:
