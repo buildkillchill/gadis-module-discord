@@ -23,26 +23,29 @@ class Module(common.BaseModule):
 		self.addcmd("retire", self.retire, "Step down from your position", rank=8)
 		self.addcmd("stepdown", self.retire, "Step down from your position", rank=8)
 		self.addcmd("demote", self.demote, "Demote person", rank=10)
+		self.addcmd("updateranks", self.update, "Force update ranks", rank=9)
 		client.loop.create_task(self.auto_update())
 	def char_fix(self, s):
 		return s.encode('ascii', 'ignore').decode('ascii')
+	async def update(self, args=None, pmsg=None):
+		server = common.getserver(self.client)
+		for member in server.members:
+			roles = common.getroles(self.client, common.getrank(member.id))
+			user = common.User.from_discord_id(self.client, member.id)
+			if user == None: continue
+			donor = discord.utils.get(common.getserver(self.client).roles, name="Donator")
+			if len(real_role) == 0 or len(user.role) == 0:
+				continue
+			await self.client.add_roles(member, common.getroles(self.client, user.previous_rank()))
+			if donor in roles and not donor in member.roles:
+				await self.send(self.getchannel("general"), "Thank you, {}, for donating. It's donations, like yours, that keep this server running.".format(member.id))
+			for role in roles:
+				if role == donor: continue
+				await self.send(self.getchannel("general"), "Congratulations on making {}, {}!".format(role.mention, member.mention))
+			await self.client.add_roles(member, roles)
 	async def auto_update(self):
 		while True:
-			server = common.getserver(self.client)
-			for member in server.members:
-				real_role = common.getrole(self.client, common.getrank(member.id))
-				user = common.User.from_discord_id(self.client, member.id)
-				donor = discord.utils.get(common.getserver(self.client).roles, name="Donator")
-				if real_role == None or user.role == None:
-					continue
-				if user.previous_rank() > 1 and not common.getrole(self.client, user.previous_rank()) in member.roles:
-					await self.client.add_roles(member, common.getrole(self.client, user.previous_rank()))
-				if user != None and not real_role in member.roles and not real_role == donor:
-					await self.send(self.getchannel("general"), "Congratulations on making {}, <@{}>!".format(real_role.name, member.id))
-					await self.client.add_roles(member, real_role)
-				if user.donated() and not donor in member.roles:
-					await self.send(self.getchannel("general"), "Thank you for donating, <@{}>!".format(member.id))
-					await self.client.add_roles(member, donor)
+			await self.update()
 			dt = datetime.datetime.now()
 			await asyncio.sleep((60-dt.minute)*60)
 	async def tick_down(self, channel, seconds, message):
