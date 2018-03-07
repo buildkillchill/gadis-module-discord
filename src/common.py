@@ -174,7 +174,7 @@ class User(BaseModule):
 		return await self.client.get_user_info(self.id["discord"])
 	def rank(self):
 		return self.getcol("rank")
-	def role(self):
+	def roles(self):
 		rank = self.rank()
 		return list(Settings.Ranks[rank])
 	def lock(self):
