@@ -11,6 +11,7 @@ class Module(common.BaseModule):
 		common.BaseModule.__init__(self, enabled, client)
 		self.addcmd("roles", self.roles, "View a list of roles with corrisponding IDs")
 		self.addcmd("report", self.report, "Report a someone", usage="`report USER`\nWhen prompted, give reason for report.")
+		self.addcmd("version", self.version, "Get version info")
 	async def roles(self, args, pmsg):
 		for server in self.client.servers:
 			roleids = None
