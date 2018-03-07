@@ -64,6 +64,7 @@ class Module(common.BaseModule):
 		self.server = common.getserver(self.client)
 		self.silenced = discord.utils.get(self.server.roles, id="347946970385743889")
 		self.client.loop.create_task(self.unsilence())
+		self.addcmd("asignore", self.ignore, "Adds or removes people from the anti-spam ignore list.", rank=9, usage="asignore on|off @mention1 .. @mentionN")
 	async def unsilence(self):
 		while True:
 			for person in self.server.members:
@@ -111,6 +112,15 @@ class Module(common.BaseModule):
 		match = re.search(pattern, message.content.lower())
 		if match:
 			await self.punish(message)
+	async def ignore(self, args, pmsg):
+		for person in pmsg.mentions:
+			val = "FALSE"
+			if args[1] == "on":
+				val = "TRUE"
+			elif args[1] == "off":
+				val = "FALSE"
+			sql = "INSERT INTO `antispam` (`id`,`ignore`) VALUES ({0},{1}) ON DUPLICATE KEY UPDATE `ignore`={1}".format(person.id, val)
+			self.db.run(sql)
 	async def on_message(self, message):
 		if not await common.BaseModule.on_message(self, message): return
 		if message.author == self.client.user or message.channel.is_private or len(self.db.query("SELECT * FROM `antispam` WHERE `id`={} AND `ignore`=TRUE")) > 0:
