@@ -71,6 +71,7 @@ class Module(common.BaseModule):
 			for person in self.server.members:
 				if self.silenced not in person.roles: continue
 				user = SpamTables(person.id)
+				print(person.id)
 				if int(user.muted_until()) <= int(time.time()):
 					await self.client.remove_roles(person, self.silenced)
 			dt = datetime.datetime.now()
