@@ -215,7 +215,7 @@ class User(BaseModule):
 			if "everyone" in role.name: continue
 			for rank in Settings.Ranks:
 				for roleid in Settings.Ranks[rank]:
-					r = discord.utils.get(getserver().roles, id=str(roleid))
+					r = discord.utils.get(getserver(self.client).roles, id=str(roleid))
 					if role == r and not (r in roles or r in prev):
 						self.client.remove_roles(member, r)
 		await self.client.add_roles(member, *roles)
