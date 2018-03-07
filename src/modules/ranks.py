@@ -40,7 +40,7 @@ class Module(common.BaseModule):
 			if donor in roles and not donor in member.roles:
 				await self.send(self.getchannel("general"), "Thank you, {}, for donating. It's donations, like yours, that keep this server running.".format(member.id))
 			for role in roles:
-				if role == donor: continue
+				if role == donor or role in member.roles: continue
 				await self.send(self.getchannel("general"), "Congratulations on making {}, {}!".format(role.mention, member.mention))
 			await self.client.add_roles(member, *roles)
 	async def auto_update(self):
