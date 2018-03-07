@@ -20,10 +20,13 @@ def setmodulestatus(name, enabled):
 def getserver(client):
 	return client.get_server(str(Settings.ServerID))
 
-def getrole(client, rank):
+def getroles(client, rank):
 	db = mysql.default()
 	server = getserver(client)
-	return discord.utils.get(server.roles, id=str(Settings.Rank[rank]))
+	roles = []
+	for rank in Settings.Ranks[rank]:
+		roles.append(discord.utils.get(server.roles, id=str(rank)))
+	return roles
 
 def getgmodrank(rank):
 	db = mysql.default()
