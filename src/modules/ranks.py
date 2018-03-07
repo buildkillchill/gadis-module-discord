@@ -37,7 +37,7 @@ class Module(common.BaseModule):
 					continue
 				if user.previous_rank() > 1 and not common.getrole(self.client, user.previous_rank()) in member.roles:
 					await self.client.add_roles(member, common.getrole(self.client, user.previous_rank()))
-				if user != None and not real_role in member.roles:
+				if user != None and not real_role in member.roles and not real_role == donor:
 					await self.send(self.getchannel("general"), "Congratulations on making {}, <@{}>!".format(real_role.name, member.id))
 					await self.client.add_roles(member, real_role)
 				if user.donated() and not donor in member.roles:
