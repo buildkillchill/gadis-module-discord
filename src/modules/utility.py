@@ -7,7 +7,7 @@ from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Utility"
-	__version__ = "3.00"
+	__version__ = "1.04"
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client)
 		self.addcmd("roles", self.roles, "View a list of roles with corrisponding IDs")

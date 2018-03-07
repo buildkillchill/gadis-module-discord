@@ -5,7 +5,7 @@ from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Mod Manager"
-	__version__ = "1.00"
+	__version__ = "1.04"
 	def __init__(self, enabled, client=None, modules={}, advanced={}):
 		common.BaseModule.__init__(self, enabled, client)
 		self.mods = modules

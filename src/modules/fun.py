@@ -3,7 +3,7 @@ import common
 
 class Module(common.BaseModule):
 	__name__ = "Fun"
-	__version__ = "3.00"
+	__version__ = "2.04"
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client, True)
 		self.addcmd("woof", self.woof, "Lovely puppies...")
