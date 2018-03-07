@@ -4,6 +4,7 @@ import discord
 import random
 import valve
 import valve.rcon
+import time
 
 import common
 import mysql
@@ -31,8 +32,14 @@ class Module(common.BaseModule):
 	async def testsr(self, args, pmsg):
 		user = common.User.from_discord_id(self.client, pmsg.mentions[0].id)
 		rank = user.rank()
-		await user.setrank(user.previous_rank())
+		t = int(time.time())
+		await self.send(pmsg.channel, "Setting {}'s rank to {} at {}".format(pmsg.mentions[0].mention, user.previous_rank(), t)
+		await user.setrank(user.previous_rank(), "You are being subjected to a test. Your rank will be restored, so do not panic.")
+		await self.send(pmsg.channel, "Done. Took {}s".format(int(time.time())-t))
+		t = int(time.time())
+		await self.send(pmsg.channel, "Restoring {}'s rank to {} at {}".format(pmsg.mentions[0].mention, rank, t))
 		await user.setrank(rank)
+		await self.send(pmsg.channel, "Done. Took {}s".format(int(time.time())-t))
 	async def update(self, args=None, pmsg=None):
 		server = common.getserver(self.client)
 		for member in server.members:
