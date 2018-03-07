@@ -1,6 +1,7 @@
 import json, requests, re
 import discord
 import common
+from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Mod Manager"
