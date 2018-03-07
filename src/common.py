@@ -195,27 +195,29 @@ class User(BaseModule):
 		value = self.db.query("SELECT `{}` FROM `{}` WHERE `id`={}".format(name, table, id))
 		return value[0][0]
 	async def setrank(self, rank, reason=None, activate_lock=True):
+		if (self.rank() < rank and self.locked()) or self.rank() == rank: return
 		print("{} is {} and will be set to {}".format(self.id["id"], self.rank(), rank))
-		if self.rank() == rank:
-			return
-		elif self.rank() < rank and not self.locked():
+
+		if self.rank() < rank:
 			await self.send(self.getchannel("general"), "Congratulations for your promotion, <@{}>!".format(self.discordID()))
 		elif self.rank() > rank:
 			if reason == None:
 				await self.send(await self.discord(), "You have been demoted.")
 			else:
 				await self.send(await self.discord(), reason)
-			if activate_lock:
-				self.lock()
 		else:
 			return
+
+		if activate_lock and self.rank() > rank:
+			self.lock()
+
 		member = getmember(self.client, self)
 		roles = getroles(self.client, rank)
 		prev = getroles(self.client, self.previous_rank())
 		for role in member.roles:
 			if "everyone" in role.name: continue
-			for rank in Settings.Ranks:
-				for roleid in Settings.Ranks[rank]:
+			for rk in Settings.Ranks:
+				for roleid in Settings.Ranks[rk]:
 					r = discord.utils.get(getserver(self.client).roles, id=str(roleid))
 					if role == r and not (r in roles or r in prev):
 						self.client.remove_roles(member, r)
