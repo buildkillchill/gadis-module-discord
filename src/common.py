@@ -199,9 +199,6 @@ class User(BaseModule):
 			return
 		elif self.rank() < rank and not self.locked():
 			await self.send(self.getchannel("general"), "Congratulations for your promotion, <@{}>!".format(self.discordID()))
-			role = getrole(self.client, rank)
-			member = getmember(self.client, self)
-			await self.client.add_roles(member, role)
 		elif self.rank() > rank:
 			if reason == None:
 				await self.send(await self.discord(), "You have been demoted.")
@@ -209,18 +206,20 @@ class User(BaseModule):
 				await self.send(await self.discord(), reason)
 			if activate_lock:
 				self.lock()
-			member = getmember(self.client, self)
-			if rank > 1:
-				role = getrole(self.client, rank)
-				await self.client.replace_roles(member, role)
-				if self.donated() and rank != 3:
-					await self.client.add_roles(member, getrole(self.client, 3))
-			else:
-				for role in member.roles:
-					if not "everyone" in role.name:
-						await self.client.remove_roles(member, role)
 		else:
 			return
+		member = getmember(self.client, self)
+		roles = getroles(self.client, rank)
+		prev = getroles(self.client, self.previous_rank())
+		for role in member.roles:
+			if "everyone" in role.name: continue
+			for rank in Settings.Ranks:
+				for roleid in rank:
+					r = discord.utils.get(getserver().roles, id=str(roleid))
+					if role == r and not (r in roles or r in prev):
+						self.client.remove_roles(member, r)
+		await self.client.add_roles(member, *roles)
+		await self.client.add_roles(member, *prev)
 		self.db.run("UPDATE `linked` SET `rank`={} WHERE `id`={}".format(rank, self.id["id"]))
 		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx adduserid {} {}".format(self.steamID(), getgmodrank(rank)))
 	def infract(self, amt):
