@@ -21,7 +21,6 @@ class Module(common.BaseModule):
 		if not await common.BaseModule.on_message(self, message): return
 		msg = message.content.lower()
 		if re.search(r'((🐴\s?)\2{4,})', msg):
-			print(self.horses)
 			if not message.author.id in self.horses:
 				self.horses[message.author.id] = 0
 			if self.horses[message.author.id] < 5:
