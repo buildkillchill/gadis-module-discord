@@ -59,6 +59,6 @@ class Module(common.BaseModule):
 			if mod in self.mods:
 				c = True
 				v = self.mods[mod].__version__
-				n = self.advm[mod].__name__
+				n = self.mods[mod].__name__
 			em.add_field(name=n, value=ver.format(mod, v, b, c), inline=True)
 		await self.client.send_message(pmsg.channel, embed=em)
