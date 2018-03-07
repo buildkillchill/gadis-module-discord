@@ -58,7 +58,7 @@ class SpamTables():
 
 class Module(common.BaseModule):
 	__name__ = "Anti-Spam"
-	__version__ = "2.08"
+	__version__ = "2.10"
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client, True)
 		self.server = common.getserver(self.client)
@@ -122,6 +122,7 @@ class Module(common.BaseModule):
 				val = "FALSE"
 			sql = "INSERT INTO `antispam` (`id`,`ignore`) VALUES ({0},{1}) ON DUPLICATE KEY UPDATE `ignore`={1}".format(person.id, val)
 			self.db.run(sql)
+		await self.send(pmsg.channel, "Anti-Spam have been turned **{}** for mentioned people.".format(args[1].upper()))
 	async def ignore_channel(self, args, pmsg):
 		for channel in pmsg.channel_mentions:
 			val = "FALSE"
@@ -130,6 +131,7 @@ class Module(common.BaseModule):
 			elif args[1] == "off":
 				sql = "DELETE FROM `antispam_ignore` WHERE `id`={}".format(channel.id)
 			self.db.run(sql)
+		await self.send(pmsg.channel, "Anti-Spam have been turned **{}** for mentioned channels.".format(args[1].upper()))
 	async def on_message(self, message):
 		if not await common.BaseModule.on_message(self, message): return
 		if message.author == self.client.user or message.channel.is_private or len(self.db.query("SELECT * FROM `antispam` WHERE `id`={} AND `ignore`=TRUE".format(message.author.id))) > 0:
