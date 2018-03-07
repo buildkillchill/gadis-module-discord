@@ -47,7 +47,9 @@ class Module(common.BaseModule):
 	async def tsayc(self, args, pmsg=None):
 		msg = ""
 		for arg in args[1:]:
-			if arg.endswith("\""): break
+			if arg.endswith("\""):
+				msg = "{} {}".format(msg, arg)
+				break
 			msg = "{} {}".format(msg, arg)
-		print("ulx tsaycolor {} {}".format(msg, args[-1]))
-		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx tsaycolor \"{}\" {}".format(msg, args[-1]))
+		cmd = "ulx tsaycolor {} {}".format(msg, args[-1])
+		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], cmd)
