@@ -113,7 +113,7 @@ class Module(common.BaseModule):
 			await self.punish(message)
 	async def on_message(self, message):
 		if not await common.BaseModule.on_message(self, message): return
-		if message.author == self.client.user or message.channel.is_private:
+		if message.author == self.client.user or message.channel.is_private or len(self.db.query("SELECT * FROM `antispam` WHERE `id`={} AND `ignore`=TRUE")) > 0:
 			return
 		if message.channel.name in Settings.cancer_channels:
 			if len(message.mentions) > 0:
