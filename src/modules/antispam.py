@@ -68,9 +68,12 @@ class Module(common.BaseModule):
 		self.addcmd("ignorechan", self.ignore_channel, "Adds or removes channels from the anti-spam ignore list.", rank=9, usage="ignorechan on|off #channel1 .. #channelN")
 	async def unsilence(self):
 		while True:
+			print("                     current time is: {}".format(int(time.time())))
 			for person in self.server.members:
+				if self.silenced not in person.roles: continue
 				user = SpamTables(person.id)
-				if user.muted_until() <= int(time.time()) and self.silenced in person.roles:
+				print("{} will be unmuted at {}".format(person.id, user.muted_until()))
+				if user.muted_until() <= int(time.time()):
 					await self.client.remove_roles(person, self.silenced)
 			dt = datetime.datetime.now()
 			await asyncio.sleep((60-dt.second)*60)
