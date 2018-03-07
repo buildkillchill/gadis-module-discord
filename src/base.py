@@ -56,7 +56,7 @@ async def on_ready():
 	files = {}
 	for filename in os.listdir('/usr/local/share/bkc-services/modules'):
 		if (filename[0] != '_' and filename[0] != '.'):
-			mname = filename[:-4]
+			mname = os.path.splitext(filename)[0]
 			files[mname] = None
 	sys.path.append('/usr/local/share/bkc-services/modules')
 	for key in files.keys():
