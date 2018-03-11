@@ -229,7 +229,7 @@ class User(BaseModule):
 				print("Removing {} from {}".format(role.name, member.id))
 				await self.client.remove_roles(member, r)
 			else:
-				print(("{} not in ranked roles, so not removing.".format(role.name))
+				print("{} not in ranked roles, so not removing.".format(role.name))
 		await self.client.add_roles(member, *roles)
 		if self.rank() < rank:
 			await self.client.add_roles(member, *prev)
