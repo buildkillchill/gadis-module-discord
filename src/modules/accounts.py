@@ -1,5 +1,6 @@
 import asyncio
 import discord
+import re
 
 import common
 import mysql
@@ -15,6 +16,16 @@ class Module(common.BaseModule):
 		self.addcmd("+1inf", self.infract, "Add an infraction to user(s).", rank=10)
 		self.addcmd("+.5inf", self.infract, "Add a half-infraction to user(s).", rank=10)
 		self.addcmd("testinf", self.testinf, "Test infraction demotion message", rank=9)
+		self.addcmd("my-slogan-is", self.slogan, "Set your slogan", rank=7)
+		self.addcmd("set-title", self.title, "Set admin title", rank=9)
+	async def slogan(self, args, message):
+		slogan = " ".join(args[1:])
+		self.db.run("UPDATE `linked` SET `slogan`=%s WHERE `id`={}".format(message.author.id), [slogan])
+		await self.send(message.channel, "{}'s new slogan is: {}".format(message.author.mention, slogan))
+	async def title(self, args, message):
+		title = re.sub("(@.*#[0-9]{4}|\<@[0-9]+\>)", '', " ".join(args[1:]))
+		self.db.run("UPDATE `linked` SET `title`=%s WHERE `id`={}".format(message.mentions[0].id), [title])
+		await self.send(message.channel, "{}'s new title is: {}".format(message.mentions[0].mention, title))
 	async def link(self, args, message):
 		await self.send(message.author, "To finish the linking process, open this link in your browser: http://bkcservice.zenforic.com/link/?did={}".format(message.author.id))
 	async def infract(self, args, message):
