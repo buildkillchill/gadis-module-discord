@@ -218,7 +218,9 @@ class User(BaseModule):
 		roles = getroles(self.client, rank)
 		prev = getroles(self.client, self.previous_rank())
 		ranked_roles = []
-		for key, value in Settings.Ranks.items(): for rid in value: ranked_roles.append(rid)
+		for key, value in Settings.Ranks.items():
+			for rid in value:
+				ranked_roles.append(rid)
 		for role in member.roles:
 			if "everyone" in role.name: continue
 			if role in ranked_roles:
