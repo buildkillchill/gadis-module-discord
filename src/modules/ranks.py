@@ -108,7 +108,7 @@ class Module(common.BaseModule):
 			for m in pmsg.mentions:
 				p = common.User.from_discord_id(self.client, pmsg.author.id)
 				await self.edit(msg, "Demoting {}".format(m.mention))
-				p.setrank(p.previous_rank(), reason, lock)
+				await p.setrank(p.previous_rank(), reason, lock)
 			await self.edit(msg, "Demotion complete.")
 	async def approve(self, args, pmsg):
 		applicant = common.User.from_discord_id(self.client, args[1])
