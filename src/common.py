@@ -226,9 +226,13 @@ class User(BaseModule):
 			if int(role.id) in ranked_roles:
 				print("{} ({}) is a ranked role. Removing it from {}".format(role.id, role.name, member.id))
 				await self.client.remove_roles(member, role)
-		await self.client.add_roles(member, *roles)
+		for role in roles:
+			print("Adding {} ({}) to {}.".format(role.id, role.name, member.id))
+			await self.client.add_roles(member, role)
 		if self.rank() < rank:
-			await self.client.add_roles(member, *prev)
+			for role in prev:
+				print("Adding {} ({}) to {}.".format(role.id, role.name, member.id))
+				await self.client.add_roles(member, role)
 		self.db.run("UPDATE `linked` SET `rank`={} WHERE `id`={}".format(rank, self.id["id"]))
 		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx adduserid {} {}".format(self.steamID(), getgmodrank(rank)))
 	def infract(self, amt):
