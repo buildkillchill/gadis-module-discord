@@ -189,12 +189,16 @@ class User(BaseModule):
 		return self.getcol("previous_rank")
 	def donated(self):
 		return self.getcol("donated")
+	def bday(self):
+		return self.getcol("birthday")
 	def getcol(self, name):
 		return self.getfcol(name, "linked", self.id["id"])
 	def getfcol(self, name, table, id):
 		value = self.db.query("SELECT `{}` FROM `{}` WHERE `id`={}".format(name, table, id))
 		return value[0][0]
-	async def setrank(self, rank, reason=None, activate_lock=True):
+	def setbday(self, date):
+		self.db.run("UPDATE `linked` SET `birthday`=%s WHERE `id`={}".format(id), [date])
+	async def setrank(self, rank, *, reason=None, activate_lock=True):
 		if (self.rank() < rank and self.locked()) or self.rank() == rank: return
 
 		if self.rank() < rank:
@@ -215,10 +219,10 @@ class User(BaseModule):
 		prev = getroles(self.client, self.previous_rank())
 		for role in member.roles:
 			if "everyone" in role.name: continue
-			for rk in Settings.Ranks:
-				for roleid in Settings.Ranks[rk]:
+			for key, value in Settings.Ranks.items():
+				for roleid in value:
 					r = discord.utils.get(getserver(self.client).roles, id=str(roleid))
-					if role == r and not (r in roles or r in prev):
+					if role == r:
 						self.client.remove_roles(member, r)
 		await self.client.add_roles(member, *roles)
 		await self.client.add_roles(member, *prev)
