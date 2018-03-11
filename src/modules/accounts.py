@@ -23,8 +23,7 @@ class Module(common.BaseModule):
 		self.db.run("UPDATE `linked` SET `slogan`=%s WHERE `id`={}".format(message.author.id), [slogan])
 		await self.send(message.channel, "{}'s new slogan is: {}".format(message.author.mention, slogan))
 	async def title(self, args, message):
-		title = re.sub("(@.*#[0-9]{4}|\<@[0-9]+\>)", '', " ".join(args[1:]))
-		print(" ".join(args[1:]))
+		title = re.sub("(@.*#[0-9]{4}|\<@\!?[0-9]+\>)", '', " ".join(args[1:]))
 		self.db.run("UPDATE `linked` SET `title`=%s WHERE `id`={}".format(message.mentions[0].id), [title])
 		await self.send(message.channel, "{}'s new title is: {}".format(message.mentions[0].mention, title))
 	async def link(self, args, message):

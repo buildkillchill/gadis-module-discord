@@ -85,9 +85,9 @@ class Module(common.BaseModule):
 		lock = False
 		if args[1].lower() == "lock":
 			lock = True
-			reason = re.sub("(@.*#[0-9]{4}|\<@[0-9]+\>)", "", " ".join(args[2:]))
+			reason = re.sub("(@.*#[0-9]{4}|\<\!?@[0-9]+\>)", "", " ".join(args[2:]))
 		else:
-			reason = re.sub("(@.*#[0-9]{4}|\<@[0-9]+\>)", "", " ".join(args[1:]))
+			reason = re.sub("(@.*#[0-9]{4}|\<@\!?[0-9]+\>)", "", " ".join(args[1:]))
 		text = "Are you sure you want to demote "
 		first = True
 		for m in pmsg.mentions:
