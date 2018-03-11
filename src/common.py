@@ -221,14 +221,11 @@ class User(BaseModule):
 		for key, value in Settings.Ranks.items():
 			for rid in value:
 				ranked_roles.append(rid)
-				print("{} is a ranked role, adding it to list.".format(rid))
 		for role in member.roles:
 			if "everyone" in role.name: continue
 			if int(role.id) in ranked_roles:
 				print("{} ({}) is a ranked role. Removing it from {}".format(role.id, role.name, member.id))
 				await self.client.remove_roles(member, role)
-			else:
-				print("{} ({}) is NOT a ranked role. It will remain as a group on {}.".format(role.id, role.name, member.id))
 		await self.client.add_roles(member, *roles)
 		if self.rank() < rank:
 			await self.client.add_roles(member, *prev)
