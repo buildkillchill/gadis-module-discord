@@ -5,6 +5,7 @@ import random
 import valve
 import valve.rcon
 import time
+import re
 
 import common
 import mysql
