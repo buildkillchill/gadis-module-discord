@@ -198,7 +198,7 @@ class User(BaseModule):
 		return value[0][0]
 	def setbday(self, date):
 		self.db.run("UPDATE `linked` SET `birthday`=%s WHERE `id`={}".format(id), [date])
-	async def setrank(self, rank, *, reason=None, activate_lock=True):
+	async def setrank(self, rank, reason=None, activate_lock=True):
 		if (self.rank() < rank and self.locked()) or self.rank() == rank: return
 
 		if self.rank() < rank:
