@@ -221,12 +221,15 @@ class User(BaseModule):
 		for key, value in Settings.Ranks.items():
 			for rid in value:
 				ranked_roles.append(rid)
+		print("{} ranked role(s)".format(len(ranked_roles)))
 		for role in member.roles:
 			if "everyone" in role.name: continue
 			if role in ranked_roles:
+				print("Removing {} from {}".format(role.name, member.id))
 				await self.client.remove_roles(member, r)
 		await self.client.add_roles(member, *roles)
-		await self.client.add_roles(member, *prev)
+		if self.rank() < rank:
+			await self.client.add_roles(member, *prev)
 		self.db.run("UPDATE `linked` SET `rank`={} WHERE `id`={}".format(rank, self.id["id"]))
 		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx adduserid {} {}".format(self.steamID(), getgmodrank(rank)))
 	def infract(self, amt):
