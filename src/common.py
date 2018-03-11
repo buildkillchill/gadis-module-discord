@@ -224,7 +224,7 @@ class User(BaseModule):
 		for role in member.roles:
 			if "everyone" in role.name: continue
 			if role in ranked_roles:
-				self.client.remove_roles(member, r)
+				await self.client.remove_roles(member, r)
 		await self.client.add_roles(member, *roles)
 		await self.client.add_roles(member, *prev)
 		self.db.run("UPDATE `linked` SET `rank`={} WHERE `id`={}".format(rank, self.id["id"]))
