@@ -217,13 +217,12 @@ class User(BaseModule):
 		member = getmember(self.client, self)
 		roles = getroles(self.client, rank)
 		prev = getroles(self.client, self.previous_rank())
+		ranked_roles = []
+		for key, value in Settings.Ranks.items(): for rid in value: ranked_roles.append(rid)
 		for role in member.roles:
 			if "everyone" in role.name: continue
-			for key, value in Settings.Ranks.items():
-				for roleid in value:
-					r = discord.utils.get(getserver(self.client).roles, id=str(roleid))
-					if role == r:
-						self.client.remove_roles(member, r)
+			if role in ranked_roles:
+				self.client.remove_roles(member, r)
 		await self.client.add_roles(member, *roles)
 		await self.client.add_roles(member, *prev)
 		self.db.run("UPDATE `linked` SET `rank`={} WHERE `id`={}".format(rank, self.id["id"]))
