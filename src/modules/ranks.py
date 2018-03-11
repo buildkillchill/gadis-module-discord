@@ -102,7 +102,7 @@ class Module(common.BaseModule):
 				text = "{}, {}".format(text, m.mention)
 		text = "{}?".format(text)
 		await self.send(pmsg.channel, text)
-		reply = await self.getreply(60, pmsg.author, pmsg.channel).contents
+		reply = (await self.getreply(60, pmsg.author, pmsg.channel)).contents
 		if reply.lower() == "y" or reply.lower() == "yes":
 			msg = await self.send(pmsg.channel, "Plugging potato into battery terminals...")
 			for m in pmsg.mentions:
