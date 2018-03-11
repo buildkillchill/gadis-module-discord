@@ -224,7 +224,7 @@ class User(BaseModule):
 				print("{} is a ranked role, adding it to list.".format(rid))
 		for role in member.roles:
 			if "everyone" in role.name: continue
-			if role.id in ranked_roles:
+			if int(role.id) in ranked_roles:
 				print("{} is a ranked role. Removing it from {}".format(role.id, member.id))
 				await self.client.remove_roles(member, r)
 			else:
