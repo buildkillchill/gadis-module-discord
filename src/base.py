@@ -115,19 +115,17 @@ async def on_message(message):
 		t = int(time.time())
 		show_help = False
 		show_modhelp = None
+		args = common.strip_mentions(message.content.lower()).split(" ")
 		if message.channel.is_private:
-			args = message.content.lower().split(" ")
 			if args[0] == "help":
 				show_help = True
 				if len(args) > 1:
 					show_modhelp = args[1:]
-		else:
-			if client.user in message.mentions:
-				args = common.strip_mentions(message.content.lower()).split(" ")
-				if args[0] == "help":
-					show_help = True
-					if len(args) > 1:
-						show_modhelp = args[1:]
+		elif client.user in message.mentions:
+			if args[0] == "help":
+				show_help = True
+				if len(args) > 1:
+					show_modhelp = args[1:]
 		handled = show_help
 		if handled and show_modhelp == None:
 			l.append("Showing full help module")
