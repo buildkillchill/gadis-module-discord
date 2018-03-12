@@ -75,7 +75,6 @@ async def on_ready():
 		if init.bind_on_message():
 			l.append("Binding ").append(init.__name__).append(" to on_message()").log()
 			advanced[key] = init
-		l.log()
 	diff = int(time.time()) - ti
 	l.append("All modules loaded").took(diff).log()
 	help.set(True, client, modules)
