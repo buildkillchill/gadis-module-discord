@@ -35,7 +35,7 @@ class logger():
 	def nlt(self):
 		return self.nl().tab()
 	def took(self, time):
-		return self.nlt().append("Took ").append(time).append("s")
+		return self.append(", Took ").append(time).append("s")
 	def log(self, entry=None):
 		if entry == None:
 			self.func(self.entry)
@@ -65,23 +65,16 @@ async def on_ready():
 		mod = __import__(key)
 		cls = getattr(mod, "Module")
 		init = cls(common.getmodulestatus(key), client)
-		l.append("Discovered module: ").append(init.__name__).nlt().append("Status: ")
+		l.append("Discovered module: ").append(init.__name__).log()
 		if common.getmodulestatus(key):
-			l.append("Enabled")
+			l.append("Initializing ").append(init.__name__).log()
 		else:
-			l.append("Disabled")
-		l.nlt().append("Commands: ")
+			l.append(init.__name__).append(" is disabled.").log()
 		if init.has_commands():
-			l.append("Yes")
 			modules[key] = init
-		else:
-			l.append("No")
-		l.nlt().append("Bound: ")
 		if init.bind_on_message():
-			l.append("Yes")
+			l.append("Binding ").append(init.__name__).append(" to on_message()").log()
 			advanced[key] = init
-		else:
-			l.append("No")
 		l.log()
 	diff = int(time.time()) - ti
 	l.append("All modules loaded").took(diff).log()
@@ -94,26 +87,52 @@ async def on_message(message):
 	handled = False
 	for n in modules:
 		module = modules[n]
-		if module.has_command(cmd) and module.permissible(cmd, common.getrank(message.author.id), message.channel.is_private):
-			l.append("'").append(cmd).append("' is handled by the ").append(n).append(" module.")
+		if module.has_command(cmd):
+			l.append("Command detected. '").append(cmd).append("' is registered to ").append(n).log()
+		else:
+			continue
+
+		if module.permissible(cmd, common.getrank(message.author.id), message.channel.is_private):
+			l.append("Creating task and inserting into loop")
 			t = int(time.time())
 			handled = module.receive(cmd, args, message)
 			secs = int(time.time()) - t
-			l.took(secs).nlt().append("Status: ")
+			l.took(secs).log()
 			if handled:
-				l.append("Success")
+				l.append("Task registered successfully")
 			else:
-				l.append("Failure")
+				l.append("WARNING: Task failed to register")
 			l.log()
 			break
+		else:
+			l.append("WARNING: ").append(message.author.id).append(" attempted to use a command in ")
+			if message.channel.is_private:
+				l.append("a chat by the name of ")
+			else:
+				l.append("#")
+			l.append(message.channel.name).append(", but did not have the rank or permissions to do so.")
+
 	if not handled:
-		if message.channel.is_private and message.content.lower() == "help":
-			handled = True
+		show_help = False
+		show_modhelp = None
+		if message.channel.is_private:
+			args = message.content.lower().split(" ")
+			if args[0] == "help":
+				show_help = True
+				if len(args) > 1:
+					show_modhelp = args[1:]
+		else:
+			if client.user in message.mentions:
+				args = common.strip_mentions(message.content.lower()).split(" ")
+				if args[0] == "help":
+					show_help = True
+					if len(args) > 1:
+						show_modhelp = args[1:]
+		handled = show_help
+		if handled and show_modhelp == None:
 			await help.show(message.channel)
-		elif not message.channel.is_private:
-			if (message.content.lower().startswith("help") or message.content.lower().endswith("help")) and client.user in message.mentions:
-				handled = True
-				await help.show(message.channel)
+		elif handled:
+			await help.show_modules(message.channel, show_modhelp)
 	for n in advanced:
 		await advanced[n].on_message(message)
 
