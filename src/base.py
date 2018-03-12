@@ -112,6 +112,7 @@ async def on_message(message):
 			l.append(message.channel.name).append(", but did not have the rank or permissions to do so.")
 
 	if not handled:
+		t = int(time.time())
 		show_help = False
 		show_modhelp = None
 		if message.channel.is_private:
@@ -129,9 +130,13 @@ async def on_message(message):
 						show_modhelp = args[1:]
 		handled = show_help
 		if handled and show_modhelp == None:
+			l.append("Showing full help module")
 			await help.show(message.channel)
 		elif handled:
+			l.append("Showing help for select module or modules")
 			await help.show_modules(message.channel, show_modhelp)
+		diff = int(time.time()) - t
+		l.took(diff).log()
 	for n in advanced:
 		await advanced[n].on_message(message)
 
