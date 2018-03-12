@@ -2,10 +2,7 @@ import datetime
 import asyncio
 import discord
 import random
-import valve
-import valve.rcon
 import time
-import re
 
 import common
 import mysql
@@ -85,9 +82,9 @@ class Module(common.BaseModule):
 		lock = False
 		if args[1].lower() == "lock":
 			lock = True
-			reason = re.sub("(@.*#[0-9]{4}|\<\!?@[0-9]+\>)", "", " ".join(args[2:]))
+			reason = common.strip_mentions(" ".join(args[2:]))
 		else:
-			reason = re.sub("(@.*#[0-9]{4}|\<@\!?[0-9]+\>)", "", " ".join(args[1:]))
+			reason = common.strip_mentions(" ".join(args[1:]))
 		text = "Are you sure you want to demote "
 		first = True
 		for m in pmsg.mentions:
@@ -127,7 +124,7 @@ class Module(common.BaseModule):
 		for role in member.roles:
 			if str(role) != "everyone" and str(role) != "@everyone":
 				await self.client.remove_role(member, role)
-		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx removeuserid {}".format(user.steamID()))
+		common.runrcon("ulx removeuserid {}".format(user.steamID()))
 	async def apply(self, args, pmsg):
 		usr = common.User.from_discord_id(self.client, pmsg.author.id)
 		taken = len(self.db.query("SELECT `id` FROM `linked` WHERE `rank` >= 7"))

@@ -1,7 +1,5 @@
 import asyncio
 import discord
-import valve
-import valve.rcon
 
 import common
 
@@ -39,10 +37,10 @@ class Module(common.BaseModule):
 			await self.send(self.getchannel("admin"), "<@&312417207911186433>: {} is filing a _confidential_ report against {} for '{}'".format(pmsg.author.mention, perp, reason.content))
 			await self.send(pmsg.channel, "Thank you for reporting the incident, {}. I have filed it to the Admins.".format(pmsg.author.mention))
 	async def say(self, args, pmsg=None):
-		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "say {}".format(" ".join(args[1:])))
+		common.runrcon("say {}".format(" ".join(args[1:])))
 	async def tsay(self, args, pmsg=None):
-		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx tsay \"{}\"".format(" ".join(args[1:])))
+		common.runrcon("ulx tsay \"{}\"".format(" ".join(args[1:])))
 	async def csay(self, args, pmsg=None):
-		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx csay \"{}\"".format(" ".join(args[1:])))
+		common.runrcon("ulx csay \"{}\"".format(" ".join(args[1:])))
 	async def tsayc(self, args, pmsg=None):
-		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx tsaycolor {}".format(" ".join(args[1:])))
+		common.runrcon("ulx tsaycolor {}".format(" ".join(args[1:])))

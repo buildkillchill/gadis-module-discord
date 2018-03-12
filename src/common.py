@@ -2,9 +2,16 @@ import asyncio
 import discord
 import valve.steam.id
 import valve.rcon
+import re
 
 import mysql
 from settings import Settings
+
+def strip_mentions(text):
+	return re.sub("(@.*#[0-9]{4}|\<\!?@[0-9]+\>)", "", text)
+
+def runrcon(cmd):
+	 valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], cmd)
 
 def getmodulestatus(name):
 	db = mysql.default()
@@ -234,7 +241,7 @@ class User(BaseModule):
 				print("Adding {} ({}) to {}.".format(role.id, role.name, member.id))
 				await self.client.add_roles(member, role)
 		self.db.run("UPDATE `linked` SET `rank`={} WHERE `id`={}".format(rank, self.id["id"]))
-		valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], "ulx adduserid {} {}".format(self.steamID(), getgmodrank(rank)))
+		runrcon("ulx adduserid {} {}".format(self.steamID(), getgmodrank(rank)))
 	def infract(self, amt):
 		self.db.run("UPDATE `linked` SET `infractions`=`infractions`+{} WHERE `id`={}".format(amt, self.id["id"]))
 	@staticmethod
