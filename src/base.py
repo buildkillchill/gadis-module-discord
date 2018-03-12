@@ -135,9 +135,7 @@ async def on_message(message):
 	for n in advanced:
 		await advanced[n].on_message(message)
 
-l.append("Starting BKC Services").nlt()
-l.append("Version:  ").append(Settings.Version["code"]).nlt()
-l.append("Codename: ").append(Settings.Version["name"]).log()
+l.append("Starting BKC Services - ").append(Settings.Version["name"]).append(" (").append(Settings.Version["code"]).append(")").log()
 t = int(time.time())
 remote_handler = Remote(client)
 remote = client.loop.create_server(lambda: remote_handler, Settings.Remote["host"], Settings.Remote["port"])
