@@ -1,5 +1,6 @@
 import discord
 import asyncio
+import logging
 import time
 
 import os
@@ -145,5 +146,10 @@ remote_handler = Remote(client)
 remote = client.loop.create_server(lambda: remote_handler, Settings.Remote["host"], Settings.Remote["port"])
 diff = int(time.time()) - t
 l.append("Remote Command Thread Started").took(diff).log()
+l.append("Sending discord errors to file").log()
+log = logging.getLogger('discord')
+handler = logging.FileHandler(filename='/var/log/bkcs-discord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+log.addHandler(handler)
 t = int(time.time())
 client.run("NDAyNjQxMTg1MDQwMTA1NDg1.DUyHfQ.FBIo0DYfGHc2ZZ840UgAof9XB4U")
