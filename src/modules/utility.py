@@ -25,7 +25,7 @@ class Module(common.BaseModule):
 			self.logiter(pmsg.channel, limit=nargs[0], mentions=pmsg.mentions)
 		else:
 			await self.send(pmsg.channel, "Too many arguments")
-	async def logiter(self, channel, *, limit=None, mentions=None)
+	async def logiter(self, channel, *, limit=None, mentions=None):
 		if limit == None:
 			while True:
 				counter = 0
