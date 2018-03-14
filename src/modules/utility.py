@@ -7,15 +7,55 @@ from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Utility"
-	__version__ = "1.05"
+	__version__ = "1.07"
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client)
 		self.addcmd("roles", self.roles, "View a list of roles with corrisponding IDs")
 		self.addcmd("report", self.report, "Report a someone", usage="`report USER`\nWhen prompted, give reason for report.")
+		self.addcmd("%clear", self.clear, "Clear channel with conditions", rank=8)
 		self.addcmd("gmod.say", self.say, "Say something through console", private=True, rank=9)
 		self.addcmd("gmod.tsay", self.tsay, "Say something through console", private=True, rank=9)
 		self.addcmd("gmod.csay", self.csay, "Say something through console", private=True, rank=9)
 		self.addcmd("gmod.tsayc", self.tsayc, "Say something through console", private=True, rank=9)
+	async def clear(self, args, pmsg):
+		nargs = common.strip_mentions(" ".join(args[1:])).split(" ")
+		if len(nargs) == 0:
+			self.logiter(pmsg.channel, mentions=pmsg.mentions)
+		elif len(nargs) == 1:
+			self.logiter(pmsg.channel, limit=nargs[0], mentions=pmsg.mentions)
+		else:
+			await self.send(pmsg.channel, "Too many arguments")
+	async def logiter(self, channel, *, limit=None, mentions=None)
+		if limit == None:
+			while True:
+				counter = 0
+				async for message in self.client.logs_from(channel, limit=500):
+					counter += 1
+					if self.check_author(message, mentions):
+						await self.client.delete_message(message)
+				if counter < 500:
+					break
+		else:
+			try:
+				max = int(limit)
+				while max > 500:
+					counter = 0
+					async for message in self.client.logs_from(channel, limit=500):
+						counter += 1
+						if self.check_author(message, mentions):
+							await self.client.delete_message(message)
+					max -= counter
+					if counter < 500:
+						break
+				async for message in self.client.logs_from(channel, limit=max):
+					if self.check_author(message, mentions):
+						await self.client.delete_message(message)
+			except ValueError:
+				await self.send(channel, "{} is not a valid number".format(limit))
+	def check_author(self, message, mentions):
+		if mentions == None or len(mentions) == 0:
+			return True
+		return message.author in mentions
 	async def roles(self, args, pmsg):
 		for server in self.client.servers:
 			roleids = None
