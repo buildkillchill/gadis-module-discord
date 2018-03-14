@@ -20,9 +20,9 @@ class Module(common.BaseModule):
 	async def clear(self, args, pmsg):
 		nargs = common.strip_mentions(" ".join(args[1:])).split(" ")
 		if len(nargs) == 0:
-			self.logiter(pmsg.channel, mentions=pmsg.mentions)
+			await self.logiter(pmsg.channel, mentions=pmsg.mentions)
 		elif len(nargs) == 1:
-			self.logiter(pmsg.channel, limit=nargs[0], mentions=pmsg.mentions)
+			await self.logiter(pmsg.channel, limit=nargs[0], mentions=pmsg.mentions)
 		else:
 			await self.send(pmsg.channel, "Too many arguments")
 	async def logiter(self, channel, *, limit=None, mentions=None):
