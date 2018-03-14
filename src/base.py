@@ -23,6 +23,11 @@ t = 0
 diff = 0
 logger = logging.getLogger("bkc-services")
 logger.setLevel(logging.INFO)
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.INFO)
+formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 class logassist():
 	def __init__(self, func):
