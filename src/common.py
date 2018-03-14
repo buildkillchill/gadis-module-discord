@@ -2,6 +2,7 @@ import asyncio
 import discord
 import valve.steam.id
 import valve.rcon
+import logging
 import re
 
 import mysql
