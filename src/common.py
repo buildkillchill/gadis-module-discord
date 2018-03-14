@@ -62,6 +62,7 @@ class BaseModule():
 		self.usage = {}
 		self.private = []
 		self.db = mysql.default()
+		self.logger = logging.getLogger("bkc-services.modules")
 	async def on_message(self, message):
 		if self.enabled and not message.author == self.client.user:
 			return True

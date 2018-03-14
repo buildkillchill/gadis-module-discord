@@ -21,8 +21,10 @@ help = Help(True, client, modules)
 mm = ModManager(True, client, modules, advanced)
 t = 0
 diff = 0
+logger = logging.getLogger("bkc-services")
+logger.setLevel(logging.INFO)
 
-class logger():
+class logassist():
 	def __init__(self, func):
 		self.func = func
 		self.entry = ""
@@ -44,9 +46,9 @@ class logger():
 		else:
 			self.func(entry)
 def log(msg):
-	print("[{}] {}".format(int(time.time()), msg))
+	logger.info(msg)
 
-l = logger(log)
+l = logassist(log)
 
 @client.event
 async def on_ready():
