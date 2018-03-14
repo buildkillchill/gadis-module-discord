@@ -134,7 +134,7 @@ async def on_message(message):
 		elif handled:
 			l.append("Showing help for selected module or modules")
 			await help.show_modules(message.channel, show_modhelp)
-			diff = int(time.time()) - t
+		diff = int(time.time()) - t
 		if handled: l.took(diff).log()
 	for n in advanced:
 		await advanced[n].on_message(message)
