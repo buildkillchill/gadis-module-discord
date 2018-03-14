@@ -19,6 +19,7 @@ class Module(common.BaseModule):
 		self.addcmd("gmod.tsayc", self.tsayc, "Say something through console", private=True, rank=9)
 	async def clear(self, args, pmsg):
 		nargs = common.strip_mentions(" ".join(args[1:])).split(" ")
+		print(nargs)
 		if len(nargs) == 0:
 			await self.logiter(pmsg.channel, mentions=pmsg.mentions)
 		elif len(nargs) == 1:
