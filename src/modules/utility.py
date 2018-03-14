@@ -20,7 +20,7 @@ class Module(common.BaseModule):
 	async def clear(self, args, pmsg):
 		nargs = common.strip_mentions(" ".join(args[1:])).split(" ")
 		print(nargs)
-		if len(nargs) == 0:
+		if len(nargs) == 0 or nargs[0] == "":
 			await self.logiter(pmsg.channel, mentions=pmsg.mentions)
 		elif len(nargs) == 1:
 			await self.logiter(pmsg.channel, limit=nargs[0], mentions=pmsg.mentions)
