@@ -19,7 +19,6 @@ class Module(common.BaseModule):
 		self.addcmd("gmod.tsayc", self.tsayc, "Say something through console", private=True, rank=9)
 	async def clear(self, args, pmsg):
 		nargs = common.strip_mentions(" ".join(args[1:])).split(" ")
-		print(nargs)
 		if len(nargs) == 0 or nargs[0] == "":
 			await self.logiter(pmsg.channel, mentions=pmsg.mentions)
 		elif len(nargs) == 1:
@@ -34,8 +33,10 @@ class Module(common.BaseModule):
 					counter += 1
 					if self.check_author(message, mentions):
 						await self.client.delete_message(message)
+						await asyncio.sleep(0.5)
 				if counter < 500:
 					break
+				await asyncio.sleep(15)
 		else:
 			try:
 				max = int(limit)
@@ -45,12 +46,15 @@ class Module(common.BaseModule):
 						counter += 1
 						if self.check_author(message, mentions):
 							await self.client.delete_message(message)
+							await asyncio.sleep(0.5)
 					max -= counter
 					if counter < 500:
 						break
+					await asyncio.sleep(15)
 				async for message in self.client.logs_from(channel, limit=max):
 					if self.check_author(message, mentions):
 						await self.client.delete_message(message)
+						await asyncio.sleep(0.5)
 			except ValueError:
 				await self.send(channel, "{} is not a valid number".format(limit))
 	def check_author(self, message, mentions):
