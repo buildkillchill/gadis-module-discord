@@ -21,44 +21,18 @@ help = Help(True, client, modules)
 mm = ModManager(True, client, modules, advanced)
 t = 0
 diff = 0
-logger = logging.getLogger("bkc-services")
+logger = logging.getLogger("BKCS")
 logger.setLevel(logging.INFO)
 ch = logging.StreamHandler(sys.stdout)
 ch.setLevel(logging.INFO)
-formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(message)s')
+formatter = logging.Formatter('[%(asctime)s][%(levelname)s][%(name)s] %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
-
-class logassist():
-	def __init__(self, func):
-		self.func = func
-		self.entry = ""
-	def append(self, text):
-		self.entry = "{}{}".format(self.entry, text)
-		return self
-	def nl(self):
-		return self.append("\n")
-	def tab(self):
-		return self.append("\t\t")
-	def nlt(self):
-		return self.nl().tab()
-	def took(self, time):
-		return self.append(", Took ").append(time).append("s")
-	def log(self, entry=None):
-		if entry == None:
-			self.func(self.entry)
-			self.entry = ""
-		else:
-			self.func(entry)
-def log(msg):
-	logger.info(msg)
-
-l = logassist(log)
 
 @client.event
 async def on_ready():
 	diff = int(time.time()) - t
-	l.append("Logged in with ID ").append(client.user.id).took(diff).log()
+	logger.info("Logged in with ID {} ({}s)".format(client.user.id, diff))
 	modules["modules"] = mm
 	ti = int(time.time())
 	files = {}
@@ -73,18 +47,18 @@ async def on_ready():
 		mod = __import__(key)
 		cls = getattr(mod, "Module")
 		init = cls(common.getmodulestatus(key), client)
-		l.append("Discovered module: ").append(init.__name__).log()
+		logger.info("Discovered module: {}".format(init.__name__))
 		if common.getmodulestatus(key):
-			l.append("Initializing ").append(init.__name__).log()
+			logger.info("Initializing {}".format(init.__name__))
 		else:
-			l.append(init.__name__).append(" is disabled.").log()
+			logger.info("{} is disabled.".format(init.__name__))
 		if init.has_commands():
 			modules[key] = init
 		if init.bind_on_message():
-			l.append("Binding ").append(init.__name__).append(" to on_message()").log()
+			logger.info("Binding {} to on_message()".format(init.__name__))
 			advanced[key] = init
 	diff = int(time.time()) - ti
-	l.append("All modules loaded").took(diff).log()
+	logger.info("No more modules. ({}s)".format(diff))
 	help.set(True, client, modules)
 
 @client.event
@@ -95,29 +69,27 @@ async def on_message(message):
 	for n in modules:
 		module = modules[n]
 		if module.has_command(cmd):
-			l.append("Command detected. '").append(cmd).append("' is registered to ").append(n).log()
+			logger.info("Command detected: '{}' is registered to {}".format(cmd, n))
 		else:
 			continue
 
 		if module.permissible(cmd, common.getrank(message.author.id), message.channel.is_private):
-			l.append("Creating task and inserting into loop")
 			t = int(time.time())
 			handled = module.receive(cmd, args, message)
 			secs = int(time.time()) - t
-			l.took(secs).log()
+			logger.info("Created task and inserted into loop ({}s)".format(secs))
 			if handled:
-				l.append("Task registered successfully")
+				logger.info("Task registered successfully")
 			else:
-				l.append("WARNING: Task failed to register")
-			l.log()
+				logger.warn("Task failed to register")
 			break
 		else:
-			l.append("WARNING: ").append(message.author.id).append(" attempted to use a command in ")
+			s = "{} attempted to use a command in ".format(message.author.id)
 			if message.channel.is_private:
-				l.append("a chat by the name of ")
+				s = "{}a chat by the name of ".format(s)
 			else:
-				l.append("#")
-			l.append(message.channel.name).append(", but did not have the rank or permissions to do so.")
+				s = "{}#".format(s)
+			logger.warn("{}{}, but did not have the rank or permissions to do so.".format(s, message.channel.name))
 
 	if not handled:
 		t = int(time.time())
@@ -134,26 +106,27 @@ async def on_message(message):
 				show_help = True
 				if len(args) > 1:
 					show_modhelp = args[1:]
-					l.append("Selected modules: ").append(", ".join(args[1:])).log()
+					logger.debug("Selected modules: {}".format(", ".join(args[1:])))
 		handled = show_help
+		s = "Displayed help for {} module{} ("
 		if handled and show_modhelp == None:
-			l.append("Showing full help module")
+			s = s.format("all", "s")
 			await help.show(message.channel)
 		elif handled:
-			l.append("Showing help for selected module or modules")
+			s.format("selected", " or modules")
 			await help.show_modules(message.channel, show_modhelp)
 		diff = int(time.time()) - t
-		if handled: l.took(diff).log()
+		if handled: logger.info("{}{}s)".format(s, diff))
 	for n in advanced:
 		await advanced[n].on_message(message)
 
-l.append("Starting BKC Services - ").append(Settings.Version["name"]).append(" (").append(Settings.Version["code"]).append(")").log()
+logger.info("Starting BKC Services - {} ({})".format(Settings.Version["name"], Settings.Version["code"]))
 t = int(time.time())
 remote_handler = Remote(client)
 remote = client.loop.create_server(lambda: remote_handler, Settings.Remote["host"], Settings.Remote["port"])
 diff = int(time.time()) - t
-l.append("Remote Command Thread Started").took(diff).log()
-l.append("Sending discord errors to file").log()
+logger.info("Remote Command Thread Started ({}s)".format(diff))
+logger.info("Sending discord errors to file")
 log = logging.getLogger('discord')
 handler = logging.FileHandler(filename='/var/log/bkcs-discord.log', encoding='utf-8', mode='w')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
