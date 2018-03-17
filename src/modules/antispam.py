@@ -117,15 +117,13 @@ class Module(common.BaseModule):
 	async def ignore(self, args, pmsg):
 		for person in pmsg.mentions:
 			val = "FALSE"
-			cos = "ON"
 			if args[1] == "on":
-				cos = "OFF"
 				val = "TRUE"
 			elif args[1] == "off":
 				val = "FALSE"
 			sql = "INSERT INTO `antispam` (`id`,`ignore`) VALUES ({0},{1}) ON DUPLICATE KEY UPDATE `ignore`={1}".format(person.id, val)
 			self.db.run(sql)
-		await self.send(pmsg.channel, "Anti-Spam has been turned **{}** for mentioned people.".format(cos))
+		await self.send(pmsg.channel, "Anti-Spam **Ignore** has been turned **{}** for mentioned people.".format(args[1].upper()))
 	async def ignore_channel(self, args, pmsg):
 		for channel in pmsg.channel_mentions:
 			val = "FALSE"
