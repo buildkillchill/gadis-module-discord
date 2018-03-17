@@ -7,7 +7,7 @@ from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Utility"
-	__version__ = "1.07"
+	__version__ = "1.08"
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client)
 		self.addcmd("roles", self.roles, "View a list of roles with corrisponding IDs")
@@ -17,6 +17,10 @@ class Module(common.BaseModule):
 		self.addcmd("gmod.tsay", self.tsay, "Say something through console", private=True, rank=9)
 		self.addcmd("gmod.csay", self.csay, "Say something through console", private=True, rank=9)
 		self.addcmd("gmod.tsayc", self.tsayc, "Say something through console", private=True, rank=9)
+		self.addcmd("inv", self.repeats, "Show the invite link")
+		self.addcmd("rtfa", self.repeats, "Read The Announcements", rank=7)
+	async def repeats(self, args, pmsg):
+		self.send(pmsg.channel, Settings.Repeats[args[0].lower()])
 	async def clear(self, args, pmsg):
 		nargs = common.strip_mentions(" ".join(args[1:])).split(" ")
 		if len(nargs) == 0 or nargs[0] == "":
