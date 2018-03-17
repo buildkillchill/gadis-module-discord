@@ -121,10 +121,10 @@ class Module(common.BaseModule):
 			return
 		if nargs[0] == "" or nargs[0] == "on":
 			val = "TRUE"
-			ret = true
+			ret = True
 		elif nargs[0] == "off":
 			val = "FALSE"
-			ret = false
+			ret = False
 		else:
 			await self.send(pmsg.channel, "Uh... I only support on or off.")
 			return
