@@ -20,7 +20,7 @@ class Module(common.BaseModule):
 		self.addcmd("inv", self.repeats, "Show the invite link")
 		self.addcmd("rtfa", self.repeats, "Read The Announcements", rank=7)
 	async def repeats(self, args, pmsg):
-		self.send(pmsg.channel, Settings.Repeats[args[0].lower()])
+		await self.send(pmsg.channel, Settings.Repeats[args[0].lower()])
 	async def clear(self, args, pmsg):
 		nargs = common.strip_mentions(" ".join(args[1:])).split(" ")
 		if len(nargs) == 0 or nargs[0] == "":
