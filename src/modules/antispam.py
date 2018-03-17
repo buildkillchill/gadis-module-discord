@@ -115,15 +115,20 @@ class Module(common.BaseModule):
 		if match:
 			await self.punish(message)
 	async def ignore(self, args, pmsg):
-		for person in pmsg.mentions:
+		nargs = common.strip_mentions(" ".join(args[1:])).split(" ")
+		if len(nargs) > 1:
+			await self.send(pmsg.channel, "Uh... that's a few too many arguments mate.")
+			return
+		if nargs[0] == "" or nargs[0] == "on":
+			val = "TRUE"
+			ret = "ON"
+		elif nargs[0] == "off":
 			val = "FALSE"
-			if args[1] == "on":
-				val = "TRUE"
-			elif args[1] == "off":
-				val = "FALSE"
+			ret = "OFF"
+		for person in pmsg.mentions:
 			sql = "INSERT INTO `antispam` (`id`,`ignore`) VALUES ({0},{1}) ON DUPLICATE KEY UPDATE `ignore`={1}".format(person.id, val)
 			self.db.run(sql)
-		await self.send(pmsg.channel, "Anti-Spam **Ignore** has been turned **{}** for mentioned people.".format(args[1].upper()))
+		await self.send(pmsg.channel, "Anti-Spam **Ignore** has been turned **{}** for mentioned people.".format(ret))
 	async def ignore_channel(self, args, pmsg):
 		for channel in pmsg.channel_mentions:
 			val = "FALSE"
