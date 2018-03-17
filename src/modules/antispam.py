@@ -121,14 +121,17 @@ class Module(common.BaseModule):
 			return
 		if nargs[0] == "" or nargs[0] == "on":
 			val = "TRUE"
-			ret = "ON"
+			ret = true
 		elif nargs[0] == "off":
 			val = "FALSE"
-			ret = "OFF"
+			ret = false
+		else:
+			await self.send(pmsg.channel, "Uh... I only support on or off.")
+			return
 		for person in pmsg.mentions:
 			sql = "INSERT INTO `antispam` (`id`,`ignore`) VALUES ({0},{1}) ON DUPLICATE KEY UPDATE `ignore`={1}".format(person.id, val)
 			self.db.run(sql)
-		await self.send(pmsg.channel, "Anti-Spam **Ignore** has been turned **{}** for mentioned people.".format(ret))
+		await self.send(pmsg.channel, "Anti-Spam scanning is now set to **{}** messages from the mentioned people.".format("IGNORE" if ret else "SCAN"))
 	async def ignore_channel(self, args, pmsg):
 		for channel in pmsg.channel_mentions:
 			val = "FALSE"
