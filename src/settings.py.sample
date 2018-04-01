@@ -1,0 +1,50 @@
+class Settings():
+	ServerID = # your discord server id
+#   did = Discord ID
+	Version = {}
+	Version["code"] = "0.1"
+	Version["name"] = "CodeName"
+
+	People = {}
+	People["creator"] = # did of creator
+	People["owner"] = # did of owner
+
+	Admin = {}
+	Admin["positions"] = # open admin positions
+	Admin["max_apps"]   = # max applicants
+	Admin["req_hours"]  = # hours required to apply
+
+	Remote = {}
+	Remote["host"] = # host for RCP
+	Remote["port"] = # port for above
+
+	MySQL = {}
+	MySQL["host"] = # sql host
+	MySQL["port"] = # sql port
+	MySQL["data"] = "table name"
+	MySQL["user"] = "user"
+	MySQL["pass"] = "pass"
+
+	RCON = {}
+	RCON["host"] = "rcon host"
+	RCON["port"] = # rcon port
+	RCON["pass"] = "pass"
+
+	Ranks = {}
+	Ranks[1]  = ()
+	Ranks[2]  = (#did of rank,)
+	#etc
+
+	RankName = {}
+	RankName[1]  = "Anyone"
+	RankName[2]  = "Operator or higher"
+	#etc
+
+	MaxInfractions = {}
+	MaxInfractions[1]  = 5
+	MaxInfractions[2]  = 2
+	#etc
+
+	Repeats = {}
+	Repeats["inv"] = "discord invite url"
+	Repeats["rtfa"] = "Admins don't like to repeat themselves. Try looking in #yourannouncementschannel and #yourruleschannel before asking a question."
