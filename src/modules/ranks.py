@@ -11,7 +11,7 @@ from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Rank Manager"
-	__version__ = "3.06"
+	__version__ = "3.07"
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client)
 		self.addcmd("apply", self.apply, "Apply for admin")
@@ -24,10 +24,12 @@ class Module(common.BaseModule):
 		self.addcmd("demote", self.demote, "Demote person", rank=10)
 		self.addcmd("updateranks", self.update, "Force update ranks", rank=9)
 		self.addcmd("testsetrank", self.testsr, "Test User.setrank", rank=9)
+		self.logger = logging.getLogger("BKCS.Mods.Ranks")
 		client.loop.create_task(self.auto_update())
 	def char_fix(self, s):
 		return s.encode('ascii', 'ignore').decode('ascii')
 	async def testsr(self, args, pmsg):
+		self.logger.debug("BEGIN TEST: User.setrank")
 		user = common.User.from_discord_id(self.client, pmsg.mentions[0].id)
 		rank = user.rank()
 		prev = user.previous_rank()
@@ -41,6 +43,7 @@ class Module(common.BaseModule):
 		await self.send(pmsg.channel, "Restoring {}'s rank to {} at {}".format(pmsg.mentions[0].mention, rank, t))
 		await user.setrank(rank)
 		await self.send(pmsg.channel, "Done. Took {}s".format(int(time.time())-t))
+		self.logger.debug("TEST COMPLETED: User.setrank ({}s)".format(int(time.time())-t))
 	async def update(self, args=None, pmsg=None):
 		server = common.getserver(self.client)
 		for member in server.members:
@@ -54,11 +57,14 @@ class Module(common.BaseModule):
 			if donor in roles and not donor in member.roles:
 				await self.send(self.getchannel("general"), "Thank you, {}, for donating. It's donations, like yours, that keep this server running.".format(member.id))
 			for role in roles:
-				if role == donor or role in member.roles: continue
+				if role in member.roles: continue
+				self.logger.info("Ranks are out of date for member with ID {}".format(member.id))
+				if role == donor: continue
 				await self.send(self.getchannel("general"), "Congratulations on making {}, {}!".format(role.mention, member.mention))
 			await self.client.add_roles(member, *roles)
 	async def auto_update(self):
 		while True:
+			self.logger.info("Checking for rank updates...")
 			await self.update()
 			dt = datetime.datetime.now()
 			await asyncio.sleep((60-dt.minute)*60)
@@ -70,14 +76,18 @@ class Module(common.BaseModule):
 			remains = remains - 1
 			await self.edit(msg, message.format(remains))
 	async def retire(self, args, pmsg):
+		self.logger.info("WARNING: RETIREMENT PROCESS STARTED FOR MEMBER WITH ID {}".format(pmsg.author.id))
 		admin = common.User.from_discord_id(self.client, pmsg.author.id)
 		self.client.create_task(self.tick_down(pmsg.channel, 60, "{} are you sure you want to retire? You will have to go through the whole application process again if you want your position back. You have \{\} seconds to reply with _EXACTLY_ `I HEREBY FORFEIT MY POSITION AND GO INTO RETIREMENT`. This is case sensitive.".format(pmsg.author.mention)))
 		reply = await self.getreply(60, pmsg.author, pmsg.channel)
 		if reply == "I HEREBY FORFEIT MY POSITION AND GO INTO RETIREMENT":
+			self.logger.info("Member with ID {} has chosen to retire.".format(pmsg.author.id))
 			admin.setrank(admin.previous_rank(), "Thank you for your service. We're sorry to see you have chosen to step down.", False)
 		else:
+			self.logger.info("Member with ID {} has not completed the retirement confirmation or has changed their mind".format(pmsg.author.id))
 			await self.send(pmsg.channel, "Glad to see you reconsidered, {}. Thank you for your ongoing service!".format(author.mention))
 	async def demote(self, args, pmsg):
+		self.logger.info("Demotion command sent by {}".format(pmsg.author.id))
 		reason = ""
 		lock = False
 		if args[1].lower() == "lock":
@@ -104,6 +114,7 @@ class Module(common.BaseModule):
 				await p.setrank(p.previous_rank(), reason, lock)
 			await self.edit(msg, "Demotion complete.")
 	async def approve(self, args, pmsg):
+		self.logger.info("Approve command sent by {}".format(pmsg.author.id))
 		applicant = common.User.from_discord_id(self.client, args[1])
 		if IsApplicant(applicant.ID()):
 			self.db.run("UPDATE `applications` SET `accepted`=True WHERE `id`={}".format(applicant.ID()))
@@ -114,10 +125,12 @@ class Module(common.BaseModule):
 		else:
 			await self.send(pmsg.author, "They are not an applicant. Please have them apply first.")
 	async def strip(self, args, pmsg):
+		self.logger.info("Strip command sent by {}".format(pmsg.author.id))
 		user = common.User.from_discord_id(args[1])
 		self.StripRank(user)
 		await self.send(pmsg.author, "Rank and title has been hereby stripped from {}".format(user.discord().mention))
 	async def StripRank(self, user):
+		self.logger.info("Stripping rank from someone")
 		await self.send(user.discord(), "You are hereby stripped of all rank and title.")
 		user.setrank(1)
 		member = common.getmember(self.client, user)
@@ -126,6 +139,7 @@ class Module(common.BaseModule):
 				await self.client.remove_role(member, role)
 		common.runrcon("ulx removeuserid {}".format(user.steamID()))
 	async def apply(self, args, pmsg):
+		self.logger.info("Apply command sent by {}".format(pmsg.author.id))
 		usr = common.User.from_discord_id(self.client, pmsg.author.id)
 		taken = len(self.db.query("SELECT `id` FROM `linked` WHERE `rank` >= 7"))
 		appcount = len(self.db.query("SELECT * FROM `applications` WHERE `accepted`=FALSE AND `denied`=FALSE AND `interviewed`=FALSE"))
@@ -159,6 +173,7 @@ class Module(common.BaseModule):
 		else:
 			await self.send(pmsg.channel, "Your account was locked from applying.")
 	async def letters(self, args, pmsg):
+		self.logger.info("Letters command sent by {}".format(pmsg.author.id))
 		await self.send(pmsg.author, "Welcome to the Letter Submodule. To go to the next letter, send `next`. To cancel viewing, type `cancel` or `stop`.")
 		last = await self.send(pmsg.author, "Fetching letters...")
 		list = self.db.query("SELECT * FROM `recommends` ORDER BY `id`")
@@ -192,6 +207,7 @@ class Module(common.BaseModule):
 			await self.edit(last, "No letters to display.")
 
 	async def applicants(self, args, pmsg):
+		self.logger.info("Applicants command sent by {}".format(pmsg.author.id))
 		rank = self.getrank(pmsg.author.id)
 		await self.send(pmsg.author, "Welcome to The Applicants Module.\nOwner commands:```interview       Extend an interview invite\napprove         Approve application\ndeny            Deny application```Admin commands:```recommend       Recommend applicant for promotion.\ndisapprove      Recommend denial of application```Common commands:```next            Show next applicant\nstop            Exit The Applicant Module```")
 		lastmsg = await self.send(pmsg.author, "Fetching applicants...")
