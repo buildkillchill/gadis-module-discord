@@ -9,7 +9,7 @@ from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Accounts"
-	__version__ = "2.01"
+	__version__ = "2.02"
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client)
 		self.addcmd("link", self.link, "Link your Steam and Discord to me. This allows for applying for admin and future features.", private=True)
@@ -18,6 +18,35 @@ class Module(common.BaseModule):
 		self.addcmd("testinf", self.testinf, "Test infraction demotion message", rank=Settings.OwnerRank)
 		self.addcmd("my-slogan-is", self.slogan, "Set your slogan", rank=Settings.Admin["rank"])
 		self.addcmd("set-title", self.title, "Set admin title", rank=Settings.OwnerRank)
+		self.addcmd("userinfo", self.info, "Get user info", private=True)
+	async def info(self, args, message):
+		user = None
+		if len(message.mentions) > 0:
+			user = message.mentions[0]
+		elif len(args) > 1:
+			try:
+				id = int(args[1])
+				user = self.client.get_user_info(str(id))
+			except:
+				user = None
+		if user == None:
+			await self.send(message.channel, "Bad syntax bro")
+		else:
+			u = common.User.from_discord_id(user.id)
+			linked = u == None
+			em = discord.Embed(title="User Info",description="")
+			em.set_author(user.name, icon_url=user.avatar_url)
+			em.add_field("Display Name", user.display_name, False)
+			em.add_field("ID", user.id, False)
+			if linked: em.add_field("Gadis ID", u.ID(), False)
+			if linked: em.add_field("Steam ID", u.steamID(), False)
+			if linked: em.add_field("Steam64 ID", u.steamID64(), False)
+			if linked: em.add_field("Rank", u.rank(), False)
+			if linked: em.add_field("Infractions", u.infractions(), False)
+			if linked: em.add_field("Locked", "Yes" if u.locked() else "No", False)
+			em.add_field("Bot", "Yes" if user.bot else "No", False)
+			em.add_field("Account Created", user.created_at, False)
+			await self.sendembed(em)
 	async def slogan(self, args, message):
 		slogan = " ".join(args[1:])
 		self.db.run("UPDATE `linked` SET `slogan`=%s WHERE `did`={}".format(message.author.id), [slogan])
