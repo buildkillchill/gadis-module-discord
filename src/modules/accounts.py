@@ -33,7 +33,7 @@ class Module(common.BaseModule):
 			await self.send(message.channel, "Bad syntax bro")
 		else:
 			u = common.User.from_discord_id(self.client, user.id)
-			linked = u == None
+			linked = False if u == None else True
 			em = discord.Embed(title="User Info",description="")
 			em.set_author(name=user.name, icon_url=user.avatar_url)
 			self.add_field(em, "Display Name", user.display_name, False)
