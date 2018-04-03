@@ -123,4 +123,4 @@ handler = logging.FileHandler(filename='/var/log/bkcs-discord.log', encoding='ut
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 log.addHandler(handler)
 t = int(time.time())
-client.run("NDAyNjQxMTg1MDQwMTA1NDg1.DUyHfQ.FBIo0DYfGHc2ZZ840UgAof9XB4U")
+client.run(Settings.DiscordToken)

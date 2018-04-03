@@ -51,6 +51,12 @@ class Settings():
 	# Type: INTEGER
 	OwnerRank = 7
 
+	# Discord Application Token
+	#	This is your Bot's "user" token. It is required to use Gadis.
+	#	Go to https://discordapp.com/developers to get one
+	# Type: STRING
+	DiscordToken = "YOUR TOKEN"
+
 	####################################
 	###         Version Info         ###
 	####################################
