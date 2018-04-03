@@ -212,7 +212,7 @@ class Module(common.BaseModule):
 		apps = sorted(apps,key=lambda k: random.random())
 		if len(apps) > 0:
 			await self.edit(lastmsg,"Stage 1 Complete.")
-			azi = await self.client.get_user_info(str(Settings.People["owner"])
+			azi = await self.client.get_user_info(str(Settings.People["owner"]))
 			if azi.avatar_url == "":
 				azi_icon = azi.default_icon_url
 			else:
