@@ -46,7 +46,7 @@ class Module(common.BaseModule):
 			if linked: self.add_field(em, "Locked", "Yes" if u.locked() else "No", False)
 			self.add_field(em, "Bot", "Yes" if user.bot else "No", False)
 			self.add_field(em, "Account Created", user.created_at, False)
-			await self.send_embed(em)
+			await self.send_embed(message.channel, em)
 	async def slogan(self, args, message):
 		slogan = " ".join(args[1:])
 		self.db.run("UPDATE `linked` SET `slogan`=%s WHERE `did`={}".format(message.author.id), [slogan])
