@@ -26,7 +26,7 @@ class Module(common.BaseModule):
 		elif len(args) > 1:
 			try:
 				id = int(args[1])
-				user = self.client.get_user_info(str(id))
+				user = await self.client.get_user_info(str(id))
 			except:
 				user = None
 		if user == None:
