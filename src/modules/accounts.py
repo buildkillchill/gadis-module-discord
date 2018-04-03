@@ -83,5 +83,5 @@ class Module(common.BaseModule):
 			self.add_field(em, "Account Lock", "Your account will be locked from receiving promotions. This may be overridden at the descretion of Azicus. Begging or asking will only make things worse.")
 			self.add_field(em, "THIS IS JUST A TEST", "You will not actually get any of these consequences, as you did nothing wrong.")
 			await self.send_embed(member, em)
-	def add_field(em, name, value, inline=True):
+	def add_field(self, em, name, value, inline=True):
 		em.add_field(name=name, value=value, inline=inline)
