@@ -22,15 +22,19 @@ class Module(common.BaseModule):
 	async def info(self, args, message):
 		user = None
 		if len(message.mentions) > 0:
-			user = discord.utils.get(server.members, id=str(message.mentions[0].id))
+			user = discord.utils.get(common.getserver().members, id=str(message.mentions[0].id))
 		elif len(args) > 1:
 			try:
 				id = int(args[1])
 				user = discord.utils.get(common.getserver().members, id=str(id))
-			except:
-				user = None
+			except ValueError:
+				await self.send(message.channel, "Could not convert {} to an integer".format(args[1]))
+				return
+		else:
+			await self.send(message.channel, "Bad syntax")
+			return
 		if user == None:
-			await self.send(message.channel, "Bad syntax or no one by that ID was found")
+			await self.send(message.channel, "No user by that ID was found")
 		else:
 			u = common.User.from_discord_id(self.client, user.id)
 			linked = False if u == None else True
