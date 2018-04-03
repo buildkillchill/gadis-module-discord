@@ -35,7 +35,7 @@ class Module(common.BaseModule):
 			u = common.User.from_discord_id(self.client, user.id)
 			linked = u == None
 			em = discord.Embed(title="User Info",description="")
-			em.set_author(user.name, icon_url=user.avatar_url)
+			em.set_author(name=user.name, icon_url=user.avatar_url)
 			em.add_field("Display Name", user.display_name, False)
 			em.add_field("ID", user.id, False)
 			if linked: em.add_field("Gadis ID", u.ID(), False)
