@@ -68,20 +68,11 @@ async def on_message(message):
 	handled = False
 	for n in modules:
 		module = modules[n]
-		if module.has_command(cmd):
-			logger.info("Command detected: '{}' is registered to {}".format(cmd, n))
-		else:
-			continue
+		if not module.has_command(cmd): continue
 
 		if module.permissible(cmd, common.getrank(message.author.id), message.channel.is_private):
 			t = int(time.time())
 			handled = module.receive(cmd, args, message)
-			secs = int(time.time()) - t
-			logger.info("Created task and inserted into loop ({}s)".format(secs))
-			if handled:
-				logger.info("Task registered successfully")
-			else:
-				logger.warn("Task failed to register")
 			break
 		else:
 			s = "{} attempted to use a command in ".format(message.author.id)

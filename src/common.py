@@ -63,13 +63,18 @@ class BaseModule():
 		self.usage = {}
 		self.private = []
 		self.db = mysql.default()
-		self.logger = logging.getLogger("BKCS.MOD")
+		self.logger = logging.getLogger("BKCS.MOD.{}".format(__name__))
 	async def on_message(self, message):
 		if self.enabled and not message.author == self.client.user:
 			return True
 		else:
 			return False
 	def receive(self, cmd, args, pmsg):
+		if pmsg.channel.is_private:
+			channel = "by private message"
+		else:
+			channel = "in #".format(pmsg.channel.name)
+		self.logger.info("User with ID {} has used command '{}' {}".format(pmsg.author.id, cmd, channel))
 		if cmd in self.commands and self.enabled:
 			self.client.loop.create_task(self.commands[cmd](args, pmsg))
 			return True
