@@ -22,11 +22,11 @@ class Module(common.BaseModule):
 	async def info(self, args, message):
 		user = None
 		if len(message.mentions) > 0:
-			user = common.getmember(message.mentions[0].id)
+			user = discord.utils.get(server.members, id=str(message.mentions[0].id))
 		elif len(args) > 1:
 			try:
 				id = int(args[1])
-				user = common.getmember(str(id))
+				user = discord.utils.get(server.members, id=str(id))
 			except:
 				user = None
 		if user == None:
