@@ -1,50 +1,261 @@
+###########################################################################################
+###########################################################################################
+#####                                                                                 #####
+#####                                    Bot Variables                                #####
+#####                                                                                 #####
+#####                                                                                 #####
+#####   This file contains the global constant variables for the bot. Each variable   #####
+#####   will be marked with it's type and a description. 
+#####                                                                                 #####
+###########################################################################################
+###########################################################################################
+
+
 class Settings():
-	ServerID = # your discord server id
-#   did = Discord ID
-	Version = {}
-	Version["code"] = "0.1"
-	Version["name"] = "CodeName"
 
-	People = {}
-	People["creator"] = # did of creator
-	People["owner"] = # did of owner
+#####################################################
+#############  DO NOT REMOVE OR MODIFY  #############
+#############   UNLESS YOU  KNOW WHAT   #############
+#############       YOU'RE  DOING       #############
+#####################################################
+		Version = {}		#############
+		People = {}		#############
+		Admin = {}		#############
+		Remote = {}		#############
+		MySQL = {}		#############
+		RCON = {}		#############
+		Ranks = {}		#############
+		RankName = {}		#############
+		MaxInfractions = {}	#############
+		Repeats = {}		#############
+		Roles = {}		#############
+#####################################################
+#####################################################
+#####################################################
+#####################################################
+#####################################################
 
-	Admin = {}
-	Admin["positions"] = # open admin positions
-	Admin["max_apps"]   = # max applicants
-	Admin["req_hours"]  = # hours required to apply
 
-	Remote = {}
-	Remote["host"] = # host for RCP
-	Remote["port"] = # port for above
+	####################################
+	###       Simple  Settings       ###
+	####################################
 
-	MySQL = {}
-	MySQL["host"] = # sql host
-	MySQL["port"] = # sql port
-	MySQL["data"] = "table name"
-	MySQL["user"] = "user"
-	MySQL["pass"] = "pass"
+	# Server ID
+	# Type: INTEGER
+	ServerID = 
 
-	RCON = {}
-	RCON["host"] = "rcon host"
-	RCON["port"] = # rcon port
-	RCON["pass"] = "pass"
+	# Owner Rank ID
+	#	Database Rank ID for the owner of the bot.
+	#	There should be no ID higher than this ID.
+	#	It is explained better in the Discord Ranks section of this file.
+	# Type: INTEGER
+	OwnerRank = 7
 
-	Ranks = {}
+	####################################
+	###         Version Info         ###
+	####################################
+
+	# Version Code
+	# Type: STRING
+	Version["code"] = "3.07"
+
+	# Version Name
+	# Type: STRING
+	Version["name"] = "DynaFly"
+
+	####################################
+	###        Special People        ###
+	####################################
+
+	# Bot Owner's Discord ID
+	# Type: INTEGER
+	People["owner"] = 
+
+	# My Discord ID
+	# Type: INTEGER
+	# Note: Please do not change this value.
+	People["creator"] = 221809690361724928
+
+	####################################
+	###        Admin Settings        ###
+	####################################
+
+	# Admin Positions
+	#	This is the total number of admin positions, open and taken
+	# Type: INTEGER
+	Admin["positions"] = 
+
+	# Maximum Applications
+	#	Total number of applications to allow at one period
+	# Type: INTEGER
+	Admin["max_apps"]   = 
+
+	# Required Hours
+	#	Hours required in-game to be allowed to apply for admin
+	# Type: INTEGER
+	Admin["req_hours"]  = 
+
+	# Rank ID
+	#	Database Rank ID for server admins. It is explained
+	#	better in the Discord Ranks section of this file.
+	# Type: INTEGER
+	Admin["rank"] = 6
+
+	####################################
+	###  External Bot Control (EBC)  ###
+	####################################
+
+	# EBC Host
+	# Type: STRING
+	# Note: Must be a valid IP address that can be bound
+	Remote["host"] = 127.0.0.1
+
+	# EBC Port
+	# Type: INTEGER
+	# Note: Must be an unused port that can be bound by the user running the bot
+	Remote["port"] = 8977
+
+	####################################
+	###        MySQL Database        ###
+	####################################
+
+	# MySQL Host
+	# Type: STRING
+	MySQL["host"] = "127.0.0.1"
+
+	# MySQL Port
+	# Type: INTEGER 
+	MySQL["port"] = 3306
+
+	# MySQL Database
+	# Type: STRING
+	MySQL["data"] = "gadis"
+
+	# MySQL Username
+	# Type: STRING
+	MySQL["user"] = "gadisbot"
+
+	# MySQL Password
+	# Type: STRING
+	MySQL["pass"] = 
+
+	####################################
+	###       Garry's Mod RCON       ###
+	####################################
+
+	# Garry's Mod RCON Host
+	# Type: STRING
+	RCON["host"] = "127.0.0.1"
+
+	# Garry's Mod RCON Port
+	# Type: INTEGER 
+	RCON["port"] =
+
+	# Garry's Mod RCON Password 
+	# Type: STRING
+	RCON["pass"] = 
+
+	####################################
+	###        Discord  Ranks        ###
+	###==============================###
+	###  Instructions:               ###
+	###    MySQL will have the GMod  ###
+	###    ranks with an ID. The ID  ###
+	###    of the GMod rank will be  ###
+	###    the "power" level. Use    ###
+	###    the ID as the dictionary  ###
+	###    key and a Tuple of the    ###
+	###    associated Discord IDs    ###
+	###    for the value.            ###
+	###                              ###
+	###    The first one should be   ###
+	###    an unranked player. So,   ###
+	###    it should be an empty     ###
+	###    Tupal, unless your setup  ###
+	###    has a rank for linked     ###
+	###    accounts. Note that       ###
+	###    Tupals with 1 value must  ###
+	###    have a comma at the end.  ###
+	###                              ###
+	###    You will find an example  ###
+	###    below.                    ###
+	####################################
+
 	Ranks[1]  = ()
-	Ranks[2]  = (#did of rank,)
-	#etc
+	Ranks[2]  = (00000000000000000,)
+	Ranks[3]  = (00000000000000001,)
+	Ranks[4]  = (00000000000000002,)
+	Ranks[5]  = (00000000000000001,00000000000000002)
+	Ranks[6]  = (00000000000000003,)
+	Ranks[7]  = (00000000000000004,)
 
-	RankName = {}
+	####################################
+	###          Rank Names          ###
+	###==============================###
+	###  Instructions:               ###
+	###    This should have the      ###
+	###    same keys as the last     ###
+	###    global, but with the      ###
+	###    name instead.             ###
+	###                              ###
+	###    You will find an example  ###
+	###    below.                    ###
+	####################################	
+
 	RankName[1]  = "Anyone"
-	RankName[2]  = "Operator or higher"
-	#etc
+	RankName[2]  = "Operator"
+	RankName[3]  = "Donator"
+	RankName[4]  = "Veteran"
+	RankName[5]  = "Veteran Donator"
+	RankName[6]  = "Admin"
+	RankName[7]  = "Owner"
 
-	MaxInfractions = {}
+	####################################
+	###       Max  Infractions       ###
+	###==============================###
+	###  Instructions:               ###
+	###    This should have the      ###
+	###    same keys as the last     ###
+	###    global, but with the      ###
+	###    maximum number of marks   ###
+	###    before demotion.          ###
+	###                              ###
+	###    Values must be INTEGERS   ###
+	###                              ###
+	###    You will find an example  ###
+	###    below.                    ###
+	####################################	
+
 	MaxInfractions[1]  = 5
-	MaxInfractions[2]  = 2
-	#etc
+	MaxInfractions[2]  = 5
+	MaxInfractions[3]  = 5
+	MaxInfractions[4]  = 5
+	MaxInfractions[5]  = 5
+	MaxInfractions[6]  = 2
 
-	Repeats = {}
-	Repeats["inv"] = "discord invite url"
-	Repeats["rtfa"] = "Admins don't like to repeat themselves. Try looking in #yourannouncementschannel and #yourruleschannel before asking a question."
+	####################################
+	###       Max  Infractions       ###
+	###==============================###
+	###  Instructions:               ###
+	###    These are FAQ responses.  ###
+	###    The key is the question   ###
+	###    and the value is the      ###
+	###    answer. If you do not     ###
+	###    wish to use this feature  ###
+	###    you can delete all the    ###
+	###    keys and disable the mod  ###
+	###    or just disable the mod.  ###
+	###                              ###
+	###    You will find an example  ###
+	###    below.                    ###
+	####################################
+
+	Repeats["inv"] = "https://discord.gg/abcdefg"
+	Repeats["rtfa"] = "Try looking in #announcements and #rules before asking a question."
+
+	####################################
+	###         Special Roles        ###
+	####################################
+
+	Roles["notilt"] = 000000000000000000
+	Roles["silent"] = 000000000000000000

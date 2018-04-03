@@ -4,6 +4,7 @@ from steam import WebAPI as SteamAPI
 
 import common
 import mysql
+from settings import Settings
 
 class Module(asyncio.Protocol, common.BaseModule):
 	__name__ = "Remote"
@@ -15,9 +16,7 @@ class Module(asyncio.Protocol, common.BaseModule):
 	def data_received(self, data):
 		message = data.decode()
 		words = message.split(' ')
-		if words[0] == "test":
-			self.run(self.send(self.client.get_channel('312405305759760394'), 'Test command received!'))
-		elif words[0] == "shutdown":
+		if words[0] == "shutdown":
 			self.db.disconnect()
 			self.run(self.client.logout())
 		elif words[0] == "msg":
@@ -33,7 +32,7 @@ class Module(asyncio.Protocol, common.BaseModule):
 	async def no_admin(self,server):
 		ch=self.getchannel("admin")
 		last=False
-		notify="<@&312417207911186433> There's no admin on shift in the {} server!".format(server)
+		notify="<@&{}> There's no admin on shift in the {} server!".format(Settings.Ranks[Settigns.Admin["rank"]][0], server)
 		notify="There's no admin on shift in the {} server!".format(server)
 		async for msg in self.client.logs_from(ch,limit=1):
 			if msg.author == self.client.user and msg.content == notify:

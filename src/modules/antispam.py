@@ -62,7 +62,7 @@ class Module(common.BaseModule):
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client, True)
 		self.server = common.getserver(self.client)
-		self.silenced = discord.utils.get(self.server.roles, id="347946970385743889")
+		self.silenced = discord.utils.get(self.server.roles, id=str(Settings.Roles["silent"]))
 		self.client.loop.create_task(self.unsilence())
 		self.addcmd("asignore", self.ignore, "Adds or removes people from the anti-spam ignore list.", rank=9, usage="asignore on|off @mention1 .. @mentionN")
 		self.addcmd("ignorechan", self.ignore_channel, "Adds or removes channels from the anti-spam ignore list.", rank=9, usage="ignorechan on|off #channel1 .. #channelN")

@@ -74,8 +74,8 @@ class BaseModule():
 			channel = "by private message"
 		else:
 			channel = "in #".format(pmsg.channel.name)
-		self.logger.info("User with ID {} has used command '{}' {}".format(pmsg.author.id, cmd, channel))
 		if cmd in self.commands and self.enabled:
+			self.logger.info("User with ID {} has sent command '{}' {}".format(pmsg.author.id, cmd, channel))
 			self.client.loop.create_task(self.commands[cmd](args, pmsg))
 			return True
 		else:
@@ -110,7 +110,7 @@ class BaseModule():
 		if usage != None:
 			self.usage[command] = usage
 	def getchannel(self, name):
-		return discord.utils.get(self.client.get_all_channels(), server__name='Build,Kill,Chill', name=name)
+		return discord.utils.get(getserver(self.client).channels, name=name)
 	def getrank(self, id):
 		return self.db.query("SELECT `rank` FROM `linked` WHERE `did`={}".format(id))[0][0]
 	def has_command(self, command):
@@ -118,7 +118,7 @@ class BaseModule():
 	def has_commands(self):
 		return len(self.commands) > 0
 	def getmember(self, id):
-		server = self.client.get_server("312405305759760394")
+		server = getserver(self.client)
 		return discord.utils.get(server.members, id=str(id))
 	def getcommands(self):
 		commands = []

@@ -2,6 +2,7 @@ import json, requests, re
 import discord
 import common
 import mysql
+from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Insult Reply"
@@ -12,7 +13,7 @@ class Module(common.BaseModule):
 		if not await common.BaseModule.on_message(self, message): return
 		if message.channel.is_private: return
 		server = common.getserver(self.client)
-		notilt = discord.utils.get(server.roles, id="420779120352296960")
+		notilt = discord.utils.get(server.roles, id=str(Settings.Roles["notilt"]))
 		if notilt not in message.author.roles: return
 		msg = re.sub('[^a-z0-9 ]', '', message.content.lower(), flags=re.UNICODE)
 		for trigger in self.db.query("SELECT * FROM `insult_triggers`"):

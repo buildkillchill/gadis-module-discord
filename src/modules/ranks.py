@@ -16,15 +16,15 @@ class Module(common.BaseModule):
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client)
 		self.addcmd("apply", self.apply, "Apply for admin")
-		self.addcmd("applicants", self.applicants, "View list of admin applicants.", rank=7, private=True)
-		self.addcmd("letters", self.letters, "View the admin's letters of recommendation or disapproval of applicants", rank=9, private=True)
-		self.addcmd("approveid", self.approve, "Approve application", rank=10)
-		self.addcmd("striprank", self.strip, "Strip user of rank and title", rank=10)
-		self.addcmd("retire", self.retire, "Step down from your position", rank=8)
-		self.addcmd("stepdown", self.retire, "Step down from your position", rank=8)
-		self.addcmd("demote", self.demote, "Demote person", rank=10)
-		self.addcmd("updateranks", self.update, "Force update ranks", rank=9)
-		self.addcmd("testsetrank", self.testsr, "Test User.setrank", rank=9)
+		self.addcmd("applicants", self.applicants, "View list of admin applicants.", rank=Settings.Admin["rank"], private=True)
+		self.addcmd("letters", self.letters, "View the admin's letters of recommendation or disapproval of applicants", rank=Settings.OwnerRank, private=True)
+		self.addcmd("approveid", self.approve, "Approve application", rank=Settings.OwnerRank)
+		self.addcmd("striprank", self.strip, "Strip user of rank and title", rank=Settings.OwnerRank)
+		self.addcmd("retire", self.retire, "Step down from your position", Settings.Admin["rank"])
+		self.addcmd("stepdown", self.retire, "Step down from your position", Settings.Admin["rank"])
+		self.addcmd("demote", self.demote, "Demote person", rank=Settings.OwnerRank)
+		self.addcmd("updateranks", self.update, "Force update ranks", rank=Settings.OwnerRank)
+		self.addcmd("testsetrank", self.testsr, "Test User.setrank", rank=Settings.OwnerRank)
 		client.loop.create_task(self.auto_update())
 	def char_fix(self, s):
 		return s.encode('ascii', 'ignore').decode('ascii')
@@ -119,7 +119,7 @@ class Module(common.BaseModule):
 		if IsApplicant(applicant.ID()):
 			self.db.run("UPDATE `applications` SET `accepted`=True WHERE `id`={}".format(applicant.ID()))
 			last = await self.send(pmsg.author, "Setting Rank...")
-			await applicant.setrank(7)
+			await applicant.setrank(Settings.Admin["rank"])
 			await self.edit(last, "Cleaning up...")
 			self.db.run("DELETE FROM `recommends` WHERE `id`={}".format(applicant.ID()))
 		else:
@@ -139,9 +139,9 @@ class Module(common.BaseModule):
 		common.runrcon("ulx removeuserid {}".format(user.steamID()))
 	async def apply(self, args, pmsg):
 		usr = common.User.from_discord_id(self.client, pmsg.author.id)
-		taken = len(self.db.query("SELECT `id` FROM `linked` WHERE `rank` >= 7"))
+		taken = len(self.db.query("SELECT `id` FROM `linked` WHERE `rank` >= {}".format(Settings.Admin["rank"])))
 		appcount = len(self.db.query("SELECT * FROM `applications` WHERE `accepted`=FALSE AND `denied`=FALSE AND `interviewed`=FALSE"))
-		if usr.rank() >= 7:
+		if usr.rank() >= Settings.Admin["rank"]:
 			await self.send(pmsg.channel, "Nice try, we don't accept applications for superadmin or developer.")
 		elif not usr.locked():
 			if Settings.Admin["positions"] <= taken or Settings.Admin["max_apps"] <= appcount:
@@ -212,7 +212,7 @@ class Module(common.BaseModule):
 		apps = sorted(apps,key=lambda k: random.random())
 		if len(apps) > 0:
 			await self.edit(lastmsg,"Stage 1 Complete.")
-			azi = await self.client.get_user_info('185447502655258626')
+			azi = await self.client.get_user_info(str(Settings.People["owner"])
 			if azi.avatar_url == "":
 				azi_icon = azi.default_icon_url
 			else:
@@ -255,9 +255,9 @@ class Module(common.BaseModule):
 							break
 						self.db.run("INSERT INTO `recommends` (`id`,`admin`,`reason`,`positive`) VALUES (%s, %s, %s, FALSE) ON DUPLICATE KEY UPDATE `reason`=%s",(app[0], aid, msg.content, msg.content))
 						await self.send(pmsg.author, "Your disrecommendation has been submitted.")
-					elif subcmd == "approve" and rank == 10:
+					elif subcmd == "approve" and rank == Settings.OwnerRank:
 						await self.edit(lastmsg, "Setting Rank...")
-						await iapp.setrank(7)
+						await iapp.setrank(Settings.Admin["rank"])
 						await self.edit(lastmsg, "Done.")
 					elif subcmd == "approve":
 						err = True
@@ -278,7 +278,7 @@ class Module(common.BaseModule):
 						err = True
 						emsg = "Owner only command"
 					elif subcmd == "interview" and rank >= 9:
-						await self.send(applicant, "You have been selected for an interview. Please DM <@185447502655258626> to proceed.")
+						await self.send(applicant, "You have been selected for an interview. Please DM <@{}> to proceed.".format(Settings.People["owner"])
 						await self.send(pmsg.author, "I sent {} an interview invitation.\nDo you wish to continue looking though applicants?".format(applicant.mention))
 						self.db.run("UPDATE `applications` SET `interviewed`=TRUE WHERE `id`={}".format(app[0]))
 						cont = await self.getreply(60, pmsg.author, pmsg.channel)

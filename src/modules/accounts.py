@@ -13,11 +13,11 @@ class Module(common.BaseModule):
 	def __init__(self, enabled, client=None):
 		common.BaseModule.__init__(self, enabled, client)
 		self.addcmd("link", self.link, "Link your Steam and Discord to me. This allows for applying for admin and future features.", private=True)
-		self.addcmd("+1inf", self.infract, "Add an infraction to user(s).", rank=10)
-		self.addcmd("+.5inf", self.infract, "Add a half-infraction to user(s).", rank=10)
-		self.addcmd("testinf", self.testinf, "Test infraction demotion message", rank=9)
-		self.addcmd("my-slogan-is", self.slogan, "Set your slogan", rank=7)
-		self.addcmd("set-title", self.title, "Set admin title", rank=9)
+		self.addcmd("+1inf", self.infract, "Add an infraction to user(s).", rank=Settings.OwnerRank)
+		self.addcmd("+.5inf", self.infract, "Add a half-infraction to user(s).", rank=Settings.OwnerRank)
+		self.addcmd("testinf", self.testinf, "Test infraction demotion message", rank=Settings.OwnerRank)
+		self.addcmd("my-slogan-is", self.slogan, "Set your slogan", rank=Settings.Admin["rank"])
+		self.addcmd("set-title", self.title, "Set admin title", rank=Settings.OwnerRank)
 	async def slogan(self, args, message):
 		slogan = " ".join(args[1:])
 		self.db.run("UPDATE `linked` SET `slogan`=%s WHERE `did`={}".format(message.author.id), [slogan])

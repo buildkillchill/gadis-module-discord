@@ -29,4 +29,3 @@ class Module(common.BaseModule):
 				self.horses[message.author.id] = self.horses[message.author.id] + 1
 			elif self.horses[message.author.id] == 5:
 				await self.send(message.author, "Your prayers to the :horse: God, Azicus, have been ANSWERED!!!!")
-				await self.send(self.client.get_channel("347437194488840202"), ".award 150 {}".format(message.author.mention))

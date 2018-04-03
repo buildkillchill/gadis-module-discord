@@ -12,13 +12,13 @@ class Module(common.BaseModule):
 		common.BaseModule.__init__(self, enabled, client)
 		self.addcmd("roles", self.roles, "View a list of roles with corrisponding IDs")
 		self.addcmd("report", self.report, "Report a someone", usage="`report USER`\nWhen prompted, give reason for report.")
-		self.addcmd("%clear", self.clear, "Clear channel with conditions", rank=8)
-		self.addcmd("gmod.say", self.say, "Say something through console", private=True, rank=9)
-		self.addcmd("gmod.tsay", self.tsay, "Say something through console", private=True, rank=9)
-		self.addcmd("gmod.csay", self.csay, "Say something through console", private=True, rank=9)
-		self.addcmd("gmod.tsayc", self.tsayc, "Say something through console", private=True, rank=9)
+		self.addcmd("%clear", self.clear, "Clear channel with conditions", rank=Settings.OwnerRank)
+		self.addcmd("gmod.say", self.say, "Say something through console", private=True, rank=Settings.OwnerRank)
+		self.addcmd("gmod.tsay", self.tsay, "Say something through console", private=True, rank=Settings.OwnerRank)
+		self.addcmd("gmod.csay", self.csay, "Say something through console", private=True, rank=Settings.OwnerRank)
+		self.addcmd("gmod.tsayc", self.tsayc, "Say something through console", private=True, rank=Settings.OwnerRank)
 		self.addcmd("inv", self.repeats, "Show the invite link")
-		self.addcmd("rtfa", self.repeats, "Read The Announcements", rank=7)
+		self.addcmd("rtfa", self.repeats, "Read The Announcements", rank=Settings.Admin["rank"])
 	async def repeats(self, args, pmsg):
 		await self.send(pmsg.channel, Settings.Repeats[args[0].lower()])
 	async def clear(self, args, pmsg):
@@ -83,7 +83,7 @@ class Module(common.BaseModule):
 		if reason == None or reason.content.lower() == "cancel report":
 			await self.send(pmsg.channel, "The report cancelled!")
 		else:
-			await self.send(self.getchannel("admin"), "<@&312417207911186433>: {} is filing a _confidential_ report against {} for '{}'".format(pmsg.author.mention, perp, reason.content))
+			await self.send(self.getchannel("admin"), "<@&{}>: {} is filing a _confidential_ report against {} for '{}'".format(Settings.Ranks[Settings.Admin["rank"]][0], pmsg.author.mention, perp, reason.content))
 			await self.send(pmsg.channel, "Thank you for reporting the incident, {}. I have filed it to the Admins.".format(pmsg.author.mention))
 	async def say(self, args, pmsg=None):
 		common.runrcon("say {}".format(" ".join(args[1:])))
