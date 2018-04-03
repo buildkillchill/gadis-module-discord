@@ -278,7 +278,7 @@ class Module(common.BaseModule):
 						err = True
 						emsg = "Owner only command"
 					elif subcmd == "interview" and rank >= 9:
-						await self.send(applicant, "You have been selected for an interview. Please DM <@{}> to proceed.".format(Settings.People["owner"])
+						await self.send(applicant, "You have been selected for an interview. Please DM <@{}> to proceed.".format(Settings.People["owner"]))
 						await self.send(pmsg.author, "I sent {} an interview invitation.\nDo you wish to continue looking though applicants?".format(applicant.mention))
 						self.db.run("UPDATE `applications` SET `interviewed`=TRUE WHERE `id`={}".format(app[0]))
 						cont = await self.getreply(60, pmsg.author, pmsg.channel)
