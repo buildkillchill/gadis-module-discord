@@ -65,10 +65,14 @@ class Module(common.BaseModule):
 				if user.rank() == 1: continue
 				await self.send(self.getchannel("general"), "Congratulations on making {}, {}!".format(role.mention, member.mention))
 			await self.client.add_roles(member, *roles)
+			await asyncio.sleep(0.25)
 		self.logger.info("Finished checking for rank updates after {}s".format(int(time.time())-t))
 	async def auto_update(self):
 		while True:
-			await self.update()
+			try:
+				await self.update()
+			except:
+				self.logger.error("Unhandled exception in update()")
 			dt = datetime.datetime.now()
 			await asyncio.sleep((60-dt.minute)*60)
 	async def tick_down(self, channel, seconds, message):
