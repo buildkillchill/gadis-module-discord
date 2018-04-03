@@ -26,7 +26,7 @@ class Module(common.BaseModule):
 		elif len(args) > 1:
 			try:
 				id = int(args[1])
-				user = discord.utils.get(server.members, id=str(id))
+				user = discord.utils.get(common.getserver().members, id=str(id))
 			except:
 				user = None
 		if user == None:
