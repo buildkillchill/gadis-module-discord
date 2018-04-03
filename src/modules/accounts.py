@@ -22,13 +22,16 @@ class Module(common.BaseModule):
 	async def info(self, args, message):
 		user = None
 		if len(message.mentions) > 0:
-			user = discord.utils.get(common.getserver().members, id=str(message.mentions[0].id))
+			user = discord.utils.get(common.getserver(self.client).members, id=str(message.mentions[0].id))
 		elif len(args) > 1:
 			try:
 				id = int(args[1])
-				user = discord.utils.get(common.getserver().members, id=str(id))
+				user = discord.utils.get(common.getserver(self.client).members, id=str(id))
 			except ValueError:
 				await self.send(message.channel, "Could not convert {} to an integer".format(args[1]))
+				return
+			except:
+				logger.error("Unhandled error happened in userinfo")
 				return
 		else:
 			await self.send(message.channel, "Bad syntax")
