@@ -45,6 +45,8 @@ class Module(common.BaseModule):
 		await self.send(pmsg.channel, "Done. Took {}s".format(int(time.time())-t))
 		self.logger.debug("TEST COMPLETED: User.setrank ({}s)".format(int(time.time())-t))
 	async def update(self, args=None, pmsg=None):
+		self.logger.info("Checking for rank updates...")
+		t = int(time.time())
 		server = common.getserver(self.client)
 		for member in server.members:
 			roles = common.getroles(self.client, common.getrank(member.id))
@@ -62,9 +64,9 @@ class Module(common.BaseModule):
 				if role == donor: continue
 				await self.send(self.getchannel("general"), "Congratulations on making {}, {}!".format(role.mention, member.mention))
 			await self.client.add_roles(member, *roles)
+		self.logger.info("Finished checking for rank updates after {}s".format(int(time.time())-t))
 	async def auto_update(self):
 		while True:
-			self.logger.info("Checking for rank updates...")
 			await self.update()
 			dt = datetime.datetime.now()
 			await asyncio.sleep((60-dt.minute)*60)
