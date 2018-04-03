@@ -34,7 +34,7 @@ async def on_ready():
 	diff = int(time.time()) - t
 	logger.info("Logged in with ID {} ({}s)".format(client.user.id, diff))
 	logger.info("Ensuring brand...")
-	client.edit_profile(None, username="Gadis")
+	await client.edit_profile(None, username="Gadis")
 	modules["modules"] = mm
 	ti = int(time.time())
 	files = {}
