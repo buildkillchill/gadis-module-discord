@@ -22,30 +22,30 @@ class Module(common.BaseModule):
 	async def info(self, args, message):
 		user = None
 		if len(message.mentions) > 0:
-			user = message.mentions[0]
+			user = common.getmember(message.mentions[0].id)
 		elif len(args) > 1:
 			try:
 				id = int(args[1])
-				user = await self.client.get_user_info(str(id))
+				user = common.getmember(str(id))
 			except:
 				user = None
 		if user == None:
-			await self.send(message.channel, "Bad syntax bro")
+			await self.send(message.channel, "Bad syntax or no one by that ID was found")
 		else:
 			u = common.User.from_discord_id(self.client, user.id)
 			linked = False if u == None else True
-			em = discord.Embed(title="User Info",description="")
+			em = discord.Embed(title="",description="")
 			em.set_author(name=user.name, icon_url=user.avatar_url)
-			self.add_field(em, "Display Name", user.display_name, False)
-			self.add_field(em, "ID", user.id, False)
-			if linked: self.add_field(em, "Gadis ID", u.ID(), False)
-			if linked: self.add_field(em, "Steam ID", u.steamID(), False)
-			if linked: self.add_field(em, "Steam64 ID", u.steamID64(), False)
-			if linked: self.add_field(em, "Rank", u.rank(), False)
-			if linked: self.add_field(em, "Infractions", u.infractions(), False)
-			if linked: self.add_field(em, "Locked", "Yes" if u.locked() else "No", False)
-			self.add_field(em, "Bot", "Yes" if user.bot else "No", False)
-			self.add_field(em, "Account Created", user.created_at, False)
+			self.add_field(em, "Display Name:", user.display_name, False)
+			self.add_field(em, "ID:", user.id, False)
+			if linked: self.add_field(em, "Gadis ID:", u.ID(), False)
+			if linked: self.add_field(em, "Steam ID:", u.steamID(), False)
+			if linked: self.add_field(em, "Steam64 ID:", u.steamID64(), False)
+			if linked: self.add_field(em, "Rank:", u.rank(), False)
+			if linked: self.add_field(em, "Infractions:", u.infractions(), False)
+			if linked: self.add_field(em, "Locked:", "Yes" if u.locked() else "No", False)
+			self.add_field(em, "Bot:", "Yes" if user.bot else "No", False)
+			self.add_field(em, "Account Created:", "{} UTC".format(user.created_at), False)
 			await self.send_embed(message.channel, em)
 	async def slogan(self, args, message):
 		slogan = " ".join(args[1:])
