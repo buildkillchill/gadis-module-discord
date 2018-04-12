@@ -18,7 +18,7 @@ class Module(asyncio.Protocol, common.BaseModule):
 			self.logger.info("Additional connection attempt thwarted.")
 			return
 		self.transport = transport
-		self.logger.info("Connection from {} established.".format(transport.get_extra_info('peername'))
+		self.logger.info("Connection from {} established.".format(transport.get_extra_info('peername')))
 	def data_received(self, data):
 		message = data.decode()
 		words = message.split(' ')
