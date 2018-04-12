@@ -21,7 +21,7 @@ help = Help(True, client, modules)
 mm = ModManager(True, client, modules, advanced)
 t = 0
 diff = 0
-logger = logging.getLogger("BKCS")
+logger = logging.getLogger("GADIS")
 logger.setLevel(logging.INFO)
 ch = logging.StreamHandler(sys.stdout)
 ch.setLevel(logging.INFO)
@@ -121,7 +121,7 @@ diff = int(time.time()) - t
 logger.info("Remote Command Thread Started ({}s)".format(diff))
 logger.info("Sending discord errors to file")
 log = logging.getLogger('discord')
-handler = logging.FileHandler(filename='/var/log/bkcs-discord.log', encoding='utf-8', mode='w')
+handler = logging.FileHandler(filename='/var/log/gadis-discord.log', encoding='utf-8', mode='w')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 log.addHandler(handler)
 t = int(time.time())
