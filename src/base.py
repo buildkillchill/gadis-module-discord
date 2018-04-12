@@ -117,6 +117,7 @@ logger.info("Starting BKC Services - {} ({})".format(Settings.Version["name"], S
 t = int(time.time())
 remote_handler = Remote(client)
 remote = client.loop.create_server(lambda: remote_handler, Settings.Remote["host"], Settings.Remote["port"])
+client.loop.create_task(remote)
 diff = int(time.time()) - t
 logger.info("Remote Command Thread Started ({}s)".format(diff))
 logger.info("Sending discord errors to file")
