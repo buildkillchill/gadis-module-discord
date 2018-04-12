@@ -12,13 +12,13 @@ class Module(asyncio.Protocol, common.BaseModule):
 		common.BaseModule.__init__(self, True, client)
 		self.transport = None
 	def connection_made(self, transport):
-		if self.transport == None:
-			transport.send("CONNECTION ALREADY ESTABLISHED")
+		if not self.transport == None:
+			transport.write("CONNECTION ALREADY ESTABLISHED")
 			transport.close()
 			self.logger.info("Additional connection attempt thwarted.")
 			return
 		self.transport = transport
-		self.logger.info("Connection from {} established.".format(transport.get_extra_info('peername')))
+		self.logger.info("Connection from {} established.".format(self.transport.get_extra_info('peername')))
 	def data_received(self, data):
 		message = data.decode()
 		words = message.split(' ')
