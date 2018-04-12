@@ -42,7 +42,7 @@ class Module(asyncio.Protocol, common.BaseModule):
 	async def no_admin(self, server):
 		ch=self.getchannel("admin")
 		last=False
-		notify="<@&{}> There's no admin on shift in the {} server!".format(Settings.Ranks[Settigns.Admin["rank"]][0], server)
+		notify="<@&{}> There's no admin on shift in the {} server!".format(Settings.Ranks[Settings.Admin["rank"]][0], server)
 		notify="There's no admin on shift in the {} server!".format(server)
 		async for msg in self.client.logs_from(ch,limit=1):
 			if msg.author == self.client.user and msg.content == notify:
