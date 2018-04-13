@@ -43,7 +43,6 @@ cmd=$1
 shift
 case $cmd in
 	update)
-		cd /root/gadis/working
 		PUSH=0
 		LOCAL=0
 		OPTIONS=nr
@@ -62,6 +61,7 @@ case $cmd in
 				;;
 				-r|--remote)
 					LOCAL=1
+					PUSH=1
 					shift
 				;;
 				--)
@@ -74,13 +74,22 @@ case $cmd in
 				;;
 			esac
 		done
+		cd /root/gadis/working
+		git checkout bot-server
 		git fetch --all
 		if [ $PUSH -eq 0 ]
 		then
-			git push origin || exit 1
-			git push local || exit 1
+			git push origin bot-server || exit 1
+			git push local bot-server || exit 1
+		fi
+		if [ ! $LOCAL -eq 0 ]
+		then
+			git pull origin bot-server || exit 1
+			cd ../bare
+			git pull origin bot-server || exit 1
 		fi
 		cd ../current
+		git checkout bot-server
 		git fetch --all
 		if [ $LOCAL -eq 0 ]
 		then
