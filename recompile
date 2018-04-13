@@ -1,9 +1,9 @@
 #!/bin/bash
-service bkcservices stop&&./compile&&service bkcservices start&&service bkcservices status
+gadis stop && ./compile && gadis start && gadis status
 echo ""
 read -p "Attach to screen? " -n 1 ans
 if [ "$ans" == "y" ]
 then
-	screen -r BKCS
+	screen -r Gadis
 fi
 echo ""

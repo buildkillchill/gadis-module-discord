@@ -60,7 +60,7 @@ for file in files:
 	shutil.move(join(cachepath, file), "bin/modules/{}.pyc".format(file.split(".")[0]))
 
 print("Renaming base.pyc...")
-os.rename("bin/base.pyc", "bin/bkc-services")
+os.rename("bin/base.pyc", "bin/gadis-server")
 
 print("Cleaning up...")
 shutil.rmtree("src/__pycache__")
@@ -68,12 +68,12 @@ shutil.rmtree("src/modules/__pycache__")
 
 install = boolquestion("Install it now?")
 if install:
-	if os.path.exists("/usr/local/share/bkc-services"): shutil.rmtree("/usr/local/share/bkc-services")
-	os.makedirs("/usr/local/share/bkc-services")
-	shutil.move("bin/modules", "/usr/local/share/bkc-services/modules")
-	if os.path.exists("/usr/local/bin/bkc-services"): os.remove("/usr/local/bin/bkc-services")
-	shutil.move("bin/bkc-services", "/usr/local/bin/")
-	os.chmod("/usr/local/bin/bkc-services", 0o755)
+	if os.path.exists("/usr/local/share/gadis"): shutil.rmtree("/usr/local/share/gadis")
+	os.makedirs("/usr/local/share/gadis")
+	shutil.move("bin/modules", "/usr/local/share/gadis/modules")
+	if os.path.exists("/usr/local/bin/gadis-server"): os.remove("/usr/local/bin/gadis-server")
+	shutil.move("bin/gadis-server", "/usr/local/bin/")
+	os.chmod("/usr/local/bin/gadis-server", 0o755)
 	files = [f for f in listdir("bin") if isfile(join("bin", f))]
 	for file in files:
-		shutil.move(join("bin", file), join("/usr/local/share/bkc-services", file))
+		shutil.move(join("bin", file), join("/usr/local/share/gadis", file))

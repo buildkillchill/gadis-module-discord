@@ -5,7 +5,7 @@ import time
 
 import os
 import sys
-sys.path.append('/usr/local/share/bkc-services')
+sys.path.append('/usr/local/share/gadis')
 
 from modules import Module as ModManager
 from remote import Module as Remote
@@ -38,13 +38,13 @@ async def on_ready():
 	modules["modules"] = mm
 	ti = int(time.time())
 	files = {}
-	for filename in os.listdir('/usr/local/share/bkc-services/modules'):
+	for filename in os.listdir('/usr/local/share/gadis/modules'):
 		if (filename[0] != '_' and filename[0] != '.'):
 			mname = os.path.splitext(filename)
 			if mname[1].startswith(".py"):
 				mname = mname[0]
 				files[mname] = None
-	sys.path.append('/usr/local/share/bkc-services/modules')
+	sys.path.append('/usr/local/share/gadis/modules')
 	for key in files.keys():
 		mod = __import__(key)
 		cls = getattr(mod, "Module")
@@ -113,7 +113,7 @@ async def on_message(message):
 	for n in advanced:
 		await advanced[n].on_message(message)
 
-logger.info("Starting BKC Services - {} ({})".format(Settings.Version["name"], Settings.Version["code"]))
+logger.info("Starting Gadis - {} ({})".format(Settings.Version["name"], Settings.Version["code"]))
 t = int(time.time())
 remote_handler = Remote(client)
 remote = client.loop.create_server(lambda: remote_handler, Settings.Remote["host"], Settings.Remote["port"])
