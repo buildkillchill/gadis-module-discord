@@ -1,7 +1,12 @@
 #!/usr/bin/python
 import socket
 import sys
-exec(open('/usr/local/share/gadis/settings.pyc').read())
+import uncompyle2
+from StringIO import StringIO
+f = StringIO()
+uncompyle2.uncompyle_file('/usr/local/share/gadis/settings.pyc', f)
+f.seek(0)
+exec(f.read(), globals(), locals())
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 addr = ('127.0.0.1', Settings.Remote["port"])
 sock.connect(addr)
