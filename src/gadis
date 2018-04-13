@@ -110,9 +110,10 @@ case $cmd in
 		if [ $num -eq 0 ]
 		then
 			echo -e "\e[0;31mSource file not found\e[0m"
+			exit 1
 		elif [ $num -eq 1 ]
 		then
-			file="$files"
+			file="${files[0]}"
 		elif [ $num -gt 1 ]
 		then
 			echo -e "\e[0;31mMore than one source file matching that name was found."
@@ -137,8 +138,8 @@ case $cmd in
 					file=""
 				fi
 			done
-			nano $file
 		fi
+		nano $file
 	;;
 	start)
 		start
