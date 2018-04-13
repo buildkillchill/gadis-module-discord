@@ -74,12 +74,14 @@ case $cmd in
 				;;
 			esac
 		done
+		git fetch --all
 		if [ $PUSH -eq 0 ]
 		then
 			git push origin || exit 1
 			git push local || exit 1
 		fi
 		cd ../current
+		git fetch --all
 		if [ $LOCAL -eq 0 ]
 		then
 			git pull local bot-server || exit 1
