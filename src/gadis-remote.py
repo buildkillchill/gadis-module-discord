@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import socket
 import sys
-import uncompyle2
+import uncompyle6
 from StringIO import StringIO
 f = StringIO()
 uncompyle2.uncompyle_file('/usr/local/share/gadis/settings.pyc', f)
