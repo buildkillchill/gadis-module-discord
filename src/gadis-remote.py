@@ -2,7 +2,7 @@
 import socket
 import sys
 import uncompyle6
-from StringIO import StringIO
+from io import StringIO
 f = StringIO()
 uncompyle2.uncompyle_file('/usr/local/share/gadis/settings.pyc', f)
 f.seek(0)
