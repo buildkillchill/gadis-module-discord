@@ -153,7 +153,7 @@ case $cmd in
 		start
 	;;
 	status)
-		echo -n "\e[0;33mGadis is "
+		echo -en "\e[0;33mGadis is "
 		if test -n "`screen -ls|grep Gadis`"
 		then
 			echo -e "\e[0;32mRunning\e[0m."
