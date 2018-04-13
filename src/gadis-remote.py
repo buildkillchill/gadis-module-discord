@@ -4,7 +4,7 @@ import sys
 import uncompyle6
 from io import StringIO
 f = StringIO()
-uncompyle2.uncompyle_file('/usr/local/share/gadis/settings.pyc', f)
+uncompyle6.uncompyle_file('/usr/local/share/gadis/settings.pyc', f)
 f.seek(0)
 exec(f.read(), globals(), locals())
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
