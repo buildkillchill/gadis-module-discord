@@ -59,8 +59,11 @@ files = [f for f in listdir(cachepath) if isfile(join(cachepath, f))]
 for file in files:
 	shutil.move(join(cachepath, file), "bin/modules/{}.pyc".format(file.split(".")[0]))
 
-print("Renaming base.pyc...")
-os.rename("bin/base.pyc", "bin/gadis-server")
+print("Renaming gadis-server.pyc...")
+os.rename("bin/gadis-server.pyc", "bin/gadis-server")
+
+print("Renaming gadis-remote.pyc...")
+os.rename("bin/gadis-remote.pyc", "bin/gadis-remote")
 
 print("Cleaning up...")
 shutil.rmtree("src/__pycache__")
@@ -74,6 +77,10 @@ if install:
 	if os.path.exists("/usr/local/bin/gadis-server"): os.remove("/usr/local/bin/gadis-server")
 	shutil.move("bin/gadis-server", "/usr/local/bin/")
 	os.chmod("/usr/local/bin/gadis-server", 0o755)
+	shutil.move("bin/gadis-remote", "/usr/local/bin/")
+	os.chmod("/usr/local/bin/gadis-remote", 0o755)
+	shutil.copy("src/gadis", "/usr/local/sbin/gadis")
+	os.chmod("/usr/local/sbin/gadis", 0o755)
 	files = [f for f in listdir("bin") if isfile(join("bin", f))]
 	for file in files:
 		shutil.move(join("bin", file), join("/usr/local/share/gadis", file))

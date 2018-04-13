@@ -1,0 +1,164 @@
+#!/bin/bash
+start()
+{
+	echo -en "\e[0;32mStarting Gadis... "
+	if test -n "`screen -ls|grep Gadis`"
+	then
+		bracket "\e[0;33mRUNNING"
+		exit 1
+	else
+		screen -dmS Gadis /usr/local/bin/gadis-server
+		if test -n "`screen -ls|grep Gadis`"
+		then
+			bracket "\e[0;32mSUCCESS"
+			exit 0
+		else
+			bracket "\e[0;31mFAILED"
+			exit 2
+		fi
+	fi
+}
+stop()
+{
+	echo -en "\e[0;32mGracefully \e[0;33mStopping Gadis... "
+	if test -n "`screen -ls|grep Gadis`"
+	then
+		discord shutdown
+		sleep 0.2
+		if test -n "`screen -ls|grep Gadis`"
+		then
+			bracket " \e[0;31mFAILED"
+		else
+			bracket "\e[0;32mDONE"
+		fi
+	else
+		bracket "\e[0;33mSTOPPED"
+	fi
+}
+bracket()
+{
+	echo -e "\e[0;34m[$1\e[0;34m]\e[0m"
+}
+cmd=$1
+shift
+case $cmd in
+	update)
+		cd /root/bkcs/working
+		PUSH=0
+		LOCAL=0
+		OPTIONS=nr
+		LONGOPTIONS=no-push,remote
+		PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTIONS --name "$0 update" -- "$@")
+		if [[ $? -ne 0 ]]
+		then
+			exit 1
+		fi
+		eval set -- "$PARSED"
+		while true; do
+			case "$1" in
+				-n|--no-push)
+					PUSH=1
+					shift
+				;;
+				-r|--remote)
+					LOCAL=1
+					shift
+				;;
+				--)
+					shift
+					break
+				;;
+				*)
+					echo -e "\e[0;31mProgramming error\e[0m"
+					exit 3
+				;;
+			esac
+		done
+		if [ $PUSH -eq 0 ]
+		then
+			git push origin || exit 1
+			git push local || exit 1
+		fi
+		cd ../current
+		if [ $LOCAL -eq 0 ]
+		then
+			git pull local bot-server || exit 1
+		else
+			git pull origin bot-server || exit 1
+		fi
+		./recompile
+	;;
+	view)
+		screen -r Gadis
+	;;
+	edit)
+		cd /root/bkcs/working/src
+		mapfile -t files < <(find ./ -iname "$1")
+		num=${#files[@]}
+		file=""
+		if [ $num -eq 0 ]
+		then
+			echo -e "\e[0;31mSource file not found\e[0m"
+		elif [ $num -eq 1 ]
+		then
+			file="$files"
+		elif [ $num -gt 1 ]
+		then
+			echo -e "\e[0;31mMore than one source file matching that name was found."
+			echo -e "\e[0;32mPossible matches:\e[0;33m"
+			for i in ${!files[@]}
+			do
+				echo -e "  $i) ${files[$i]}"
+			done
+			echo -e "  \e[0;31m99) None, just exit\e[0m"
+			while [ "$file" == "" ]
+			do
+				read -p "Which file do you want to edit? " f
+				if [ "$f" == "99" ]
+				then
+					echo -e "\e[0;32mOK, bye.\e[0m"
+					exit 0
+				fi
+				file=${files[$f]}
+				if [ ! -f "$file" ]
+				then
+					echo -e "\e[0;31mBad option. Please retry.\e[0m"
+					file=""
+				fi
+			done
+			nano $file
+		fi
+	;;
+	start)
+		start
+	;;
+	stop)
+		stop
+	;;
+	force-stop)
+		echo -e "\e[0;31mRudely\e[0m \e[0;33mStopping Gadis...\e[0m"
+		pkill -9 gadis-server
+	;;
+	restart)
+		stop
+		sleep 0.2
+		if test -n "`screen -ls|grep Gadis`"
+		then
+			echo -en "\e[0;31mGadis is not stopping, using force stop... "
+			pkill -9 gadis-server
+			bracket "\e[0;32mDONE"
+		fi
+		start
+	;;
+	status)
+		echo -n "Gadis is "
+		if test -n "`screen -ls|grep Gadis`"
+		then
+			echo -e "\e[0;32mRunning\e[0m."
+			exit 0
+		else
+			echo -e "\e[0;31mNOT Running\e[0m."
+			exit 0
+		fi
+	;;
+esac
