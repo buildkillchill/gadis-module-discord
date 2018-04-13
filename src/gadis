@@ -43,7 +43,7 @@ cmd=$1
 shift
 case $cmd in
 	update)
-		cd /root/bkcs/working
+		cd /root/gadis/working
 		PUSH=0
 		LOCAL=0
 		OPTIONS=nr
@@ -94,7 +94,7 @@ case $cmd in
 		screen -r Gadis
 	;;
 	edit)
-		cd /root/bkcs/working/src
+		cd /root/gadis/working/src
 		mapfile -t files < <(find ./ -iname "$1")
 		num=${#files[@]}
 		file=""
