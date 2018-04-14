@@ -49,15 +49,14 @@ async def on_ready():
 		mod = __import__(key)
 		cls = getattr(mod, "Module")
 		init = cls(common.getmodulestatus(key), client)
-		logger.info("Discovered module: {}".format(init.__name__))
 		if common.getmodulestatus(key):
-			logger.info("Initializing {}".format(init.__name__))
+			logger.info("{} is enabled.".format(init.__name__))
 		else:
 			logger.info("{} is disabled.".format(init.__name__))
 		if init.has_commands():
 			modules[key] = init
 		if init.bind_on_message():
-			logger.info("Binding {} to on_message()".format(init.__name__))
+			logger.info("Binding {}".format(init.__name__))
 			advanced[key] = init
 	diff = int(time.time()) - ti
 	logger.info("No more modules. ({}s)".format(diff))
