@@ -1,6 +1,7 @@
 
 import asyncio
 import discord
+from random import randint
 
 import common
 import mysql
@@ -63,7 +64,8 @@ class Module(common.BaseModule):
 		self.db.run("UPDATE `linked` SET `title`=%s WHERE `did`={}".format(message.mentions[0].id), [title])
 		await self.send(message.channel, "{}'s new title is: {}".format(message.mentions[0].mention, title))
 	async def link(self, args, message):
-		await self.send(message.author, "To finish the linking process, open this link in your browser: http://bkcservice.zenforic.com/link/?did={}".format(message.author.id))
+		code = randint(10000, 99999)
+		await self.send(message.author, "Thank you for starting the linking process. To complete the linking process, please get on the BKC GMod server and send `!link {}` in chat.".format(code))
 	async def infract(self, args, message):
 		if "+1inf" in message.content:
 			amt=1
