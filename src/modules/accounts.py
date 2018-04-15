@@ -76,7 +76,7 @@ class Module(common.BaseModule):
 			while code == 0:
 				code = randint(10000, 99999)
 				query = self.db.query("SELECT `id` FROM `link` WHERE `code`={} AND `used`=FALSE".format(code))
-				if not len(query) == 0:
+				if len(query) > 0:
 					code = 0
 					await asyncio.sleep(0.2)
 			self.db.run("INSERT INTO `link` (`id`,`code`) VALUES ({0},{1}) ON DUPLICATE KEY UPDATE `id`={0},`used`=FALSE".format(message.author.id, code))
