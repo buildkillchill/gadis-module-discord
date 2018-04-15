@@ -42,7 +42,7 @@ bracket()
 cmd=$1
 shift
 case $cmd in
-	update)
+	update|upd)
 		PUSH=0
 		LOCAL=0
 		OPTIONS=nr
@@ -74,35 +74,33 @@ case $cmd in
 				;;
 			esac
 		done
-		cd /root/gadis/working
-		git checkout bot-server
-		git fetch --all
-		if [ $PUSH -eq 0 ]
+		cd /root/gadis
+		if [ -e compile ]
 		then
-			git push origin bot-server || exit 1
-			git push local bot-server || exit 1
+			rm -fr compile
 		fi
-		if [ ! $LOCAL -eq 0 ]
-		then
-			git pull origin bot-server || exit 1
-			cd ../bare
-			git pull origin bot-server || exit 1
-		fi
-		cd ../current
-		git checkout bot-server
-		git fetch --all
-		if [ $LOCAL -eq 0 ]
-		then
-			git pull local bot-server || exit 1
-		else
-			git pull origin bot-server || exit 1
-		fi
+		git clone https://github.com/zenforic/Gadis compile
+		cd compile
 		./recompile
+		cd ..
+		rm -fr compile
 	;;
-	view)
+	publish|pub)
+		cd /root/gadis/working
+		git checkout bot-server || exit 1
+		git fetch --all || exit 1
+		git push origin bot-server || exit 1
+	;;
+	refresh-src|rsrc)
+		cd /root/gadis/working
+		git checkout bot-server || exit 1
+		git fetch --all || exit 1
+		git pull origin bot-server || exit 1
+	;;
+	view|v)
 		screen -r Gadis
 	;;
-	edit)
+	edit|e)
 		cd /root/gadis/working/src
 		mapfile -t files < <(find ./ -iname "$1")
 		num=${#files[@]}
@@ -140,18 +138,30 @@ case $cmd in
 			done
 		fi
 		nano $file
+		read -n 1 -p "Make a commit? [yN] " ans
+		if [ "$ans" == "y" ]
+		then
+			read -p "Message: " msg
+			git add $file || exit 1
+			git commit -m "$msg" || exit 1
+			read -n 1 -p "Publish? [Yn] " ans
+			if [ "$ans" != "n" ]
+			then
+				git push origin bot-server
+			fi
+		fi
 	;;
-	start)
+	start|run)
 		start
 	;;
 	stop)
 		stop
 	;;
-	force-stop)
+	force-stop|fstop)
 		echo -e "\e[0;31mRudely\e[0m \e[0;33mStopping Gadis...\e[0m"
 		pkill -9 gadis-server
 	;;
-	restart)
+	restart|rstart)
 		stop
 		sleep 0.2
 		if test -n "`screen -ls|grep Gadis`"
