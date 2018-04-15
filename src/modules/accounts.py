@@ -65,17 +65,21 @@ class Module(common.BaseModule):
 		await self.send(message.channel, "{}'s new title is: {}".format(message.mentions[0].mention, title))
 	async def link(self, args, message):
 		query = self.db.query("SELECT `did` FROM `linked` WHERE `did`={}".format(message.author.id))
-		if not query == None:
+		if len(query) > 0:
 			await self.send(message.author, "Your account is already linked")
 			return
-		code = 0
-		while code == 0:
-			code = randint(10000, 99999)
-			query = self.db.query("SELECT `id` FROM `link` WHERE `code`={} AND `used`=FALSE".format(code))
-			if not query == None:
-				code = 0
-				await asyncio.sleep(0.2)
-		self.db.run("INSERT INTO `link` (`id`,`code`) VALUES ({0},{1}) ON DUPLICATE KEY UPDATE `id`={0},`used`=FALSE".format(message.author.id, code))
+		query = self.db.query("SELECT `code` FROM `link` WHERE `id`={} AND `used`=FALSE".format(message.author.id))
+		if len(query) > 0:
+			code = query[0][0]
+		else:
+			code = 0
+			while code == 0:
+				code = randint(10000, 99999)
+				query = self.db.query("SELECT `id` FROM `link` WHERE `code`={} AND `used`=FALSE".format(code))
+				if not len(query) == 0:
+					code = 0
+					await asyncio.sleep(0.2)
+			self.db.run("INSERT INTO `link` (`id`,`code`) VALUES ({0},{1}) ON DUPLICATE KEY UPDATE `id`={0},`used`=FALSE".format(message.author.id, code))
 		await self.send(message.author, "Thank you for starting the linking process. To complete the linking process, please get on the BKC GMod server and send `!link {}` in chat.".format(code))
 	async def infract(self, args, message):
 		if "+1inf" in message.content:
