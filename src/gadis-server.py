@@ -23,14 +23,14 @@ t = 0
 diff = 0
 logger = logging.getLogger("GADIS")
 logger.setLevel(logging.DEBUG)
-ch = logging.StreamHandler(sys.stdout)
-ch.setLevel(logging.INFO)
 formatter = logging.Formatter('[%(asctime)s][%(levelname)s][%(name)s] %(message)s')
-ch.setFormatter(formatter)
-logger.addHandler(ch)
+ch = logging.StreamHandler(sys.stdout)
 fh = logging.FileHandler(filename='/var/log/gadis.log', encoding='utf-8', mode='w')
+ch.setLevel(logging.INFO)
 fh.setLevel(logging.DEBUG)
+ch.setFormatter(formatter)
 fh.setFormatter(formatter)
+logger.addHandler(ch)
 logger.addHandler(fh)
 
 @client.event
