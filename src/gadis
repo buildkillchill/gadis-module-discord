@@ -91,6 +91,17 @@ case $cmd in
 		git checkout bot-server || exit 1
 		git fetch --all || exit 1
 		git push origin bot-server || exit 1
+		read -n 1 -p "Run update? [Yn]" ans && echo
+		if [ "$ans" != "n" ]
+		then
+			cd ..
+			git clone https://github.com/zenforic/Gadis compile
+			cp settings/settings.py compile/src/settings.py
+			cd compile
+			./recompile
+			cd ..
+			rm -fr compile
+		fi
 	;;
 	refresh-src|rsrc)
 		cd /root/gadis/working
