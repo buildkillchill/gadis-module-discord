@@ -21,6 +21,29 @@ class Module(common.BaseModule):
 		self.addcmd("set-title", self.title, "Set admin title", rank=Settings.OwnerRank)
 		self.addcmd("userinfo", self.info, "Get user info", private=True)
 		self.addcmd("unlink-my-account", self.unlink, "Unlink and remove yourself from our accounts database", private=True)
+		self.addcmd("force-link", self.flink, "Force link user", rank=Settings.OwnerRank)
+	async def flink(self, args, message):
+		if not len(message.mentions) == 1:
+			await self.send(message.channel, "Please mention some poor fuck to link to this Steam ID.")
+			return
+		nargs = common.strip_mentions(" ".join(args[1:])).split(" ")
+		if not len(nargs) == 1:
+			await self.send(message.channel, "Learn to use the damn commands.")
+			return
+		try:
+			sid = int(nargs[0])
+		except ValueError:
+			await self.send(message.channel, "Are you a moron? Steam IDs are integers...")
+			return
+		except:
+			await self.send(message.channel, "I think I'm stupid. Or broken. I don't know which. Either way I was unable to convert the arg you provided to an integer.")
+			return
+		query = self.db.query("SELECT * FROM `linked` WHERE `sid`={} OR `did`={}".format(sid, message.mentions[0].id))
+		if len(query) > 0:
+			await self.send(message.channel, "This account is already linked ijiot")
+			return
+		self.db.run("DELETE FROM `link` WHERE `did`={}".format(message.mentions[0].id))
+		self.db.run("INSERT INTO `linked` (`sid`,`did`) VALUES ({},{})".format(sid, message.mentions[0].id))
 	async def unlink(self, args, message):
 		await self.send(message.channel, "To confirm your unlink please type `I DON'T LIKE BEING LINKED, PLEASE FORGET ME.`\nIt must be _exactly_ that, including the upper case and symbols. You have 60 seconds to do so, starting now.")
 		reply = await self.getreply(60, message.author, message.channel)
