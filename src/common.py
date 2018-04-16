@@ -9,7 +9,7 @@ import mysql
 from settings import Settings
 
 def strip_mentions(text):
-	return re.sub("(@.*#[0-9]{4}|\<\!?@[0-9]+\>)", "", text).strip()
+	return re.sub("(@.*#[0-9]{4}|\<@\!?[0-9]+\>)", "", text).strip()
 
 def runrcon(cmd):
 	 valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], cmd)
