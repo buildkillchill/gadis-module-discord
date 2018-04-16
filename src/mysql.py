@@ -28,5 +28,5 @@ class MySQLWrapper():
 		else:
 			self.cursor.execute(sql,replacements)
 	def disconnect(self):
-		self.logger.log(15, "Closing DB connection")
+		self.logger.extra("Closing DB connection")
 		self.connection.close()

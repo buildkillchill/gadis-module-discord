@@ -52,6 +52,12 @@ def getrank(id):
 	except:
 		return 1
 
+class LoggerExtension(logging.getLoggerClass()):
+	def __init__(self, *args, **kwargs):
+		super(LoggerExtension, self).__init__(*args, **kwargs)
+	def extra(self, msg, *args, **kwargs):
+		self.log(15, msg, *args, **kwargs)
+
 class BaseModule():
 	def __init__(self, enabled, client, raw=False):
 		self.enabled = enabled

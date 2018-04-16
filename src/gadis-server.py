@@ -22,6 +22,7 @@ mm = ModManager(True, client, modules, advanced)
 t = 0
 diff = 0
 logging.addLevelName(15, "EXTRA")
+logging.setLoggerClass(common.LoggerExtension)
 logger = logging.getLogger("GADIS")
 logger.setLevel(1)
 formatter = logging.Formatter('[%(asctime)s][%(levelname)s][%(name)s] %(message)s')
