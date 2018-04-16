@@ -28,6 +28,7 @@ class Module(common.BaseModule):
 			return
 		nargs = common.strip_mentions(" ".join(args[1:])).split(" ")
 		if not len(nargs) == 1:
+			self.logger.debug(" ".join(nargs))
 			await self.send(message.channel, "Learn to use the damn commands.")
 			return
 		try:
