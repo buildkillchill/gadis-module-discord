@@ -22,7 +22,7 @@ mm = ModManager(True, client, modules, advanced)
 t = 0
 diff = 0
 logger = logging.getLogger("GADIS")
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler(sys.stdout)
 ch.setLevel(logging.INFO)
 formatter = logging.Formatter('[%(asctime)s][%(levelname)s][%(name)s] %(message)s')
@@ -30,6 +30,7 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 fh = logging.FileHandler(filename='/var/log/gadis.log', encoding='utf-8', mode='w')
 fh.setLevel(logging.DEBUG)
+fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 @client.event
