@@ -42,6 +42,7 @@ async def on_ready():
 	logger.info("Ensuring brand...")
 	await client.edit_profile(None, username="Gadis")
 	modules["modules"] = mm
+	logger.info("Loading modules...")
 	ti = int(time.time())
 	files = {}
 	for filename in os.listdir('/usr/local/share/gadis/modules'):
@@ -62,7 +63,7 @@ async def on_ready():
 		if init.has_commands():
 			modules[key] = init
 		if init.bind_on_message():
-			logger.info("Binding {}".format(init.__name__))
+			logger.extra("Binding {}".format(init.__name__))
 			advanced[key] = init
 	diff = int(time.time()) - ti
 	logger.info("No more modules. ({}s)".format(diff))
