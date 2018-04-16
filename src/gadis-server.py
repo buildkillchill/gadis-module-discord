@@ -22,6 +22,7 @@ mm = ModManager(True, client, modules, advanced)
 t = 0
 diff = 0
 logger = logging.getLogger("GADIS")
+logging.addLevelName(15, "EXTRA")
 formatter = logging.Formatter('[%(asctime)s][%(levelname)s][%(name)s] %(message)s')
 ch = logging.StreamHandler(sys.stdout)
 fh = logging.FileHandler(filename='/var/log/gadis/debug.log', encoding='utf-8', mode='w')
@@ -31,7 +32,6 @@ ch.setFormatter(formatter)
 fh.setFormatter(formatter)
 logger.addHandler(ch)
 logger.addHandler(fh)
-logger.addLevelName(15, "EXTRA")
 
 @client.event
 async def on_ready():
