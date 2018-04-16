@@ -80,6 +80,7 @@ case $cmd in
 			rm -fr compile
 		fi
 		git clone https://github.com/zenforic/Gadis compile
+		cp settings/settings.py compile/src/settings.py
 		cd compile
 		./recompile
 		cd ..
