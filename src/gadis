@@ -139,13 +139,13 @@ case $cmd in
 			done
 		fi
 		nano $file
-		read -n 1 -p "Make a commit? [yN] " ans
+		read -n 1 -p "Make a commit? [yN] " ans && echo
 		if [ "$ans" == "y" ]
 		then
 			read -p "Message: " msg
 			git add $file || exit 1
 			git commit -m "$msg" || exit 1
-			read -n 1 -p "Publish? [Yn] " ans
+			read -n 1 -p "Publish? [Yn] " ans && echo
 			if [ "$ans" != "n" ]
 			then
 				git push origin bot-server
