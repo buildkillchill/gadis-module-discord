@@ -21,8 +21,9 @@ help = Help(True, client, modules)
 mm = ModManager(True, client, modules, advanced)
 t = 0
 diff = 0
-logger = logging.getLogger("GADIS")
 logging.addLevelName(15, "EXTRA")
+logger = logging.getLogger("GADIS")
+logger.setLevel(1)
 formatter = logging.Formatter('[%(asctime)s][%(levelname)s][%(name)s] %(message)s')
 ch = logging.StreamHandler(sys.stdout)
 fh = logging.FileHandler(filename='/var/log/gadis/debug.log', encoding='utf-8', mode='w')
