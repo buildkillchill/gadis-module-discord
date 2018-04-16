@@ -27,8 +27,8 @@ class Module(common.BaseModule):
 			await self.send(message.channel, "Please mention some poor fuck to link to this Steam ID.")
 			return
 		nargs = common.strip_mentions(" ".join(args[1:])).split(" ")
+		self.logger.debug(" ".join(nargs))
 		if not len(nargs) == 1:
-			self.logger.debug(" ".join(nargs))
 			await self.send(message.channel, "Learn to use the damn commands.")
 			return
 		try:
