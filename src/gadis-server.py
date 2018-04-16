@@ -28,6 +28,9 @@ ch.setLevel(logging.INFO)
 formatter = logging.Formatter('[%(asctime)s][%(levelname)s][%(name)s] %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
+fh = logging.FileHandler(filename='/var/log/gadis.log', encoding='utf-8', mode='w')
+fh.setLevel(logging.DEBUG)
+logger.addHandler(fh)
 
 @client.event
 async def on_ready():
