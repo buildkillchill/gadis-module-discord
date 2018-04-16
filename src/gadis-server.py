@@ -32,6 +32,7 @@ ch.setFormatter(formatter)
 fh.setFormatter(formatter)
 logger.addHandler(ch)
 logger.addHandler(fh)
+logger.addLevelName(15, "EXTRA")
 
 @client.event
 async def on_ready():
