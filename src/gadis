@@ -7,7 +7,7 @@ start()
 		bracket "\e[0;33mRUNNING"
 		exit 1
 	else
-		screen -dmS Gadis /usr/local/bin/gadis-server
+		screen -dmS Gadis /usr/local/bin/gadis.sh
 		if test -n "`screen -ls|grep Gadis`"
 		then
 			bracket "\e[0;32mSUCCESS"

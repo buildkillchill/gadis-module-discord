@@ -75,6 +75,7 @@ if install:
 	os.makedirs("/usr/local/share/gadis")
 	shutil.move("bin/modules", "/usr/local/share/gadis/modules")
 	if os.path.exists("/usr/local/sbin/gadis"): os.remove("/usr/local/sbin/gadis")
+	if os.path.exists("/usr/local/bin/gadis.sh"): os.remove("/usr/local/bin/gadis.sh")
 	if os.path.exists("/usr/local/bin/gadis-server"): os.remove("/usr/local/bin/gadis-server")
 	if os.path.exists("/usr/local/bin/gadis-remote"): os.remove("/usr/local/bin/gadis-remote")
 	shutil.move("bin/gadis-server", "/usr/local/bin/")
@@ -83,6 +84,8 @@ if install:
 	os.chmod("/usr/local/bin/gadis-remote", 0o755)
 	shutil.copy("src/gadis", "/usr/local/sbin/gadis")
 	os.chmod("/usr/local/sbin/gadis", 0o755)
+	shutil.copy("src/gadis.sh", "/usr/local/bin/gadis.sh")
+	os.chmod("/usr/local/bin/gadis.sh", 0o755)
 	files = [f for f in listdir("bin") if isfile(join("bin", f))]
 	for file in files:
 		shutil.move(join("bin", file), join("/usr/local/share/gadis", file))
