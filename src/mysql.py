@@ -13,7 +13,6 @@ class MySQLWrapper():
 		self.connection.ping(True)
 		self.cursor = self.connection.cursor()
 		self.logger = logging.getLogger("GADIS.MYSQL")
-		self.logger.addLevelName(15, "EXTRA")
 		filterwarnings('ignore', category = MySQLdb.Warning)
 	def query(self, sql, replacements=None):
 		self.logger.debug("Executing '{}'".format(sql))
