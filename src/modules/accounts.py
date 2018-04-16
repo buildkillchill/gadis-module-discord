@@ -20,6 +20,14 @@ class Module(common.BaseModule):
 		self.addcmd("my-slogan-is", self.slogan, "Set your slogan", rank=Settings.Admin["rank"])
 		self.addcmd("set-title", self.title, "Set admin title", rank=Settings.OwnerRank)
 		self.addcmd("userinfo", self.info, "Get user info", private=True)
+		self.addcmd("unlink-my-account", self.unlink, "Unlink and remove yourself from our accounts database", private=True)
+	async def unlink(self, args, message):
+		await self.send(message.channel, "To confirm your unlink please type `I DON'T LIKE BEING LINKED, PLEASE FORGET ME.`\nIt must be _exactly_ that, including the upper case and symbols. You have 60 seconds to do so, starting now.")
+		reply = await self.getreply(60, message.author, message.channel)
+		if reply.contents == "I DON'T LIKE BEING LINKED, PLEASE FORGET ME.":
+			self.db.run("DELETE FROM `linked` WHERE `did`={}".format(message.author.id))
+			self.db.run("DELETE FROM `link` WHERE `did`={}".format(message.author.id))
+			await self.send(message.channel, "You have been forgotten.")
 	async def info(self, args, message):
 		user = None
 		if len(message.mentions) > 0:
