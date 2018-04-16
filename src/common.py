@@ -69,6 +69,7 @@ class BaseModule():
 		self.usage = {}
 		self.private = []
 		self.db = mysql.default()
+		logging.setLoggerClass(LoggerExtension)
 		self.logger = logging.getLogger("GADIS.MOD.{}".format("".join(self.__name__.split())))
 		self.logger.extra("{} Base Initialization Completed.".format(self.__name__))
 	async def on_message(self, message):
