@@ -2,7 +2,7 @@ import MySQLdb
 import logging
 import sys
 sys.path.append('/usr/local/share/gadis')
-import common
+from common import LoggerExtension
 from warnings import filterwarnings
 from settings import Settings
 
@@ -15,7 +15,7 @@ class MySQLWrapper():
 		self.connection.autocommit(True)
 		self.connection.ping(True)
 		self.cursor = self.connection.cursor()
-		logging.setLoggerClass(common.LoggerExtension)
+		logging.setLoggerClass(LoggerExtension)
 		self.logger = logging.getLogger("GADIS.MYSQL")
 		filterwarnings('ignore', category = MySQLdb.Warning)
 	def query(self, sql, replacements=None):
