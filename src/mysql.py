@@ -12,6 +12,7 @@ class MySQLWrapper():
 		self.connection.autocommit(True)
 		self.connection.ping(True)
 		self.cursor = self.connection.cursor()
+		logging.setLoggerClass(common.LoggerExtension)
 		self.logger = logging.getLogger("GADIS.MYSQL")
 		filterwarnings('ignore', category = MySQLdb.Warning)
 	def query(self, sql, replacements=None):
