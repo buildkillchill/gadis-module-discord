@@ -1,5 +1,7 @@
 import MySQLdb
 import logging
+sys.path.append('/usr/local/share/gadis')
+import common
 from warnings import filterwarnings
 from settings import Settings
 
