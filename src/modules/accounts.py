@@ -4,15 +4,14 @@ import discord
 from random import randint
 
 import common
-import mysql
 
 from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Accounts"
 	__version__ = "2.02"
-	def __init__(self, enabled, client=None):
-		common.BaseModule.__init__(self, enabled, client)
+	def __init__(self, db, enabled, client=None):
+		common.BaseModule.__init__(self, db, enabled, client)
 		self.addcmd("link", self.link, "Link your Steam and Discord to me. This allows for applying for admin and future features.", private=True)
 		self.addcmd("+1inf", self.infract, "Add an infraction to user(s).", rank=Settings.OwnerRank)
 		self.addcmd("+.5inf", self.infract, "Add a half-infraction to user(s).", rank=Settings.OwnerRank)
@@ -72,7 +71,7 @@ class Module(common.BaseModule):
 		if user == None:
 			await self.send(message.channel, "No user by that ID was found")
 		else:
-			u = common.User.from_discord_id(self.client, user.id)
+			u = common.User.from_discord_id(self.client, self.db, user.id)
 			linked = False if u == None else True
 			em = discord.Embed(title="",description="")
 			em.set_author(name=user.name, icon_url=user.avatar_url)
@@ -121,7 +120,7 @@ class Module(common.BaseModule):
 		else:
 			return
 		for member in message.mentions:
-			user = common.User.from_discord_id(self.client, member.id)
+			user = common.User.from_discord_id(self.client, self.db, member.id)
 			user.infract(amt)
 			if user.infractions() >= Settings.MaxInfractions[user.rank()]:
 				em = discord.Embed(title="Infractions Beyond Permissible Amount", description="The consequences are listed below.")
@@ -132,7 +131,7 @@ class Module(common.BaseModule):
 				await user.setrank(user.previous_rank())
 	async def testinf(self, args, message):
 		for member in message.mentions:
-			user = common.User.from_discord_id(self.client, member.id)
+			user = common.User.from_discord_id(self.client, self.db, member.id)
 			em = discord.Embed(title="! TEST MESSAGE ! Infractions Beyond Permissible Amount ! TEST MESSAGE !", description="! TEST MESSAGE ! The consequences are listed below. ! TEST MESSAGE !")
 			em.set_author(name=message.author.name, icon_url=message.author.avatar_url)
 			self.add_field(em, "Demotion", "You will be demoted to your previous rank and your infractions will be reset.")

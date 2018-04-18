@@ -6,15 +6,14 @@ import random
 import time
 
 import common
-import mysql
 
 from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Rank Manager"
 	__version__ = "3.07"
-	def __init__(self, enabled, client=None):
-		common.BaseModule.__init__(self, enabled, client)
+	def __init__(self, db, enabled, client=None):
+		common.BaseModule.__init__(self, db, enabled, client)
 		self.addcmd("apply", self.apply, "Apply for admin")
 		self.addcmd("applicants", self.applicants, "View list of admin applicants.", rank=Settings.Admin["rank"], private=True)
 		self.addcmd("letters", self.letters, "View the admin's letters of recommendation or disapproval of applicants", rank=Settings.OwnerRank, private=True)
@@ -30,7 +29,7 @@ class Module(common.BaseModule):
 		return s.encode('ascii', 'ignore').decode('ascii')
 	async def testsr(self, args, pmsg):
 		self.logger.debug("BEGIN TEST: User.setrank")
-		user = common.User.from_discord_id(self.client, pmsg.mentions[0].id)
+		user = common.User.from_discord_id(self.client, self.db, pmsg.mentions[0].id)
 		rank = user.rank()
 		prev = user.previous_rank()
 		t = int(time.time())
@@ -49,13 +48,13 @@ class Module(common.BaseModule):
 		t = int(time.time())
 		server = common.getserver(self.client)
 		for member in server.members:
-			roles = common.getroles(self.client, common.getrank(member.id))
-			user = common.User.from_discord_id(self.client, member.id)
+			roles = common.getroles(self.client, self.db, common.getrank(self.db, member.id))
+			user = common.User.from_discord_id(self.client, self.db, member.id)
 			if user == None: continue
 			donor = discord.utils.get(common.getserver(self.client).roles, name="Donator")
 			if len(roles) == 0 or len(user.roles()) == 0:
 				continue
-			await self.client.add_roles(member, *common.getroles(self.client, user.previous_rank()))
+			await self.client.add_roles(member, *common.getroles(self.client, self.db, user.previous_rank()))
 			if donor in roles and not donor in member.roles:
 				await self.send(self.getchannel("general"), "Thank you, {}, for donating. It's donations, like yours, that keep this server running.".format(member.mention))
 			for role in roles:
@@ -84,7 +83,7 @@ class Module(common.BaseModule):
 			await self.edit(msg, message.format(remains))
 	async def retire(self, args, pmsg):
 		self.logger.info("WARNING: RETIREMENT PROCESS STARTED FOR MEMBER WITH ID {}".format(pmsg.author.id))
-		admin = common.User.from_discord_id(self.client, pmsg.author.id)
+		admin = common.User.from_discord_id(self.client, self.db, pmsg.author.id)
 		self.client.create_task(self.tick_down(pmsg.channel, 60, "{} are you sure you want to retire? You will have to go through the whole application process again if you want your position back. You have \{\} seconds to reply with _EXACTLY_ `I HEREBY FORFEIT MY POSITION AND GO INTO RETIREMENT`. This is case sensitive.".format(pmsg.author.mention)))
 		reply = await self.getreply(60, pmsg.author, pmsg.channel)
 		if reply == "I HEREBY FORFEIT MY POSITION AND GO INTO RETIREMENT":
@@ -115,13 +114,13 @@ class Module(common.BaseModule):
 		if reply.lower() == "y" or reply.lower() == "yes":
 			msg = await self.send(pmsg.channel, "Plugging potato into battery terminals...")
 			for m in pmsg.mentions:
-				p = common.User.from_discord_id(self.client, pmsg.author.id)
+				p = common.User.from_discord_id(self.client, self.db, pmsg.author.id)
 				await self.edit(msg, "Demoting {}".format(m.mention))
 				await p.setrank(p.previous_rank(), reason, lock)
 			await self.edit(msg, "Demotion complete.")
 	async def approve(self, args, pmsg):
-		applicant = common.User.from_discord_id(self.client, args[1])
-		if IsApplicant(applicant.ID()):
+		applicant = common.User.from_discord_id(self.client, self.db, args[1])
+		if IsApplicant(self.db, applicant.ID()):
 			self.db.run("UPDATE `applications` SET `accepted`=True WHERE `id`={}".format(applicant.ID()))
 			last = await self.send(pmsg.author, "Setting Rank...")
 			await applicant.setrank(Settings.Admin["rank"])
@@ -130,7 +129,7 @@ class Module(common.BaseModule):
 		else:
 			await self.send(pmsg.author, "They are not an applicant. Please have them apply first.")
 	async def strip(self, args, pmsg):
-		user = common.User.from_discord_id(args[1])
+		user = common.User.from_discord_id(self.client, self.db, args[1])
 		self.StripRank(user)
 		await self.send(pmsg.author, "Rank and title has been hereby stripped from {}".format(user.discord().mention))
 	async def StripRank(self, user):
@@ -143,7 +142,7 @@ class Module(common.BaseModule):
 				await self.client.remove_role(member, role)
 		common.runrcon("ulx removeuserid {}".format(user.steamID()))
 	async def apply(self, args, pmsg):
-		usr = common.User.from_discord_id(self.client, pmsg.author.id)
+		usr = common.User.from_discord_id(self.client, self.db, pmsg.author.id)
 		taken = len(self.db.query("SELECT `id` FROM `linked` WHERE `rank` >= {}".format(Settings.Admin["rank"])))
 		appcount = len(self.db.query("SELECT * FROM `applications` WHERE `accepted`=FALSE AND `denied`=FALSE AND `interviewed`=FALSE"))
 		if usr.rank() >= Settings.Admin["rank"]:
@@ -209,7 +208,7 @@ class Module(common.BaseModule):
 			await self.edit(last, "No letters to display.")
 
 	async def applicants(self, args, pmsg):
-		rank = self.getrank(pmsg.author.id)
+		rank = self.getrank(self.db, pmsg.author.id)
 		await self.send(pmsg.author, "Welcome to The Applicants Module.\nOwner commands:```interview       Extend an interview invite\napprove         Approve application\ndeny            Deny application```Admin commands:```recommend       Recommend applicant for promotion.\ndisapprove      Recommend denial of application```Common commands:```next            Show next applicant\nstop            Exit The Applicant Module```")
 		lastmsg = await self.send(pmsg.author, "Fetching applicants...")
 		apps = self.db.query("SELECT `id`,`message` FROM `applications` WHERE `denied` = FALSE AND `accepted` = FALSE")
@@ -224,8 +223,8 @@ class Module(common.BaseModule):
 				azi_icon = azi.avatar_url
 			for app in apps:
 				await self.edit(lastmsg, "Getting applicant's Discord info...")
-				iapp = common.User.from_id(self.client, app[0])
-				iadm = common.User.from_discord_id(self.client, pmsg.author.id)
+				iapp = common.User.from_id(self.client, self.db, app[0])
+				iadm = common.User.from_discord_id(self.client, self.db, pmsg.author.id)
 				id = iapp.ID()
 				aid = iadm.ID()
 				applicant = await iapp.discord()
@@ -304,8 +303,7 @@ class Module(common.BaseModule):
 			await self.send(pmsg.author, "No more applicants remain.")
 		else:
 			await self.edit(lastmsg, "No viable applicants found.")
-def IsApplicant(id):
-	db = mysql.default()
+def IsApplicant(db, id):
 	results = db.query("SELECT * FROM `applications` WHERE `id`={}".format(id))
 	if len(results) > 0:
 		return True

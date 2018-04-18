@@ -13,10 +13,12 @@ from help import Module as Help
 from settings import Settings
 
 import common
+import mysql
 
 client = discord.Client()
 modules = {}
 advanced = {}
+db = mysql.default()
 help = Help(True, client, modules)
 mm = ModManager(True, client, modules, advanced)
 t = 0
@@ -55,8 +57,8 @@ async def on_ready():
 	for key in files.keys():
 		mod = __import__(key)
 		cls = getattr(mod, "Module")
-		init = cls(common.getmodulestatus(key), client)
-		if common.getmodulestatus(key):
+		init = cls(common.getmodulestatus(db, key), client)
+		if common.getmodulestatus(db, key):
 			logger.info("{} is enabled.".format(init.__name__))
 		else:
 			logger.info("{} is disabled.".format(init.__name__))
@@ -78,7 +80,7 @@ async def on_message(message):
 		module = modules[n]
 		if not module.has_command(cmd): continue
 
-		if module.permissible(cmd, common.getrank(message.author.id), message.channel.is_private):
+		if module.permissible(cmd, common.getrank(db, message.author.id), message.channel.is_private):
 			t = int(time.time())
 			handled = module.receive(cmd, args, message)
 			break
@@ -121,7 +123,7 @@ async def on_message(message):
 
 logger.info("Starting Gadis - {} ({})".format(Settings.Version["name"], Settings.Version["code"]))
 t = int(time.time())
-remote_handler = Remote(client)
+remote_handler = Remote(db, client)
 remote = client.loop.create_server(lambda: remote_handler, Settings.Remote["host"], Settings.Remote["port"])
 client.loop.create_task(remote)
 diff = int(time.time()) - t

@@ -5,7 +5,6 @@ import valve.rcon
 import logging
 import re
 
-import mysql
 from settings import Settings
 
 def strip_mentions(text):
@@ -14,22 +13,19 @@ def strip_mentions(text):
 def runrcon(cmd):
 	 valve.rcon.execute((Settings.RCON["host"], Settings.RCON["port"]), Settings.RCON["pass"], cmd)
 
-def getmodulestatus(name):
-	db = mysql.default()
+def getmodulestatus(db, name):
 	db.run("INSERT IGNORE INTO `modules` (`name`) VALUES (%s)", [name])
 	status = db.query("SELECT `enabled` FROM `modules` WHERE `name`=%s", [name])
 	status = status[0][0]
 	return status
 
-def setmodulestatus(name, enabled):
-	db = mysql.default()
+def setmodulestatus(db, name, enabled):
 	db.run("INSERT INTO `modules` (`name`,`enabled`) VALUES (%s, %s) ON DUPLICATE KEY UPDATE `enabled`=%s", [name, enabled, enabled])
 
 def getserver(client):
 	return client.get_server(str(Settings.ServerID))
 
-def getroles(client, rank):
-	db = mysql.default()
+def getroles(client, db, rank):
 	server = getserver(client)
 	roles = []
 	for rank in Settings.Ranks[rank]:
@@ -37,7 +33,6 @@ def getroles(client, rank):
 	return roles
 
 def getgmodrank(rank):
-	db = mysql.default()
 	rank = db.query("SELECT `name` FROM `ranks` WHERE `id`={}".format(rank))
 	return rank[0][0]
 
@@ -45,8 +40,7 @@ def getmember(client, user):
 	server = getserver(client)
 	return discord.utils.get(server.members, id=str(user.discordID()))
 
-def getrank(id):
-	db = mysql.default()
+def getrank(db, id):
 	try:
 		return db.query("SELECT `rank` FROM `linked` WHERE `did`={}".format(id))[0][0]
 	except:
@@ -59,7 +53,7 @@ class LoggerExtension(logging.getLoggerClass()):
 		self.log(15, msg, *args, **kwargs)
 
 class BaseModule():
-	def __init__(self, enabled, client, raw=False):
+	def __init__(self, enabled, db, client, raw=False):
 		self.enabled = enabled
 		self.raw = raw
 		self.client  = client
@@ -68,7 +62,7 @@ class BaseModule():
 		self.minrank = {}
 		self.usage = {}
 		self.private = []
-		self.db = mysql.default()
+		self.db = db
 		logging.setLoggerClass(LoggerExtension)
 		self.logger = logging.getLogger("GADIS.MOD.{}".format("".join(self.__name__.split())))
 		self.logger.extra("{} Base Initialization Completed.".format(self.__name__))
@@ -90,10 +84,10 @@ class BaseModule():
 			return False
 	def enable(self):
 		self.enabled = True
-		setmodulestatus(__file__[:-4], True)
+		setmodulestatus(self.db, __file__[:-4], True)
 	def disable(self):
 		self.enabled = False
-		setmodulestatus(__file__[:-4], False)
+		setmodulestatus(self.db, __file__[:-4], False)
 	async def send(self, channel, message):
 		return await self.client.send_message(channel, message)
 	async def edit(self, message, new_message):
@@ -176,14 +170,14 @@ class Steam():
 	def ID(steam64):
 		return valve.steam.id.SteamID.from_community_url("http://steamcommunity.com/profiles/{}".format(steam64)).__str__()
 class User(BaseModule):
-	def __init__(self, client, id, did, sid, sid64):
+	def __init__(self, client, db, id, did, sid, sid64):
 		self.id = {}
 		self.id["id"] = id
 		self.id["discord"] = did
 		self.id["steam"] = sid
 		self.id["steam64"] = sid64
 		self.client = client
-		self.db = mysql.default()
+		self.db = db
 	def ID(self):
 		return self.id["id"]
 	def steamID(self):
@@ -237,8 +231,8 @@ class User(BaseModule):
 			self.lock()
 
 		member = getmember(self.client, self)
-		roles = getroles(self.client, rank)
-		prev = getroles(self.client, self.previous_rank())
+		roles = getroles(self.client, self.db, rank)
+		prev = getroles(self.client, self.db, self.previous_rank())
 		ranked_roles = []
 		for key, value in Settings.Ranks.items():
 			for rid in value:
@@ -256,32 +250,27 @@ class User(BaseModule):
 				print("Adding {} ({}) to {}.".format(role.id, role.name, member.id))
 				await self.client.add_roles(member, role)
 		self.db.run("UPDATE `linked` SET `rank`={} WHERE `id`={}".format(rank, self.id["id"]))
-		runrcon("ulx adduserid {} {}".format(self.steamID(), getgmodrank(rank)))
+		runrcon("ulx adduserid {} {}".format(self.steamID(), getgmodrank(self.db, rank)))
 	def infract(self, amt):
 		self.db.run("UPDATE `linked` SET `infractions`=`infractions`+{} WHERE `id`={}".format(amt, self.id["id"]))
 	@staticmethod
-	def from_steam_id(client, sid):
-		db = mysql.default()
+	def from_steam_id(client, db, sid):
 		sid64 = Steam.ID64(sid)
 		account = db.query("SELECT `id`,`did` FROM `linked` WHERE `sid`={}".format(sid64))
 		account = account[0]
 		id = account[0]
 		did = account[1]
-		db.disconnect()
-		return User(client, id, did, sid, sid64)
+		return User(client, db, id, did, sid, sid64)
 	@staticmethod
-	def from_steam_id64(client, sid64):
-		db = mysql.default()
+	def from_steam_id64(client, db, sid64):
 		sid = Steam.ID(sid64)
 		account = db.query("SELECT `id`,`did` FROM `linked` WHERE `sid`={}".format(sid64))
 		account = account[0]
 		id = account[0]
 		did = account[1]
-		db.disconnect()
-		return User(client, id, did, sid, sid64)
+		return User(client, db, id, did, sid, sid64)
 	@staticmethod
-	def from_discord_id(client, did):
-		db = mysql.default()
+	def from_discord_id(client, db, did):
 		account = db.query("SELECT `id`,`sid` FROM `linked` WHERE `did`={}".format(did))
 		if len(account) == 0:
 			return None
@@ -289,15 +278,12 @@ class User(BaseModule):
 		id = account[0]
 		sid64 = account[1]
 		sid = Steam.ID(sid64)
-		db.disconnect()
-		return User(client, id, did, sid, sid64)
+		return User(client, db, id, did, sid, sid64)
 	@staticmethod
-	def from_id(client, id):
-		db = mysql.default()
+	def from_id(client, db, id):
 		account = db.query("SELECT `did`,`sid` FROM `linked` WHERE `id`={}".format(id))
 		account = account[0]
 		did = account[0]
 		sid64 = account[1]
 		sid = Steam.ID(sid64)
-		db.disconnect()
-		return User(client, id, did, sid, sid64)
+		return User(client, db, id, did, sid, sid64)
