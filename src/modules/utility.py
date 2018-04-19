@@ -34,7 +34,7 @@ class Module(common.BaseModule):
 					v = v[:-1]
 					text = "Row {}:\n`{}`".format(i, v)
 					await self.send(pmsg.author, text)
-					i++
+					i += 1
 		else:
 			self.db.run(query)
 	async def repeats(self, args, pmsg):
