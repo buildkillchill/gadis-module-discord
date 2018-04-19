@@ -4,7 +4,7 @@ import common
 class Module(common.BaseModule):
 	__name__ = "Fun"
 	__version__ = "2.04"
-	def __init__(self, enabled, db client=None):
+	def __init__(self, enabled, db, client=None):
 		common.BaseModule.__init__(self, enabled, db, client, True)
 		self.addcmd("woof", self.woof, "Lovely puppies...")
 		self.addcmd("meow", self.meow, "Lovely kitties...")
