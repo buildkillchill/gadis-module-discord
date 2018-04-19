@@ -35,6 +35,8 @@ class Module(common.BaseModule):
 					text = "Row {}:\n`{}`".format(i, v)
 					await self.send(pmsg.author, text)
 					i += 1
+			else:
+				await self.send(pmsg.author, "No results")
 		else:
 			self.db.run(query)
 	async def repeats(self, args, pmsg):
