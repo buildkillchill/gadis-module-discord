@@ -17,8 +17,26 @@ class Module(common.BaseModule):
 		self.addcmd("gmod.tsay", self.tsay, "Say something through console", private=True, rank=Settings.OwnerRank)
 		self.addcmd("gmod.csay", self.csay, "Say something through console", private=True, rank=Settings.OwnerRank)
 		self.addcmd("gmod.tsayc", self.tsayc, "Say something through console", private=True, rank=Settings.OwnerRank)
+		self.addcmd("+sqlq", self.sql, "Execute SQL query for results", rank=Settings.OwnerRank)
+		self.addcmd("+sqle", self.sql, "Execute SQL query", rank=Settings.OwnerRank)
 		self.addcmd("inv", self.repeats, "Show the invite link")
 		self.addcmd("rtfa", self.repeats, "Read The Announcements", rank=Settings.Admin["rank"])
+	async def sql(self, args, pmsg):
+		query = " ".join(args[1:])
+		if args[0].lower() == "+sqlq":
+			res = self.db.query(query)
+			if len(res) > 0:
+				i = 1
+				for row in res:
+					v = ""
+					for col in row:
+						v = "{}{},".format(v, col)
+					v = v[:-1]
+					text = "Row {}:\n`{}`".format(i, v)
+					await self.send(pmsg.author, text)
+					i++
+		else:
+			self.db.run(query)
 	async def repeats(self, args, pmsg):
 		await self.send(pmsg.channel, Settings.Repeats[args[0].lower()])
 	async def clear(self, args, pmsg):
