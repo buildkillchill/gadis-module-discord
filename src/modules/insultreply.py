@@ -6,8 +6,8 @@ from settings import Settings
 class Module(common.BaseModule):
 	__name__ = "Insult Reply"
 	__version__ = "1.14"
-	def __init__(self, db, enabled, client=None):
-		common.BaseModule.__init__(self, db, enabled, client, True)
+	def __init__(self, enabled, db, client=None):
+		common.BaseModule.__init__(self, enabled, db, client, True)
 	async def on_message(self, message):
 		if not await common.BaseModule.on_message(self, message): return
 		if message.channel.is_private: return

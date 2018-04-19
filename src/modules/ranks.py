@@ -12,8 +12,8 @@ from settings import Settings
 class Module(common.BaseModule):
 	__name__ = "Rank Manager"
 	__version__ = "3.07"
-	def __init__(self, db, enabled, client=None):
-		common.BaseModule.__init__(self, db, enabled, client)
+	def __init__(self, enabled, db, client=None):
+		common.BaseModule.__init__(self, enabled, db, client)
 		self.addcmd("apply", self.apply, "Apply for admin")
 		self.addcmd("applicants", self.applicants, "View list of admin applicants.", rank=Settings.Admin["rank"], private=True)
 		self.addcmd("letters", self.letters, "View the admin's letters of recommendation or disapproval of applicants", rank=Settings.OwnerRank, private=True)

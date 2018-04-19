@@ -8,7 +8,7 @@ from settings import Settings
 class Module(asyncio.Protocol, common.BaseModule):
 	__name__ = "Remote"
 	def __init__(self, db, client):
-		common.BaseModule.__init__(self, db, True, client)
+		common.BaseModule.__init__(self, True, db, client)
 		self.transport = None
 	def connection_made(self, transport):
 		if not self.transport == None:

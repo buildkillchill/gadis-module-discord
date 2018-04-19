@@ -57,7 +57,7 @@ async def on_ready():
 	for key in files.keys():
 		mod = __import__(key)
 		cls = getattr(mod, "Module")
-		init = cls(common.getmodulestatus(db, key), client)
+		init = cls(common.getmodulestatus(db, key), db, client)
 		if common.getmodulestatus(db, key):
 			logger.info("{} is enabled.".format(init.__name__))
 		else:

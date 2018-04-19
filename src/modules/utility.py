@@ -8,8 +8,8 @@ from settings import Settings
 class Module(common.BaseModule):
 	__name__ = "Utility"
 	__version__ = "1.08"
-	def __init__(self, db, enabled, client=None):
-		common.BaseModule.__init__(self, db, enabled, client)
+	def __init__(self, enabled, db, client=None):
+		common.BaseModule.__init__(self, enabled, db, client)
 		self.addcmd("roles", self.roles, "View a list of roles with corrisponding IDs")
 		self.addcmd("report", self.report, "Report a someone", usage="`report USER`\nWhen prompted, give reason for report.")
 		self.addcmd("%clear", self.clear, "Clear channel with conditions", rank=Settings.OwnerRank)

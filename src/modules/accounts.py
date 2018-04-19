@@ -10,8 +10,8 @@ from settings import Settings
 class Module(common.BaseModule):
 	__name__ = "Accounts"
 	__version__ = "2.02"
-	def __init__(self, db, enabled, client=None):
-		common.BaseModule.__init__(self, db, enabled, client)
+	def __init__(self, enabled, db, client=None):
+		common.BaseModule.__init__(self, enabled, db, client)
 		self.addcmd("link", self.link, "Link your Steam and Discord to me. This allows for applying for admin and future features.", private=True)
 		self.addcmd("+1inf", self.infract, "Add an infraction to user(s).", rank=Settings.OwnerRank)
 		self.addcmd("+.5inf", self.infract, "Add a half-infraction to user(s).", rank=Settings.OwnerRank)

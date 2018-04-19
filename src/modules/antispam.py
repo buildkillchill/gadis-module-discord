@@ -58,8 +58,8 @@ class SpamTables():
 class Module(common.BaseModule):
 	__name__ = "Anti-Spam"
 	__version__ = "2.12"
-	def __init__(self, db, enabled, client=None):
-		common.BaseModule.__init__(self, db, enabled, client, True)
+	def __init__(self, enabled, db, client=None):
+		common.BaseModule.__init__(self, enabled, db, client, True)
 		self.server = common.getserver(self.client)
 		self.silenced = discord.utils.get(self.server.roles, id=str(Settings.Roles["silent"]))
 		self.client.loop.create_task(self.unsilence())
