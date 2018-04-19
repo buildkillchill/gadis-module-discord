@@ -208,7 +208,7 @@ class Module(common.BaseModule):
 			await self.edit(last, "No letters to display.")
 
 	async def applicants(self, args, pmsg):
-		rank = getrank(self.db, pmsg.author.id)
+		rank = common.getrank(self.db, pmsg.author.id)
 		await self.send(pmsg.author, "Welcome to The Applicants Module.\nOwner commands:```interview       Extend an interview invite\napprove         Approve application\ndeny            Deny application```Admin commands:```recommend       Recommend applicant for promotion.\ndisapprove      Recommend denial of application```Common commands:```next            Show next applicant\nstop            Exit The Applicant Module```")
 		lastmsg = await self.send(pmsg.author, "Fetching applicants...")
 		apps = self.db.query("SELECT `id`,`message` FROM `applications` WHERE `denied` = FALSE AND `accepted` = FALSE")
