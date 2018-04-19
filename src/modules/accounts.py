@@ -36,13 +36,13 @@ class Module(common.BaseModule):
 			await self.send(message.channel, "Are you a moron? Steam IDs are integers...")
 			return
 		except:
-			await self.send(message.channel, "I think I'm stupid. Or broken. I don't know which. Either way I was unable to convert the arg you provided to an integer.")
+			await self.send(message.channel, "I think I'm stupid or broken. I don't know which. Either way I was unable to convert the arg you provided to an integer.")
 			return
 		query = self.db.query("SELECT * FROM `linked` WHERE `sid`={} OR `did`={}".format(sid, message.mentions[0].id))
 		if len(query) > 0:
 			await self.send(message.channel, "This account is already linked ijiot")
 			return
-		self.db.run("DELETE FROM `link` WHERE `did`={}".format(message.mentions[0].id))
+		self.db.run("DELETE FROM `link` WHERE `id`={}".format(message.mentions[0].id))
 		self.db.run("INSERT INTO `linked` (`sid`,`did`) VALUES ({},{})".format(sid, message.mentions[0].id))
 	async def unlink(self, args, message):
 		await self.send(message.channel, "To confirm your unlink please type `I DON'T LIKE BEING LINKED, PLEASE FORGET ME.`\nIt must be _exactly_ that, including the upper case and symbols. You have 60 seconds to do so, starting now.")
