@@ -44,12 +44,13 @@ class Module(common.BaseModule):
 			return
 		self.db.run("DELETE FROM `link` WHERE `id`={}".format(message.mentions[0].id))
 		self.db.run("INSERT INTO `linked` (`sid`,`did`) VALUES ({},{})".format(sid, message.mentions[0].id))
+		await self.send(message.channel, "{} you have been forcefully linked to the Steam profile with url https://steamcommunity.com/id/{}".format(message.mentions[0].mention, sid))
 	async def unlink(self, args, message):
 		await self.send(message.channel, "To confirm your unlink please type `I DON'T LIKE BEING LINKED, PLEASE FORGET ME.`\nIt must be _exactly_ that, including the upper case and symbols. You have 60 seconds to do so, starting now.")
 		reply = await self.getreply(60, message.author, message.channel)
 		if reply.contents == "I DON'T LIKE BEING LINKED, PLEASE FORGET ME.":
 			self.db.run("DELETE FROM `linked` WHERE `did`={}".format(message.author.id))
-			self.db.run("DELETE FROM `link` WHERE `did`={}".format(message.author.id))
+			self.db.run("DELETE FROM `link` WHERE `id`={}".format(message.author.id))
 			await self.send(message.channel, "You have been forgotten.")
 	async def info(self, args, message):
 		user = None
