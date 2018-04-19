@@ -8,9 +8,8 @@ from settings import Settings
 class Module(asyncio.Protocol, common.BaseModule):
 	__name__ = "Remote"
 	def __init__(self, db, client):
-		common.BaseModule.__init__(self, True, client)
+		common.BaseModule.__init__(self, db, True, client)
 		self.transport = None
-		self.db = db
 	def connection_made(self, transport):
 		if not self.transport == None:
 			transport.write("CONNECTION ALREADY ESTABLISHED")
