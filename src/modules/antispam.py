@@ -93,6 +93,7 @@ class Module(common.BaseModule):
 		self.addcmd("!defcon", self.setlevel, "Sets the spam DEFCON level.", rank=Settings.OwnerRank, usage="!defcon {1-5}")
 	async def setlevel(self, args, pmsg):
 		level = args[1]
+		self.logger.warn("DEFCON level is being prepared to be changed...")
 		if level == "1" or level == "2" or level == "3" or level == "4" or level == "5":
 			self.client.send_message(pmsg.channel, "@everyone Server Anti-Spam is now in DEFCON{}".format(level))
 			self.defcon.setlevel(level)
