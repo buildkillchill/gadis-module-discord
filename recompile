@@ -1,5 +1,5 @@
 #!/bin/bash
-gadis stop && ./compile && gadis start && gadis status
+gadisctl stop && ./compile && gadisctl start && gadisctl status
 echo ""
 read -p "Attach to screen? " -n 1 ans
 if [ "$ans" == "y" ]
