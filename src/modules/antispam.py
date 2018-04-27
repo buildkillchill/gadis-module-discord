@@ -8,10 +8,42 @@ import common
 
 from settings import Settings
 
+class DefCon():
+	def __init__(self, client=None, level=4):
+		self.client = client
+		self.level = level
+	def speed(self):
+		  if self.level == 1: return (count=1, delay=3600)
+		elif self.level == 2: return (count=1, delay=30  )
+		elif self.level == 3: return (count=2, delay=5   )
+		elif self.level == 4: return (count=3, delay=1   )
+		elif self.level == 5: return (count=5, delay=1   )
+	def identical(self):
+		  if self.level == 1: return 0
+		elif self.level == 2: return 2
+		elif self.level == 3: return 3
+		elif self.level == 4: return 5
+		elif self.level == 5: return 8
+	def drag(self):
+		  if self.level == 1: return (characters=r'((\S\s?)\2{2,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{1,})' )
+		elif self.level == 2: return (characters=r'((\S\s?)\2{3,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{3,})' )
+		elif self.level == 3: return (characters=r'((\S\s?)\2{4,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{4,})' )
+		elif self.level == 4: return (characters=r'((\S\s?)\2{9,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{9,})' )
+		elif self.level == 5: return (characters=r'((\S\s?)\2{49,})', emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{19,})')
+	def setlevel(self, args, pmsg):
+		if self.client == None: return
+		level = args[1]
+		if level == "1" or level == "2" or level == "3" or level == "4" or level == "5":
+			self.client.send_message(pmsg.channel, "@everyone Server Anti-Spam is now in DEFCON{}".format(level))
+			self.level = level
+		else:
+			self.client.send_message(pmsg.channel, "{}, please... For everyone's sake, learn the syntax for the security commands before you try to use them.".format(pmsg.author.mention))
+
 class SpamTables():
-	def __init__(self, db, userID):
+	def __init__(self, db, userID, defcon=DefCon()):
 		self.id = userID
 		self.db = db
+		self.defcon = defcon
 		self.db.run("INSERT IGNORE INTO `antispam` (`id`, `timestamp`) VALUES ({}, {})".format(self.id, int(time.time())))
 	def column(self, name):
 		value = self.db.query("SELECT `{}` FROM `antispam` WHERE `id`={}".format(name, self.id))
@@ -37,23 +69,17 @@ class SpamTables():
 	def spammed(self):
 		self.increment("violations")
 	def messaged(self, contents):
-		will_punish = False
-		if int(time.time()) - self.time() < 5:
+		if int(time.time()) - self.time() < self.defcon.fast().delay:
 			self.increment("fast")
 		else:
 			self.zero("fast")
-		if self.fastmsg() > 0:
-			will_punish = will_punish or True
 
 		self.db.run("UPDATE `antispam` SET `timestamp`='{}' WHERE `id`={}".format(int(time.time()), self.id))
 		if contents.encode('utf-8', "ignore") == self.message() and int(time.time()) - self.time() < 300:
 			self.increment("identical")
-			will_punish = will_punish or True
 		else:
 			self.db.run("UPDATE `antispam` SET `message`=%s WHERE `id`={}".format(self.id), [contents.encode('utf-8', "ignore")])
 			self.zero("identical")
-			will_punish = will_punish or False
-		return will_punish
 
 class Module(common.BaseModule):
 	__name__ = "Anti-Spam"
@@ -62,9 +88,11 @@ class Module(common.BaseModule):
 		common.BaseModule.__init__(self, enabled, db, client, True)
 		self.server = common.getserver(self.client)
 		self.silenced = discord.utils.get(self.server.roles, id=str(Settings.Roles["silent"]))
+		self.defcon = DefCon(client)
 		self.client.loop.create_task(self.unsilence())
-		self.addcmd("asignore", self.ignore, "Adds or removes people from the anti-spam ignore list.", rank=9, usage="asignore on|off @mention1 .. @mentionN")
-		self.addcmd("ignorechan", self.ignore_channel, "Adds or removes channels from the anti-spam ignore list.", rank=9, usage="ignorechan on|off #channel1 .. #channelN")
+		self.addcmd("asignore", self.ignore, "Adds or removes people from the anti-spam ignore list.", rank=Settings.OwnerRank, usage="asignore on|off @mention1 .. @mentionN")
+		self.addcmd("ignorechan", self.ignore_channel, "Adds or removes channels from the anti-spam ignore list.", rank=Settings.OwnerRank, usage="ignorechan on|off #channel1 .. #channelN")
+		self.addcmd("!defcon", self.defcon.setlevel, "Sets the spam DEFCON level.", rank=Settings.OwnerRank, usage="!defcon {1-5}")
 	async def unsilence(self):
 		while True:
 			for person in self.server.members:
@@ -144,15 +172,13 @@ class Module(common.BaseModule):
 		await self.send(pmsg.channel, "Anti-Spam has been turned **{}** for mentioned channels.".format(cos))
 	async def on_message(self, message):
 		if not await common.BaseModule.on_message(self, message): return
-		if message.author == self.client.user or message.channel.is_private or len(self.db.query("SELECT * FROM `antispam` WHERE `id`={} AND `ignore`=TRUE".format(message.author.id))) > 0:
-			return
+		if message.author == self.client.user or message.channel.is_private or len(self.db.query("SELECT * FROM `antispam` WHERE `id`={} AND `ignore`=TRUE".format(message.author.id))) > 0: return
 		if len(self.db.query("SELECT * FROM `antispam_ignore` WHERE `id`={}".format(message.channel.id))) > 0:
-			if len(message.mentions) > 0:
-				await self.client.delete_message(message)
-			else:
-				return
-		await self.match_del(r'((\S\s?)\2{5,})', message)
-		await self.match_del(r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{3,})', message)
-		user = SpamTables(self.db, message.author.id)
-		if user.messaged(message.content) and (user.identical() > 3 or user.fastmsg() > 3):
+			if len(message.mentions) > 0: await self.client.delete_message(message)
+			else: return
+		await self.match_del(self.defcon.drag().characters, message)
+		await self.match_del(self.defcon.drag().emojis    , message)
+		user = SpamTables(self.db, message.author.id, self.defcon)
+		user.messaged(message.content)
+		if user.fastmsg() > self.defcon.fast().count or user.identical() > self.defcon.identical() or user.fastmsg() > self.defcon.fast().delay:
 			await self.punish(message)
