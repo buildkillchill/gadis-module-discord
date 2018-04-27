@@ -62,7 +62,7 @@ class Module(common.BaseModule):
 				self.logger.info("Ranks are out of date for member with ID {}".format(member.id))
 				if role == donor: continue
 				if user.rank() == 1: continue
-				await self.send(self.getchannel("general"), "Congratulations on making {}, {}!".format(role.mention, member.mention))
+				await self.send(self.getchannel("general"), "Congratulations on making {}, {}!".format(role.name, member.mention))
 			await self.client.add_roles(member, *roles)
 			await asyncio.sleep(0.25)
 		self.logger.info("Finished checking for rank updates after {}s".format(int(time.time())-t))
