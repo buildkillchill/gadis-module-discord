@@ -23,23 +23,30 @@ class DefCon():
 			self.level = int(level)
 		elif level == 1 or level == 2 or level == 3 or level == 4 or level == 5:
 			self.level = level
+		else:
+			self.level = 4
 		drag = namedtuple("drag", "characters emoji")
 		speed = namedtuple("speed", "count delay")
-		if   self.level == 1: self.drag = drag(characters=r'((\S\s?)\2{2,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{1,})' )
-		elif self.level == 2: self.drag = drag(characters=r'((\S\s?)\2{3,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{3,})' )
-		elif self.level == 3: self.drag = drag(characters=r'((\S\s?)\2{4,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{4,})' )
-		elif self.level == 4: self.drag = drag(characters=r'((\S\s?)\2{9,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{9,})' )
-		elif self.level == 5: self.drag = drag(characters=r'((\S\s?)\2{49,})', emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{19,})')
-		if   self.level == 1: self.speed = speed(count=1, delay=3600)
-		elif self.level == 2: self.speed = speed(count=1, delay=30  )
-		elif self.level == 3: self.speed = speed(count=2, delay=5   )
-		elif self.level == 4: self.speed = speed(count=3, delay=1   )
-		elif self.level == 5: self.speed = speed(count=5, delay=1   )
-		if   self.level == 1: self.identical = 0
-		elif self.level == 2: self.identical = 2
-		elif self.level == 3: self.identical = 3
-		elif self.level == 4: self.identical = 5
-		elif self.level == 5: self.identical = 8
+		if   self.level == 1:
+			self.drag = drag(characters=r'((\S\s?)\2{2,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{1,})' )
+			self.speed = speed(count=0, delay=3600)
+			self.identical = 0
+		elif self.level == 2:
+			self.drag = drag(characters=r'((\S\s?)\2{3,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{3,})' )
+			self.speed = speed(count=1, delay=30  )
+			self.identical = 3
+		elif self.level == 3:
+			self.drag = drag(characters=r'((\S\s?)\2{4,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{4,})' )
+			self.identical = 5
+			self.speed = speed(count=3, delay=1   )
+		elif self.level == 5:
+			self.drag = drag(characters=r'((\S\s?)\2{49,})', emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{19,})')
+			self.speed = speed(count=5, delay=1   )
+			self.identical = 2
+		else:
+			self.drag = drag(characters=r'((\S\s?)\2{9,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{9,})' )
+			self.speed = speed(count=2, delay=5   )
+			self.identical = 8
 
 class SpamTables():
 	def __init__(self, db, userID, defcon=DefCon()):
