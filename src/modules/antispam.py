@@ -31,16 +31,11 @@ class DefCon():
 		elif self.level == 3: return dict(characters=r'((\S\s?)\2{4,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{4,})' )
 		elif self.level == 4: return dict(characters=r'((\S\s?)\2{9,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{9,})' )
 		elif self.level == 5: return dict(characters=r'((\S\s?)\2{49,})', emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{19,})')
-	async def setlevel(self, args, pmsg):
-		if self.client == None:
-			logging.getLogger("GADIS.MOD.ANTI-SPAM").debug("Client variable not found.")
-			return
-		level = args[1]
+	def setlevel(self, level):
 		if level == "1" or level == "2" or level == "3" or level == "4" or level == "5":
-			self.client.send_message(pmsg.channel, "@everyone Server Anti-Spam is now in DEFCON{}".format(level))
+			self.level = int(level)
+		elif level == 1 or level == 2 or level == 3 or level == 4 or level == 5:
 			self.level = level
-		else:
-			self.client.send_message(pmsg.channel, "{}, please... For everyone's sake, learn the syntax for the security commands before you try to use them.".format(pmsg.author.mention))
 
 class SpamTables():
 	def __init__(self, db, userID, defcon=DefCon()):
@@ -95,7 +90,14 @@ class Module(common.BaseModule):
 		self.client.loop.create_task(self.unsilence())
 		self.addcmd("asignore", self.ignore, "Adds or removes people from the anti-spam ignore list.", rank=Settings.OwnerRank, usage="asignore on|off @mention1 .. @mentionN")
 		self.addcmd("ignorechan", self.ignore_channel, "Adds or removes channels from the anti-spam ignore list.", rank=Settings.OwnerRank, usage="ignorechan on|off #channel1 .. #channelN")
-		self.addcmd("!defcon", self.defcon.setlevel, "Sets the spam DEFCON level.", rank=Settings.OwnerRank, usage="!defcon {1-5}")
+		self.addcmd("!defcon", self.setlevel, "Sets the spam DEFCON level.", rank=Settings.OwnerRank, usage="!defcon {1-5}")
+	async def setlevel(self, args, pmsg):
+		level = args[1]
+		if level == "1" or level == "2" or level == "3" or level == "4" or level == "5":
+			self.client.send_message(pmsg.channel, "@everyone Server Anti-Spam is now in DEFCON{}".format(level))
+			self.defcon.setlevel(level)
+		else:
+			self.client.send_message(pmsg.channel, "{}, please... For everyone's sake, learn the syntax for the security commands before you try to use them.".format(pmsg.author.mention))
 	async def unsilence(self):
 		while True:
 			for person in self.server.members:
