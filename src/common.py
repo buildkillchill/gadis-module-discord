@@ -75,9 +75,9 @@ class BaseModule():
 		if pmsg.channel.is_private:
 			channel = "by private message"
 		else:
-			channel = "in #".format(pmsg.channel.name)
+			channel = "in #{}".format(pmsg.channel.name)
 		if cmd in self.commands and self.enabled:
-			self.logger.info("User with ID {} has sent command '{}' {}".format(pmsg.author.id, cmd, channel.mention))
+			self.logger.info("User with ID {} has sent command '{}' {}".format(pmsg.author.id, cmd, channel))
 			self.client.loop.create_task(self.commands[cmd](args, pmsg))
 			return True
 		else:
