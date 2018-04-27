@@ -8,17 +8,18 @@ import logging
 import common
 
 from settings import Settings
+from collections import namedtuple
 
 class DefCon():
-	def __init__(self, client=None, level=4):
-		self.client = client
+	def __init__(self, level=4):
 		self.level = level
 	def speed(self):
-		if   self.level == 1: return dict(count=1, delay=3600)
-		elif self.level == 2: return dict(count=1, delay=30  )
-		elif self.level == 3: return dict(count=2, delay=5   )
-		elif self.level == 4: return dict(count=3, delay=1   )
-		elif self.level == 5: return dict(count=5, delay=1   )
+		speed = namedtuple("speed", "count delay")
+		if   self.level == 1: return speed(count=1, delay=3600)
+		elif self.level == 2: return speed(count=1, delay=30  )
+		elif self.level == 3: return speed(count=2, delay=5   )
+		elif self.level == 4: return speed(count=3, delay=1   )
+		elif self.level == 5: return speed(count=5, delay=1   )
 	def identical(self):
 		if   self.level == 1: return 0
 		elif self.level == 2: return 2
@@ -26,11 +27,12 @@ class DefCon():
 		elif self.level == 4: return 5
 		elif self.level == 5: return 8
 	def drag(self):
-		if   self.level == 1: return dict(characters=r'((\S\s?)\2{2,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{1,})' )
-		elif self.level == 2: return dict(characters=r'((\S\s?)\2{3,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{3,})' )
-		elif self.level == 3: return dict(characters=r'((\S\s?)\2{4,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{4,})' )
-		elif self.level == 4: return dict(characters=r'((\S\s?)\2{9,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{9,})' )
-		elif self.level == 5: return dict(characters=r'((\S\s?)\2{49,})', emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{19,})')
+		drag = namedtuple("drag", "characters emoji")
+		if   self.level == 1: return drag(characters=r'((\S\s?)\2{2,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{1,})' )
+		elif self.level == 2: return drag(characters=r'((\S\s?)\2{3,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{3,})' )
+		elif self.level == 3: return drag(characters=r'((\S\s?)\2{4,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{4,})' )
+		elif self.level == 4: return drag(characters=r'((\S\s?)\2{9,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{9,})' )
+		elif self.level == 5: return drag(characters=r'((\S\s?)\2{49,})', emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{19,})')
 	def setlevel(self, level):
 		if level == "1" or level == "2" or level == "3" or level == "4" or level == "5":
 			self.level = int(level)
@@ -86,7 +88,7 @@ class Module(common.BaseModule):
 		common.BaseModule.__init__(self, enabled, db, client, True)
 		self.server = common.getserver(self.client)
 		self.silenced = discord.utils.get(self.server.roles, id=str(Settings.Roles["silent"]))
-		self.defcon = DefCon(client)
+		self.defcon = DefCon()
 		self.client.loop.create_task(self.unsilence())
 		self.addcmd("asignore", self.ignore, "Adds or removes people from the anti-spam ignore list.", rank=Settings.OwnerRank, usage="asignore on|off @mention1 .. @mentionN")
 		self.addcmd("ignorechan", self.ignore_channel, "Adds or removes channels from the anti-spam ignore list.", rank=Settings.OwnerRank, usage="ignorechan on|off #channel1 .. #channelN")
