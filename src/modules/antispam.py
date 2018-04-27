@@ -30,7 +30,7 @@ class DefCon():
 		elif self.level == 3: return dict(characters=r'((\S\s?)\2{4,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{4,})' )
 		elif self.level == 4: return dict(characters=r'((\S\s?)\2{9,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{9,})' )
 		elif self.level == 5: return dict(characters=r'((\S\s?)\2{49,})', emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{19,})')
-	def setlevel(self, args, pmsg):
+	async def setlevel(self, args, pmsg):
 		if self.client == None: return
 		level = args[1]
 		if level == "1" or level == "2" or level == "3" or level == "4" or level == "5":
