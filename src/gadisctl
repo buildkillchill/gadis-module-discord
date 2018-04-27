@@ -43,37 +43,6 @@ cmd=$1
 shift
 case $cmd in
 	update|upd)
-		PUSH=0
-		LOCAL=0
-		OPTIONS=nr
-		LONGOPTIONS=no-push,remote
-		PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTIONS --name "$0 update" -- "$@")
-		if [[ $? -ne 0 ]]
-		then
-			exit 1
-		fi
-		eval set -- "$PARSED"
-		while true; do
-			case "$1" in
-				-n|--no-push)
-					PUSH=1
-					shift
-				;;
-				-r|--remote)
-					LOCAL=1
-					PUSH=1
-					shift
-				;;
-				--)
-					shift
-					break
-				;;
-				*)
-					echo -e "\e[0;31mProgramming error\e[0m"
-					exit 3
-				;;
-			esac
-		done
 		cd /root/gadis
 		if [ -e compile ]
 		then
@@ -86,93 +55,8 @@ case $cmd in
 		cd ..
 		rm -fr compile
 	;;
-	publish|pub)
-		cd /root/gadis/working
-		git checkout bot-server || exit 1
-		git fetch --all || exit 1
-		git push origin bot-server || exit 1
-		read -n 1 -p "Run update? [Yn]" ans && echo
-		if [ "$ans" != "n" ]
-		then
-			cd ..
-			git clone https://github.com/zenforic/Gadis compile
-			cp settings/settings.py compile/src/settings.py
-			cd compile
-			./recompile
-			cd ..
-			rm -fr compile
-		fi
-	;;
-	refresh-src|rsrc)
-		cd /root/gadis/working
-		git checkout bot-server || exit 1
-		git fetch --all || exit 1
-		git pull origin bot-server || exit 1
-	;;
 	view|v)
 		screen -r Gadis
-	;;
-	edit|e)
-		cd /root/gadis/working/src
-		mapfile -t files < <(find ./ -iname "$1")
-		num=${#files[@]}
-		file=""
-		if [ $num -eq 0 ]
-		then
-			echo -e "\e[0;31mSource file not found\e[0m"
-			exit 1
-		elif [ $num -eq 1 ]
-		then
-			file="${files[0]}"
-		elif [ $num -gt 1 ]
-		then
-			echo -e "\e[0;31mMore than one source file matching that name was found."
-			echo -e "\e[0;32mPossible matches:\e[0;33m"
-			for i in ${!files[@]}
-			do
-				echo -e "  $i) ${files[$i]}"
-			done
-			echo -e "  \e[0;31m99) None, just exit\e[0m"
-			while [ "$file" == "" ]
-			do
-				read -p "Which file do you want to edit? " f
-				if [ "$f" == "99" ]
-				then
-					echo -e "\e[0;32mOK, bye.\e[0m"
-					exit 0
-				fi
-				file=${files[$f]}
-				if [ ! -f "$file" ]
-				then
-					echo -e "\e[0;31mBad option. Please retry.\e[0m"
-					file=""
-				fi
-			done
-		fi
-		nano $file
-		read -n 1 -p "Make a commit? [yN] " ans && echo
-		if [ "$ans" == "y" ]
-		then
-			read -p "Message: " msg
-			git add $file || exit 1
-			git commit -m "$msg" || exit 1
-			read -n 1 -p "Publish? [Yn] " ans && echo
-			if [ "$ans" != "n" ]
-			then
-				git push origin bot-server
-			fi
-			read -n 1 -p "Run update? [Yn]" ans && echo
-			if [ "$ans" != "n" ]
-			then
-				cd ..
-				git clone https://github.com/zenforic/Gadis compile
-				cp settings/settings.py compile/src/settings.py
-				cd compile
-				./recompile
-				cd ..
-				rm -fr compile
-			fi
-		fi
 	;;
 	start|run)
 		start
