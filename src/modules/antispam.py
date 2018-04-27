@@ -12,32 +12,34 @@ from collections import namedtuple
 
 class DefCon():
 	def __init__(self, level=4):
-		self.level = level
-	def speed(self):
-		speed = namedtuple("speed", "count delay")
-		if   self.level == 1: return speed(count=1, delay=3600)
-		elif self.level == 2: return speed(count=1, delay=30  )
-		elif self.level == 3: return speed(count=2, delay=5   )
-		elif self.level == 4: return speed(count=3, delay=1   )
-		elif self.level == 5: return speed(count=5, delay=1   )
-	def identical(self):
-		if   self.level == 1: return 0
-		elif self.level == 2: return 2
-		elif self.level == 3: return 3
-		elif self.level == 4: return 5
-		elif self.level == 5: return 8
-	def drag(self):
 		drag = namedtuple("drag", "characters emoji")
-		if   self.level == 1: return drag(characters=r'((\S\s?)\2{2,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{1,})' )
-		elif self.level == 2: return drag(characters=r'((\S\s?)\2{3,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{3,})' )
-		elif self.level == 3: return drag(characters=r'((\S\s?)\2{4,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{4,})' )
-		elif self.level == 4: return drag(characters=r'((\S\s?)\2{9,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{9,})' )
-		elif self.level == 5: return drag(characters=r'((\S\s?)\2{49,})', emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{19,})')
+		speed = namedtuple("speed", "count delay")
+		self.level = level
+		self.drag  = drag(characters=r'((\S\s?)\2{9,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{9,})' )
+		self.speed = speed(count=3, delay=1   )
+		self.identical = 5
 	def setlevel(self, level):
 		if level == "1" or level == "2" or level == "3" or level == "4" or level == "5":
 			self.level = int(level)
 		elif level == 1 or level == 2 or level == 3 or level == 4 or level == 5:
 			self.level = level
+		drag = namedtuple("drag", "characters emoji")
+		speed = namedtuple("speed", "count delay")
+		if   self.level == 1: self.drag = drag(characters=r'((\S\s?)\2{2,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{1,})' )
+		elif self.level == 2: self.drag = drag(characters=r'((\S\s?)\2{3,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{3,})' )
+		elif self.level == 3: self.drag = drag(characters=r'((\S\s?)\2{4,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{4,})' )
+		elif self.level == 4: self.drag = drag(characters=r'((\S\s?)\2{9,})',  emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{9,})' )
+		elif self.level == 5: self.drag = drag(characters=r'((\S\s?)\2{49,})', emoji=r'((\<:[a-z0-9\-_]+:[0-9]+\>\s?)\2{19,})')
+		if   self.level == 1: self.speed = speed(count=1, delay=3600)
+		elif self.level == 2: self.speed = speed(count=1, delay=30  )
+		elif self.level == 3: self.speed = speed(count=2, delay=5   )
+		elif self.level == 4: self.speed = speed(count=3, delay=1   )
+		elif self.level == 5: self.speed = speed(count=5, delay=1   )
+		if   self.level == 1: self.identical = 0
+		elif self.level == 2: self.identical = 2
+		elif self.level == 3: self.identical = 3
+		elif self.level == 4: self.identical = 5
+		elif self.level == 5: self.identical = 8
 
 class SpamTables():
 	def __init__(self, db, userID, defcon=DefCon()):
@@ -69,7 +71,7 @@ class SpamTables():
 	def spammed(self):
 		self.increment("violations")
 	def messaged(self, contents):
-		if int(time.time()) - self.time() < self.defcon.fast().delay:
+		if int(time.time()) - self.time() < self.defcon.speed.delay:
 			self.increment("fast")
 		else:
 			self.zero("fast")
@@ -93,6 +95,7 @@ class Module(common.BaseModule):
 		self.addcmd("asignore", self.ignore, "Adds or removes people from the anti-spam ignore list.", rank=Settings.OwnerRank, usage="asignore on|off @mention1 .. @mentionN")
 		self.addcmd("ignorechan", self.ignore_channel, "Adds or removes channels from the anti-spam ignore list.", rank=Settings.OwnerRank, usage="ignorechan on|off #channel1 .. #channelN")
 		self.addcmd("!defcon", self.setlevel, "Sets the spam DEFCON level.", rank=Settings.OwnerRank, usage="!defcon {1-5}")
+		self.addcmd("!raidmode", self.defcon5, "Sets to DEFCON5", rank=Settings.OwnerRank)
 	async def setlevel(self, args, pmsg):
 		level = args[1]
 		if level == "1" or level == "2" or level == "3" or level == "4" or level == "5":
@@ -101,6 +104,11 @@ class Module(common.BaseModule):
 			self.defcon.setlevel(level)
 		else:
 			await self.send(pmsg.channel, "{}, please... For everyone's sake, learn the syntax for the security commands before you try to use them.".format(pmsg.author.mention))
+	async def defcon5(self, args=None, pmsg=None):
+		self.logger.warn("ANTI-SPAM MODULE ENTERING RAID MODE (DEFCON5)")
+		await self.send(self.getchannel("general"), "@everyone Server Anti-Spam Module Entering Raid Mode!")
+		await self.send(self.getchannel("general"), "To avoid being silenced or kicked, it is not recommended that you send _any_ messages.")
+		self.defcon.setlevel(level)
 	async def unsilence(self):
 		while True:
 			for person in self.server.members:
@@ -184,9 +192,9 @@ class Module(common.BaseModule):
 		if len(self.db.query("SELECT * FROM `antispam_ignore` WHERE `id`={}".format(message.channel.id))) > 0:
 			if len(message.mentions) > 0: await self.client.delete_message(message)
 			else: return
-		await self.match_del(self.defcon.drag().characters, message)
-		await self.match_del(self.defcon.drag().emojis    , message)
+		await self.match_del(self.defcon.drag.characters, message)
+		await self.match_del(self.defcon.drag.emojis    , message)
 		user = SpamTables(self.db, message.author.id, self.defcon)
 		user.messaged(message.content)
-		if user.fastmsg() > self.defcon.fast().count or user.identical() > self.defcon.identical() or user.fastmsg() > self.defcon.fast().delay:
+		if user.fastmsg() > self.defcon.speed.count or user.identical() > self.defcon.identical or user.fastmsg() > self.defcon.speed.delay:
 			await self.punish(message)
