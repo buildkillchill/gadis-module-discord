@@ -39,6 +39,19 @@ bracket()
 {
 	echo -e "\e[0;34m[$1\e[0;34m]\e[0m"
 }
+help()
+{
+	echo "USAGE: gadisctl CMD [args]                      "
+	echo "                                                "
+	echo "Available Commands:                             "
+	echo "update,upd        Update Gadis from repository  "
+	echo "view,v            View Gadis console            "
+	echo "start,run         Start Gadis                   "
+	echo "stop              Stop Gadis                    "
+	echo "force-stop,fstop  Forcefully stop Gadis         "
+	echo "restart,rstart    Restart Gadis                 "
+	echo "status            Check whether Gadis is running"
+}
 cmd=$1
 shift
 case $cmd in
@@ -89,5 +102,14 @@ case $cmd in
 			echo -e "\e[0;31mNOT Running\e[0m."
 			exit 0
 		fi
+	;;
+	-h|--help|help|h)
+		help
+		exit 0
+	;;
+	*)
+		echo "Invalid command"
+		help
+		exit 1
 	;;
 esac

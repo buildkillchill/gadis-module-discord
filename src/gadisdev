@@ -1,4 +1,14 @@
 #!/bin/bash
+help()
+{
+	echo "USAGE: gadisdev CMD [args]                    "
+	echo "                                              "
+	echo "Available Commands:                           "
+	echo "publish,pub       Publish committed changes   "
+	echo "refresh-src,rsrc  Pull changes from remote    "
+	echo "view,v            View Gadis console          "
+	echo "edit,e            Edit source file in src tree"
+}
 cmd=$1
 shift
 case $cmd in
@@ -99,5 +109,14 @@ case $cmd in
 				rm -fr compile
 			fi
 		fi
+	;;
+	-h|--help|help|h)
+		help
+		exit 0
+	;;
+	*)
+		echo "Invalid command"
+		help
+		exit 1
 	;;
 esac
