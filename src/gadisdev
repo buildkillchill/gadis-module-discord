@@ -1,44 +1,4 @@
 #!/bin/bash
-start()
-{
-	echo -en "\e[0;32mStarting Gadis... "
-	if test -n "`screen -ls|grep Gadis`"
-	then
-		bracket "\e[0;33mRUNNING"
-		exit 1
-	else
-		screen -dmS Gadis /usr/local/bin/gadis
-		if test -n "`screen -ls|grep Gadis`"
-		then
-			bracket "\e[0;32mSUCCESS"
-			exit 0
-		else
-			bracket "\e[0;31mFAILED"
-			exit 2
-		fi
-	fi
-}
-stop()
-{
-	echo -en "\e[0;32mGracefully \e[0;33mStopping Gadis... "
-	if test -n "`screen -ls|grep Gadis`"
-	then
-		gadis-remote shutdown
-		sleep 0.2
-		if test -n "`screen -ls|grep Gadis`"
-		then
-			bracket " \e[0;31mFAILED"
-		else
-			bracket "\e[0;32mDONE"
-		fi
-	else
-		bracket "\e[0;33mSTOPPED"
-	fi
-}
-bracket()
-{
-	echo -e "\e[0;34m[$1\e[0;34m]\e[0m"
-}
 cmd=$1
 shift
 case $cmd in
