@@ -200,7 +200,7 @@ class Module(common.BaseModule):
 			if len(message.mentions) > 0: await self.client.delete_message(message)
 			else: return
 		await self.match_del(self.defcon.drag.characters, message)
-		await self.match_del(self.defcon.drag.emojis    , message)
+		await self.match_del(self.defcon.drag.emoji     , message)
 		user = SpamTables(self.db, message.author.id, self.defcon)
 		user.messaged(message.content)
 		if user.fastmsg() > self.defcon.speed.count or user.identical() > self.defcon.identical or user.fastmsg() > self.defcon.speed.delay:
