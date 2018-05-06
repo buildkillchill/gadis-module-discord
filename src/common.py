@@ -32,7 +32,7 @@ def getroles(client, db, rank):
 		roles.append(discord.utils.get(server.roles, id=str(rank)))
 	return roles
 
-def getgmodrank(rank):
+def getgmodrank(db, rank):
 	rank = db.query("SELECT `name` FROM `ranks` WHERE `id`={}".format(rank))
 	return rank[0][0]
 
