@@ -259,7 +259,7 @@ class Module(common.BaseModule):
 							break
 						self.db.run("INSERT INTO `recommends` (`id`,`admin`,`reason`,`positive`) VALUES (%s, %s, %s, FALSE) ON DUPLICATE KEY UPDATE `reason`=%s",(app[0], aid, msg.content, msg.content))
 						await self.send(pmsg.author, "Your disrecommendation has been submitted.")
-					elif subcmd == "approve" and rank == Settings.OwnerRank:
+					elif subcmd == "approve" and rank >= Settings.OwnerRank:
 						await self.edit(lastmsg, "Setting Rank...")
 						await iapp.setrank(Settings.Admin["rank"])
 						await self.edit(lastmsg, "Done.")
