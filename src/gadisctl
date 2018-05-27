@@ -61,7 +61,7 @@ case $cmd in
 		then
 			rm -fr compile
 		fi
-		git clone https://github.com/zenforic/Gadis compile
+		git clone https://github.com/buildkillchill/gadis-module-discord.git compile
 		cp settings/settings.py compile/src/settings.py
 		cd compile
 		./recompile
