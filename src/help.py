@@ -18,7 +18,7 @@ class Module(common.BaseModule):
 	async def show_module(self, channel, module):
 		if not self.enabled: return
 		mod = discord.Embed(title="{} Module:".format(module.__name__))
-		mod.set_author(name="BKC Services", icon_url=self.client.user.avatar_url)
+		mod.set_author(name="Gadis", icon_url=self.client.user.avatar_url)
 		for command in module.getcommands():
 			helptext = module.gethelp(command)
 			helptext = textwrap.fill(helptext, 25)
