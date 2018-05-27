@@ -24,4 +24,4 @@ class Module(common.BaseModule):
 			if msg.author == self.client.user and msg.content == notify:
 				last=True
 		if not last:
-			self.run(self.send(ch,notify))
+			await self.send(ch,notify)
