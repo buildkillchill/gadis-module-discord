@@ -1,5 +1,6 @@
 import json, requests, re
 import common
+from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Admin Caller"
