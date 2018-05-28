@@ -1,4 +1,4 @@
-import json, requests, re
+import json, requests, re, asyncio
 import common
 from settings import Settings
 
