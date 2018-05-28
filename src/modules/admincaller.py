@@ -17,7 +17,7 @@ class Module(common.BaseModule):
 					await self.no_admin()
 			except:
 				self.logger.error("An error occurred in checking for admins.")
-			asyncio.sleep(1800)
+			await asyncio.sleep(1800)
 	async def no_admin(self):
 		try:
 			ch=self.getchannel("admin")
