@@ -77,7 +77,7 @@ case $cmd in
 	stop)
 		stop
 	;;
-	force-stop|fstop)
+	force-stop|kill)
 		echo -e "\e[0;31mRudely\e[0m \e[0;33mStopping Gadis...\e[0m"
 		pkill -9 gadis-server
 	;;
