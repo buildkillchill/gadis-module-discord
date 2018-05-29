@@ -42,7 +42,7 @@ def getmember(client, user):
 
 def getrank(db, id):
 	try:
-		return db.query("SELECT `rank` FROM `linked` WHERE `did`={}".format(id))[0][0]
+		return db.query("SELECT `rank` FROM `accounts` WHERE `did`={}".format(id))[0][0]
 	except:
 		return 1
 
@@ -114,7 +114,7 @@ class BaseModule():
 	def getchannel(self, name):
 		return discord.utils.get(getserver(self.client).channels, name=name)
 	def getrank(self, id):
-		return self.db.query("SELECT `rank` FROM `linked` WHERE `did`={}".format(id))[0][0]
+		return self.db.query("SELECT `rank` FROM `accounts` WHERE `did`={}".format(id))[0][0]
 	def has_command(self, command):
 		return command in self.commands
 	def has_commands(self):
@@ -142,13 +142,13 @@ class BaseModule():
 		else:
 			return True
 	def infractions(self):
-		res = self.db.query("SELECT `infractions` FROM `linked` WHERE `id`={}".format(self.id["id"]))
+		res = self.db.query("SELECT `infractions` FROM `accounts` WHERE `id`={}".format(self.id["id"]))
 		try:
 			return res[0][0]
 		except:
 			return 0
 	def previous_rank(self):
-		res = self.db.query("SELECT `previous_rank` FROM `linked` WHERE `id`={}".format(self.id["id"]))
+		res = self.db.query("SELECT `previous_rank` FROM `accounts` WHERE `id`={}".format(self.id["id"]))
 		try:
 			return res[0][0]
 		except:
@@ -194,7 +194,7 @@ class User(BaseModule):
 		rank = self.rank()
 		return list(Settings.Ranks[rank])
 	def lock(self):
-		self.db.run("UPDATE `linked` SET `locked`=True WHERE `id`={}".format(self.id["id"]))
+		self.db.run("UPDATE `accounts` SET `locked`=True WHERE `id`={}".format(self.id["id"]))
 	def locked(self):
 		return self.getcol("locked")
 	def hours(self):
@@ -213,7 +213,7 @@ class User(BaseModule):
 		value = self.db.query("SELECT `{}` FROM `{}` WHERE `id`={}".format(name, table, id))
 		return value[0][0]
 	def setbday(self, date):
-		self.db.run("UPDATE `linked` SET `birthday`=%s WHERE `id`={}".format(id), [date])
+		self.db.run("UPDATE `accounts` SET `birthday`=%s WHERE `id`={}".format(id), [date])
 	async def setrank(self, rank, reason=None, activate_lock=True):
 		if (self.rank() < rank and self.locked()) or self.rank() == rank: return
 
@@ -249,14 +249,14 @@ class User(BaseModule):
 			for role in prev:
 				print("Adding {} ({}) to {}.".format(role.id, role.name, member.id))
 				await self.client.add_roles(member, role)
-		self.db.run("UPDATE `linked` SET `rank`={} WHERE `id`={}".format(rank, self.id["id"]))
+		self.db.run("UPDATE `accounts` SET `rank`={} WHERE `id`={}".format(rank, self.id["id"]))
 		runrcon("ulx adduserid {} {}".format(self.steamID(), getgmodrank(self.db, rank)))
 	def infract(self, amt):
-		self.db.run("UPDATE `linked` SET `infractions`=`infractions`+{} WHERE `id`={}".format(amt, self.id["id"]))
+		self.db.run("UPDATE `accounts` SET `infractions`=`infractions`+{} WHERE `id`={}".format(amt, self.id["id"]))
 	@staticmethod
 	def from_steam_id(client, db, sid):
 		sid64 = Steam.ID64(sid)
-		account = db.query("SELECT `id`,`did` FROM `linked` WHERE `sid`={}".format(sid64))
+		account = db.query("SELECT `id`,`did` FROM `accounts` WHERE `sid`={}".format(sid64))
 		account = account[0]
 		id = account[0]
 		did = account[1]
@@ -264,14 +264,14 @@ class User(BaseModule):
 	@staticmethod
 	def from_steam_id64(client, db, sid64):
 		sid = Steam.ID(sid64)
-		account = db.query("SELECT `id`,`did` FROM `linked` WHERE `sid`={}".format(sid64))
+		account = db.query("SELECT `id`,`did` FROM `accounts` WHERE `sid`={}".format(sid64))
 		account = account[0]
 		id = account[0]
 		did = account[1]
 		return User(client, db, id, did, sid, sid64)
 	@staticmethod
 	def from_discord_id(client, db, did):
-		account = db.query("SELECT `id`,`sid` FROM `linked` WHERE `did`={}".format(did))
+		account = db.query("SELECT `id`,`sid` FROM `accounts` WHERE `did`={}".format(did))
 		if len(account) == 0:
 			return None
 		account = account[0]
@@ -281,7 +281,7 @@ class User(BaseModule):
 		return User(client, db, id, did, sid, sid64)
 	@staticmethod
 	def from_id(client, db, id):
-		account = db.query("SELECT `did`,`sid` FROM `linked` WHERE `id`={}".format(id))
+		account = db.query("SELECT `did`,`sid` FROM `accounts` WHERE `id`={}".format(id))
 		account = account[0]
 		did = account[0]
 		sid64 = account[1]

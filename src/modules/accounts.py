@@ -38,18 +38,18 @@ class Module(common.BaseModule):
 		except:
 			await self.send(message.channel, "I think I'm stupid or broken. I don't know which. Either way I was unable to convert the arg you provided to an integer.")
 			return
-		query = self.db.query("SELECT * FROM `linked` WHERE `sid`={} OR `did`={}".format(sid, message.mentions[0].id))
+		query = self.db.query("SELECT * FROM `accounts` WHERE `sid`={} OR `did`={}".format(sid, message.mentions[0].id))
 		if len(query) > 0:
 			await self.send(message.channel, "This account is already linked ijiot")
 			return
 		self.db.run("DELETE FROM `link` WHERE `id`={}".format(message.mentions[0].id))
-		self.db.run("INSERT INTO `linked` (`sid`,`did`) VALUES ({},{})".format(sid, message.mentions[0].id))
+		self.db.run("INSERT INTO `accounts` (`sid`,`did`) VALUES ({},{})".format(sid, message.mentions[0].id))
 		await self.send(message.channel, "{} you have been forcefully linked to the Steam profile with url https://steamcommunity.com/profiles/{}".format(message.mentions[0].mention, sid))
 	async def unlink(self, args, message):
 		await self.send(message.channel, "To confirm your unlink please type `I DON'T LIKE BEING LINKED, PLEASE FORGET ME.`\nIt must be _exactly_ that, including the upper case and symbols. You have 60 seconds to do so, starting now.")
 		reply = await self.getreply(60, message.author, message.channel)
 		if reply.contents == "I DON'T LIKE BEING LINKED, PLEASE FORGET ME.":
-			self.db.run("DELETE FROM `linked` WHERE `did`={}".format(message.author.id))
+			self.db.run("DELETE FROM `accounts` WHERE `did`={}".format(message.author.id))
 			self.db.run("DELETE FROM `link` WHERE `id`={}".format(message.author.id))
 			await self.send(message.channel, "You have been forgotten.")
 	async def info(self, args, message):
@@ -89,14 +89,14 @@ class Module(common.BaseModule):
 			await self.send_embed(message.channel, em)
 	async def slogan(self, args, message):
 		slogan = " ".join(args[1:])
-		self.db.run("UPDATE `linked` SET `slogan`=%s WHERE `did`={}".format(message.author.id), [slogan])
+		self.db.run("UPDATE `accounts` SET `slogan`=%s WHERE `did`={}".format(message.author.id), [slogan])
 		await self.send(message.channel, "{}'s new slogan is: {}".format(message.author.mention, slogan))
 	async def title(self, args, message):
 		title = common.strip_mentions(" ".join(args[1:]))
-		self.db.run("UPDATE `linked` SET `title`=%s WHERE `did`={}".format(message.mentions[0].id), [title])
+		self.db.run("UPDATE `accounts` SET `title`=%s WHERE `did`={}".format(message.mentions[0].id), [title])
 		await self.send(message.channel, "{}'s new title is: {}".format(message.mentions[0].mention, title))
 	async def link(self, args, message):
-		query = self.db.query("SELECT `did` FROM `linked` WHERE `did`={}".format(message.author.id))
+		query = self.db.query("SELECT `did` FROM `accounts` WHERE `did`={}".format(message.author.id))
 		if len(query) > 0:
 			await self.send(message.author, "Your account is already linked")
 			return

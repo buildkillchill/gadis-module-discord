@@ -11,7 +11,7 @@ class Module(common.BaseModule):
 	async def Check(self):
 		while True:
 			try:
-				sql = "SELECT * FROM `linked` WHERE `honorary` = FALSE AND `rank` >= 7 AND `sid` IN (SELECT `id` FROM `active`);"
+				sql = "SELECT * FROM `accounts` WHERE `honorary` = FALSE AND `rank` >= 7 AND `sid` IN (SELECT `id` FROM `active`);"
 				query = self.db.query(sql)
 				if len(query) == 0:
 					await self.no_admin()

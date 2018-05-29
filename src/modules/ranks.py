@@ -143,7 +143,7 @@ class Module(common.BaseModule):
 		common.runrcon("ulx removeuserid {}".format(user.steamID()))
 	async def apply(self, args, pmsg):
 		usr = common.User.from_discord_id(self.client, self.db, pmsg.author.id)
-		taken = len(self.db.query("SELECT `id` FROM `linked` WHERE `rank` >= {}".format(Settings.Admin["rank"])))
+		taken = len(self.db.query("SELECT `id` FROM `accounts` WHERE `rank` >= {}".format(Settings.Admin["rank"])))
 		appcount = len(self.db.query("SELECT * FROM `applications` WHERE `accepted`=FALSE AND `denied`=FALSE AND `interviewed`=FALSE"))
 		if usr.rank() >= Settings.Admin["rank"]:
 			await self.send(pmsg.channel, "Nice try, we don't accept applications for superadmin or developer.")
@@ -151,11 +151,11 @@ class Module(common.BaseModule):
 			if Settings.Admin["positions"] <= taken or Settings.Admin["max_apps"] <= appcount:
 				await self.send(pmsg.channel, "We are not currently accepting applications for admin.")
 			else:
-				linked = len(self.db.query("SELECT `id` FROM `linked` WHERE `sid` IS NOT NULL AND `did`={}".format(pmsg.author.id)))
+				linked = len(self.db.query("SELECT `id` FROM `accounts` WHERE `sid` IS NOT NULL AND `did`={}".format(pmsg.author.id)))
 				if linked > 0:
 					aid = int(pmsg.author.id)
 					time=Settings.Admin["req_hours"]
-					id=self.db.query("SELECT `id` FROM `linked` WHERE `did`=%s AND `hours` >= %s", [aid,time])
+					id=self.db.query("SELECT `id` FROM `accounts` WHERE `did`=%s AND `hours` >= %s", [aid,time])
 					if len(id) > 0:
 						id=int(id[0][0])
 						if len(self.db.query("SELECT `id` FROM `applications` WHERE `id`=%s",[id])):
@@ -181,10 +181,10 @@ class Module(common.BaseModule):
 		if len(list) > 0:
 			for recommendation in list:
 				await self.edit(last, "Found letter. Loading applicant ID...")
-				applicant = self.db.query("SELECT `did` FROM `linked` WHERE `id`={}".format(recommendation[0]))
+				applicant = self.db.query("SELECT `did` FROM `accounts` WHERE `id`={}".format(recommendation[0]))
 				applicant = await self.getuser(applicant[0][0])
 				await self.edit(last, "Loading authoring admin's ID...")
-				recommender = self.db.query("SELECT `did` FROM `linked` WHERE `id`={}".format(recommendation[1]))
+				recommender = self.db.query("SELECT `did` FROM `accounts` WHERE `id`={}".format(recommendation[1]))
 				recommender = await self.getuser(recommender[0][0])
 				await self.edit(last, "Checking letter type...")
 				recommends = recommendation[3]
