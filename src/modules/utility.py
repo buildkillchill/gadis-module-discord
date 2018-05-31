@@ -9,7 +9,7 @@ class Module(common.BaseModule):
 	__name__ = "Utility"
 	__version__ = "1.08"
 	def __init__(self, enabled, db, client=None):
-		common.BaseModule.__init__(self, enabled, db, client)
+		common.BaseModule.__init__(self, enabled, db, client, True)
 		self.addcmd("roles", self.roles, "View a list of roles with corrisponding IDs")
 		self.addcmd("report", self.report, "Report a someone", usage="`report USER`\nWhen prompted, give reason for report.")
 		self.addcmd("%clear", self.clear, "Clear channel with conditions", rank=Settings.OwnerRank)
@@ -21,6 +21,10 @@ class Module(common.BaseModule):
 		self.addcmd("+sqle", self.sql, "Execute SQL query", rank=Settings.OwnerRank)
 		self.addcmd("inv", self.repeats, "Show the invite link")
 		self.addcmd("rtfa", self.repeats, "Read The Announcements", rank=Settings.Admin["rank"])
+	async def on_message(self, message):
+		if not await common.BaseModule.on_message(self, message): return
+		if message.content.lower() in Settings.Repeats:
+			await self.send(message.channel, Settings.Repeats[message.content.lower()])
 	async def sql(self, args, pmsg):
 		query = " ".join(args[1:])
 		if args[0].lower() == "+sqlq":
@@ -39,8 +43,6 @@ class Module(common.BaseModule):
 				await self.send(pmsg.author, "No results")
 		else:
 			self.db.run(query)
-	async def repeats(self, args, pmsg):
-		await self.send(pmsg.channel, Settings.Repeats[args[0].lower()])
 	async def clear(self, args, pmsg):
 		nargs = common.strip_mentions(" ".join(args[1:])).split(" ")
 		if len(nargs) == 0 or nargs[0] == "":
