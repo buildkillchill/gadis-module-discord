@@ -208,7 +208,7 @@ class User(BaseModule):
 	def bday(self):
 		return self.getcol("birthday")
 	def getcol(self, name):
-		return self.getfcol(name, "linked", self.id["id"])
+		return self.getfcol(name, "accounts", self.id["id"])
 	def getfcol(self, name, table, id):
 		value = self.db.query("SELECT `{}` FROM `{}` WHERE `id`={}".format(name, table, id))
 		return value[0][0]
