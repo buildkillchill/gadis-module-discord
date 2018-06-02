@@ -86,7 +86,7 @@ async def on_message(message):
 			else:
 				s = "{}#".format(s)
 			logger.warn("{}{}, but did not have the rank or permissions to do so.".format(s, message.channel.name))
-		if hasattr(n, 'on_message') and callable(getattr(n, 'on_message')): await n.on_message(message)
+		if hasattr(module, 'on_message') and callable(getattr(module, 'on_message')): await module.on_message(message)
 
 	if not handled:
 		t = int(time.time())
