@@ -17,6 +17,7 @@ class Module(common.BaseModule):
 		self.modules = modules
 	async def show_module(self, channel, module):
 		if not self.enabled: return
+		if not module.has_commands(): return
 		mod = discord.Embed(title="{} Module:".format(module.__name__))
 		mod.set_author(name="Gadis", icon_url=self.client.user.avatar_url)
 		for command in module.getcommands():
@@ -30,12 +31,12 @@ class Module(common.BaseModule):
 			mod.add_field(name=command, value=helptext, inline=True)
 		await self.send_embed(channel, mod)
 	async def show(self, channel):
-		await self.send(channel, "You have triggered the Help Module.")
+		await self.send(channel, "Here is the help list for all modules.")
 		for n in self.modules:
 			module = self.modules[n]
 			await self.show_module(channel, module)
 	async def show_modules(self, channel, modules):
-		await self.send(channel, "You have triggered the Help Module.")
+		await self.send(channel, "Here is the help list for the modules you have selected.")
 		for n in modules:
 			if n in self.modules:
 				module = self.modules[n]
