@@ -52,21 +52,21 @@ async def on_ready():
 			mname = os.path.splitext(filename)
 			if mname[1].startswith(".py"):
 				mname = mname[0]
-				files[mname] = None
+				files[mname] = common.getmodulestatus(db, mname)
 	sys.path.append('/usr/local/share/gadis/modules')
-	for key in files.keys():
-		mod = __import__(key)
-		cls = getattr(mod, "Module")
-		init = cls(common.getmodulestatus(db, key), db, client)
-		if common.getmodulestatus(db, key):
-			logger.info("{} is enabled.".format(init.__name__))
+	for key, enabled in files.items():
+		if enabled:
+			logger.info("{} is enabled, initializing now...".format(init.__name__))
+			mod = __import__(key)
+			cls = getattr(mod, "Module")
+			init = cls(enabled, db, client)
+			if init.has_commands():
+				modules[key] = init
+			if init.bind_on_message():
+				logger.extra("Binding {}".format(init.__name__))
+				advanced[key] = init
 		else:
 			logger.info("{} is disabled.".format(init.__name__))
-		if init.has_commands():
-			modules[key] = init
-		if init.bind_on_message():
-			logger.extra("Binding {}".format(init.__name__))
-			advanced[key] = init
 	diff = int(time.time()) - ti
 	logger.info("No more modules. ({}s)".format(diff))
 	help.set(True, client, modules)
