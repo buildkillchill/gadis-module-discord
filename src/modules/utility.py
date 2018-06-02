@@ -19,8 +19,6 @@ class Module(common.BaseModule):
 		self.addcmd("gmod.tsayc", self.tsayc, "Say something through console", private=True, rank=Settings.OwnerRank)
 		self.addcmd("+sqlq", self.sql, "Execute SQL query for results", rank=Settings.OwnerRank)
 		self.addcmd("+sqle", self.sql, "Execute SQL query", rank=Settings.OwnerRank)
-		self.addcmd("inv", self.repeats, "Show the invite link")
-		self.addcmd("rtfa", self.repeats, "Read The Announcements", rank=Settings.Admin["rank"])
 	async def on_message(self, message):
 		if not await common.BaseModule.on_message(self, message): return
 		if message.content.lower() in Settings.Repeats:
