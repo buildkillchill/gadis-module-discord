@@ -55,16 +55,15 @@ async def on_ready():
 				mname = mname[0]
 				files[mname] = common.getmodulestatus(db, mname)
 	for key, moden in files.items():
-		logger.debug("Discovered {}, checking status...".format(key))
 		if moden:
-			logger.info("{} is enabled, initializing now...".format(init.__name__))
+			logger.info("{} is enabled, initializing now...".format(key))
 			mod = __import__(key)
 			cls = getattr(mod, "Module")
 			init = cls(moden, db, client)
 			if init.has_commands():
 				modules[key] = init
 			if init.bind_on_message():
-				logger.extra("Binding {}".format(init.__name__))
+				logger.extra("Binding {}".format(key))
 				advanced[key] = init
 		else:
 			logger.info("{} is disabled.".format(key))
