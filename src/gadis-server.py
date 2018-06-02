@@ -55,7 +55,7 @@ async def on_ready():
 				mname = mname[0]
 				files[mname] = common.getmodulestatus(db, mname)
 	for key, enabled in files.items():
-		logger.debug(files.items())
+		logger.debug("Discovered {}, checking status...".format(key))
 		if enabled:
 			logger.info("{} is enabled, initializing now...".format(init.__name__))
 			mod = __import__(key)
