@@ -17,10 +17,9 @@ import mysql
 
 client = discord.Client()
 modules = {}
-advanced = {}
 db = mysql.default()
 help = Help(True, client, modules)
-mm = ModManager(True, client, modules, advanced)
+mm = ModManager(True, client, modules)
 t = 0
 diff = 0
 logging.addLevelName(15, "EXTRA")
@@ -60,11 +59,7 @@ async def on_ready():
 			mod = __import__(key)
 			cls = getattr(mod, "Module")
 			init = cls(moden, db, client)
-			if init.has_commands():
-				modules[key] = init
-			if init.raw:
-				logger.extra("Binding {}".format(key))
-				advanced[key] = init
+			modules[key] = init
 		else:
 			logger.info("{} is disabled.".format(key))
 	diff = int(time.time()) - ti
@@ -91,6 +86,7 @@ async def on_message(message):
 			else:
 				s = "{}#".format(s)
 			logger.warn("{}{}, but did not have the rank or permissions to do so.".format(s, message.channel.name))
+		if hasattr(n, 'on_message') and callable(getattr(n, 'on_message')): await n.on_message(message)
 
 	if not handled:
 		t = int(time.time())
@@ -118,8 +114,6 @@ async def on_message(message):
 			await help.show_modules(message.channel, show_modhelp)
 		diff = int(time.time()) - t
 		if handled: logger.info("{}{}s)".format(s, diff))
-	for n in advanced:
-		await advanced[n].on_message(message)
 
 logger.info("Starting Gadis - {} ({})".format(Settings.Version["name"], Settings.Version["code"]))
 t = int(time.time())
