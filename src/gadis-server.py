@@ -45,6 +45,7 @@ async def on_ready():
 	await client.edit_profile(None, username="Gadis")
 	modules["modules"] = mm
 	logger.info("Loading modules...")
+	sys.path.append('/usr/local/share/gadis/modules')
 	ti = int(time.time())
 	files = {}
 	for filename in os.listdir('/usr/local/share/gadis/modules'):
@@ -53,7 +54,6 @@ async def on_ready():
 			if mname[1].startswith(".py"):
 				mname = mname[0]
 				files[mname] = common.getmodulestatus(db, mname)
-	sys.path.append('/usr/local/share/gadis/modules')
 	for key, enabled in files.items():
 		if enabled:
 			logger.info("{} is enabled, initializing now...".format(init.__name__))
@@ -66,7 +66,7 @@ async def on_ready():
 				logger.extra("Binding {}".format(init.__name__))
 				advanced[key] = init
 		else:
-			logger.info("{} is disabled.".format(init.__name__))
+			logger.info("{} is disabled.".format(key))
 	diff = int(time.time()) - ti
 	logger.info("No more modules. ({}s)".format(diff))
 	help.set(True, client, modules)
