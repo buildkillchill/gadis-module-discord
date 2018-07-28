@@ -61,7 +61,7 @@ case $cmd in
 			rm -fr gadis-compile
 		fi
 		git clone https://github.com/buildkillchill/gadis-module-discord.git gadis-compile
-		cp $1 gadis-compile/src/settings.py
+		cp settings/settings.py gadis-compile/src/settings.py
 		cd gadis-compile
 		./recompile
 		cd ..
