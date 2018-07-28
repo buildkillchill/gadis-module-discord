@@ -65,7 +65,7 @@ case $cmd in
 		cd gadis-compile
 		./recompile
 		cd ..
-		rm -fr compile
+		rm -fr gadis-compile
 	;;
 	view|v)
 		screen -r Gadis
