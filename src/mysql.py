@@ -1,10 +1,15 @@
 import MySQLdb
 import logging
 import sys
-sys.path.append('/usr/local/share/gadis')
+
 from common import LoggerExtension
 from warnings import filterwarnings
 from settings import Settings
+
+if not os.path.exists(os.path.expanduser("~/.gadis")):
+	sys.path.append('/usr/local/share/gadis')
+else
+	sys.path.append(os.path.expanduser("~/.gadis/share/gadis"))
 
 def default():
 	return MySQLWrapper(Settings.MySQL["data"], Settings.MySQL["user"], Settings.MySQL["pass"], Settings.MySQL["host"], Settings.MySQL["port"])
