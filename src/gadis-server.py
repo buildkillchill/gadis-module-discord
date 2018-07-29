@@ -5,7 +5,13 @@ import time
 
 import os
 import sys
-sys.path.append('/usr/local/share/gadis')
+
+userinst = False
+if not os.path.exists(os.path.expanduser("~/.gadis")):
+	sys.path.append('/usr/local/share/gadis')
+else
+	sys.path.append(os.path.expanduser("~/.gadis/share/gadis"))
+	userinst = True
 
 from modules import Module as ModManager
 from remote import Module as Remote
@@ -20,6 +26,8 @@ modules = {}
 db = mysql.default()
 help = Help(True, client, modules)
 mm = ModManager(True, client, modules)
+userinstmoddir = os.path.expanduser("~/.gadis/share/gadis/modules")
+loopmoddir = userinstmoddir if userinst else '/usr/local/share/gadis/modules'
 t = 0
 diff = 0
 logging.addLevelName(15, "EXTRA")
@@ -28,7 +36,10 @@ logger = logging.getLogger("GADIS")
 logger.setLevel(1)
 formatter = logging.Formatter('[%(asctime)s][%(levelname)s][%(name)s] %(message)s')
 ch = logging.StreamHandler(sys.stdout)
-fh = logging.FileHandler(filename='/var/log/gadis/debug.log', encoding='utf-8', mode='w')
+if userinst:
+	fh = logging.FileHandler(filename=os.path.expanduser('~/.gadis/log/debug.log'), encoding='utf-8', mode='w')
+else
+	fh = logging.FileHandler(filename='/var/log/gadis/debug.log', encoding='utf-8', mode='w')
 ch.setLevel(logging.INFO)
 fh.setLevel(logging.DEBUG)
 ch.setFormatter(formatter)
@@ -44,10 +55,13 @@ async def on_ready():
 	await client.edit_profile(None, username="Gadis")
 	modules["modules"] = mm
 	logger.info("Loading modules...")
-	sys.path.append('/usr/local/share/gadis/modules')
+	if userinst:
+		sys.path.append(userinstmoddir)
+	else
+		sys.path.append('/usr/local/share/gadis/modules')
 	ti = int(time.time())
 	files = {}
-	for filename in os.listdir('/usr/local/share/gadis/modules'):
+	for filename in os.listdir(loopmoddir):
 		if (filename[0] != '_' and filename[0] != '.'):
 			mname = os.path.splitext(filename)
 			if mname[1].startswith(".py"):
@@ -124,7 +138,10 @@ diff = int(time.time()) - t
 logger.info("Remote Command Thread Started ({}s)".format(diff))
 logger.info("Sending discord errors to file")
 log = logging.getLogger('discord')
-handler = logging.FileHandler(filename='/var/log/gadis/discord.log', encoding='utf-8', mode='w')
+if userinst:
+	handler = logging.FileHandler(filename=os.path.expanduser('~/.gadis/log/discord.log'), encoding='utf-8', mode='w')
+else
+	handler = logging.FileHandler(filename='/var/log/gadis/discord.log', encoding='utf-8', mode='w')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 log.addHandler(handler)
 t = int(time.time())

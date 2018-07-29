@@ -4,7 +4,10 @@ import sys
 import uncompyle6
 from io import StringIO
 f = StringIO()
-uncompyle6.uncompyle_file('/usr/local/share/gadis/settings.pyc', f)
+if not os.path.exists(os.path.expanduser("~/.gadis")):
+		uncompyle6.uncompyle_file('~/.gadis/share/gadis/settings.pyc', f)
+	else
+		uncompyle6.uncompyle_file('/usr/local/share/gadis/settings.pyc', f)
 f.seek(0)
 exec(f.read(), globals(), locals())
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
