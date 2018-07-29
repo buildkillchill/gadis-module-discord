@@ -57,7 +57,7 @@ async def on_ready():
 	logger.info("Loading modules...")
 	if userinst:
 		sys.path.append(userinstmoddir)
-	else
+	else:
 		sys.path.append('/usr/local/share/gadis/modules')
 	ti = int(time.time())
 	files = {}
@@ -140,7 +140,7 @@ logger.info("Sending discord errors to file")
 log = logging.getLogger('discord')
 if userinst:
 	handler = logging.FileHandler(filename=os.path.expanduser('~/.gadis/log/discord.log'), encoding='utf-8', mode='w')
-else
+else:
 	handler = logging.FileHandler(filename='/var/log/gadis/discord.log', encoding='utf-8', mode='w')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 log.addHandler(handler)
