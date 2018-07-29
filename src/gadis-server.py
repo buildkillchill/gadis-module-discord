@@ -6,6 +6,12 @@ import time
 import os
 import sys
 
+userinst = False
+if not os.path.exists(os.path.expanduser("~/.gadis")):
+	sys.path.append('/usr/local/share/gadis')
+else:
+	sys.path.append(os.path.expanduser("~/.gadis/share/gadis"))
+	userinst = True
 
 from modules import Module as ModManager
 from remote import Module as Remote
@@ -14,13 +20,6 @@ from settings import Settings
 
 import common
 import mysql
-
-userinst = False
-if not os.path.exists(os.path.expanduser("~/.gadis")):
-	sys.path.append('/usr/local/share/gadis')
-else
-	sys.path.append(os.path.expanduser("~/.gadis/share/gadis"))
-	userinst = True
 
 client = discord.Client()
 modules = {}
