@@ -77,7 +77,8 @@ if install:
 		if os.path.exists(os.path.join(home_dir, "share/gadis")):
 			shutil.rmtree(os.path.join(home_dir, "share/gadis"))
 		os.makedirs(os.path.join(home_dir, "share/gadis"))
-		os.makedirs(os.path.join(home_dir, "bin"))
+		if not os.path.exists(os.path.join(home_dir, "bin")):
+			os.makedirs(os.path.join(home_dir, "bin"))
 		shutil.move("bin/modules", os.path.join(home_dir, "share/gadis/modules"))
 		if os.path.exists(os.path.join(home_dir, "bin/gadis")):
 			os.remove(os.path.join(home_dir, "bin/gadis"))
