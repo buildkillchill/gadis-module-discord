@@ -84,7 +84,7 @@ if install:
 			os.remove(os.path.join(home_dir, "bin/gadis"))
 		if os.path.exists(os.path.join(home_dir, "bin/gadisctl")):
 			os.remove(os.path.join(home_dir, "bin/gadisctl"))
-		if os.path.exists(os.path.join(home_dir, "bin/gadisdev")) and instroot:
+		if os.path.exists(os.path.join(home_dir, "bin/gadisdev")):
 			os.remove(os.path.join(home_dir, "bin/gadisdev"))
 		if os.path.exists(os.path.join(home_dir, "bin/gadis-server")):
 			os.remove(os.path.join(home_dir, "bin/gadis-server"))
