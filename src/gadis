@@ -1,2 +1,20 @@
 #!/bin/bash
-python3 /usr/local/bin/gadis-server 2>/var/log/gadis/error.log
+
+if [ ! -f ~/.gadis/bin/gadis ]; then
+	if [ ! -f /var/log/gadis/error.log ]; then
+		if [ ! -d /var/log/gadis ]; then
+			mkdir /var/log/gadis
+			touch /var/log/gadis/error.log
+		fi
+	fi
+
+	python3 /usr/local/bin/gadis-server 2>/var/log/gadis/error.log
+else
+	if [ ! -f ~/.gadis/log/error.log ]; then
+		if [ ! -d ~/.gadis/log ]; then
+			mkdir ~/.gadis/log
+			touch ~/.gadis/log/error.log
+		fi
+	fi
+	python3 ~/.gadis/bin/gadis-server 2>~/.gadis/log/error.log
+fi
