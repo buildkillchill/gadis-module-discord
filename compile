@@ -8,36 +8,36 @@ from os import listdir
 from os.path import isfile, join
 
 def boolquestion(question, default="yes"):
-    """Ask a yes/no question via input() and return their answer.
+	"""Ask a yes/no question via input() and return their answer.
 
-    "question" is a string that is presented to the user.
-    "default" is the presumed answer if the user just hits <Enter>.
-        It must be "yes" (the default), "no" or None (meaning
-        an answer is required of the user).
+	"question" is a string that is presented to the user.
+	"default" is the presumed answer if the user just hits <Enter>.
+		It must be "yes" (the default), "no" or None (meaning
+		an answer is required of the user).
 
-    The "answer" return value is True for "yes" or False for "no".
-    """
-    valid = {"yes": True, "y": True, "ye": True,
-             "no": False, "n": False}
-    if default is None:
-        prompt = " [y/n] "
-    elif default == "yes":
-        prompt = " [Y/n] "
-    elif default == "no":
-        prompt = " [y/N] "
-    else:
-        raise ValueError("invalid default answer: '%s'" % default)
+	The "answer" return value is True for "yes" or False for "no".
+	"""
+	valid = {"yes": True, "y": True, "ye": True,
+			 "no": False, "n": False}
+	if default is None:
+		prompt = " [y/n] "
+	elif default == "yes":
+		prompt = " [Y/n] "
+	elif default == "no":
+		prompt = " [y/N] "
+	else:
+		raise ValueError("invalid default answer: '%s'" % default)
 
-    while True:
-        sys.stdout.write(question + prompt)
-        choice = input().lower()
-        if default is not None and choice == '':
-            return valid[default]
-        elif choice in valid:
-            return valid[choice]
-        else:
-            sys.stdout.write("Please respond with 'yes' or 'no' "
-                             "(or 'y' or 'n').\n")
+	while True:
+		sys.stdout.write(question + prompt)
+		choice = input().lower()
+		if default is not None and choice == '':
+			return valid[default]
+		elif choice in valid:
+			return valid[choice]
+		else:
+			sys.stdout.write("Please respond with 'yes' or 'no' "
+							 "(or 'y' or 'n').\n")
 
 print("Compiling...")
 Compiler.compile_dir("src/")
@@ -71,49 +71,49 @@ shutil.rmtree("src/modules/__pycache__")
 
 install = boolquestion("Install it now?")
 if install:
-    instroot = boolquestion("Will root manage Gadis?")
+	instroot = boolquestion("Will root manage Gadis?")
 	if os.path.exists("/usr/local/share/gadis"):
-        shutil.rmtree("/usr/local/share/gadis")
+		shutil.rmtree("/usr/local/share/gadis")
 	os.makedirs("/usr/local/share/gadis")
 	shutil.move("bin/modules", "/usr/local/share/gadis/modules")
 	if os.path.exists("/usr/local/sbin/gadis"):
-        os.remove("/usr/local/sbin/gadis")
-    if os.path.exists("/usr/local/bin/gadis"):
-        os.remove("/usr/local/bin/gadis")
+		os.remove("/usr/local/sbin/gadis")
+	if os.path.exists("/usr/local/bin/gadis"):
+		os.remove("/usr/local/bin/gadis")
 	if os.path.exists("/usr/local/bin/gadisctl"):
-        os.remove("/usr/local/bin/gadisctl")
+		os.remove("/usr/local/bin/gadisctl")
 	if os.path.exists("/usr/local/bin/gadisdev") and instroot:
-        os.remove("/usr/local/bin/gadisdev")
+		os.remove("/usr/local/bin/gadisdev")
 	if os.path.exists("/usr/local/bin/gadis-server"):
-        os.remove("/usr/local/bin/gadis-server")
+		os.remove("/usr/local/bin/gadis-server")
 	if os.path.exists("/usr/local/bin/gadis-remote"):
-        os.remove("/usr/local/bin/gadis-remote")
-    if os.path.exists("/usr/local/sbin/gadisctl"):
-        os.remove("/usr/local/bin/gadisctl")
+		os.remove("/usr/local/bin/gadis-remote")
+	if os.path.exists("/usr/local/sbin/gadisctl"):
+		os.remove("/usr/local/bin/gadisctl")
 	if os.path.exists("/usr/local/sbin/gadisdev"):
-        os.remove("/usr/local/bin/gadisdev")
+		os.remove("/usr/local/bin/gadisdev")
 	if os.path.exists("/usr/local/sbin/gadis-server"):
-        os.remove("/usr/local/bin/gadis-server")
+		os.remove("/usr/local/bin/gadis-server")
 	if os.path.exists("/usr/local/sbin/gadis-remote"):
-        os.remove("/usr/local/bin/gadis-remote")
+		os.remove("/usr/local/bin/gadis-remote")
 	shutil.move("bin/gadis-server", "/usr/local/bin/")
 	os.chmod("/usr/local/bin/gadis-server", 0o755)
 	shutil.move("bin/gadis-remote", "/usr/local/bin/")
 	os.chmod("/usr/local/bin/gadis-remote", 0o755)
 	shutil.copy("src/gadis", "/usr/local/bin/gadis")
 	os.chmod("/usr/local/bin/gadis", 0o755)
-    if instroot:
-    	shutil.copy("src/gadisctl", "/usr/local/sbin/gadisctl")
-    	os.chmod("/usr/local/sbin/gadisctl", 0o755)
-    	shutil.copy("src/gadisdev", "/usr/local/sbin/gadisdev")
-    	os.chmod("/usr/local/sbin/gadisdev", 0o755)
-    else:
-        shutil.copy("src/gadisctl", "/usr/local/bin/gadisctl")
-    	os.chmod("/usr/local/bin/gadisctl", 0o755)
-    	shutil.copy("src/gadisdev", "/usr/local/bin/gadisdev")
-    	os.chmod("/usr/local/bin/gadisdev", 0o755)
-        print("NOTE: gadisdev was designed toward root use, this can be changed however and requires manually editing /usr/local/bin/gadisdev")
-        print("Future updates will allow for easier detection on environment on gadisdev, apologies for the inconvenience.")
+	if instroot:
+		shutil.copy("src/gadisctl", "/usr/local/sbin/gadisctl")
+		os.chmod("/usr/local/sbin/gadisctl", 0o755)
+		shutil.copy("src/gadisdev", "/usr/local/sbin/gadisdev")
+		os.chmod("/usr/local/sbin/gadisdev", 0o755)
+	else:
+		shutil.copy("src/gadisctl", "/usr/local/bin/gadisctl")
+		os.chmod("/usr/local/bin/gadisctl", 0o755)
+		shutil.copy("src/gadisdev", "/usr/local/bin/gadisdev")
+		os.chmod("/usr/local/bin/gadisdev", 0o755)
+		print("NOTE: gadisdev was designed toward root use, this can be changed however and requires manually editing /usr/local/bin/gadisdev")
+		print("Future updates will allow for easier detection on environment on gadisdev, apologies for the inconvenience.")
 	files = [f for f in listdir("bin") if isfile(join("bin", f))]
 	for file in files:
 		shutil.move(join("bin", file), join("/usr/local/share/gadis", file))
