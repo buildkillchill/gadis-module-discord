@@ -1,6 +1,8 @@
 import MySQLdb
 import logging
 import sys
+import os
+
 if not os.path.exists(os.path.expanduser("~/.gadis")):
 	sys.path.append('/usr/local/share/gadis')
 else:
