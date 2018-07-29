@@ -71,49 +71,82 @@ shutil.rmtree("src/modules/__pycache__")
 
 install = boolquestion("Install it now?")
 if install:
-	instroot = boolquestion("Will root manage Gadis?")
-	if os.path.exists("/usr/local/share/gadis"):
-		shutil.rmtree("/usr/local/share/gadis")
-	os.makedirs("/usr/local/share/gadis")
-	shutil.move("bin/modules", "/usr/local/share/gadis/modules")
-	if os.path.exists("/usr/local/sbin/gadis"):
-		os.remove("/usr/local/sbin/gadis")
-	if os.path.exists("/usr/local/bin/gadis"):
-		os.remove("/usr/local/bin/gadis")
-	if os.path.exists("/usr/local/bin/gadisctl"):
-		os.remove("/usr/local/bin/gadisctl")
-	if os.path.exists("/usr/local/bin/gadisdev") and instroot:
-		os.remove("/usr/local/bin/gadisdev")
-	if os.path.exists("/usr/local/bin/gadis-server"):
-		os.remove("/usr/local/bin/gadis-server")
-	if os.path.exists("/usr/local/bin/gadis-remote"):
-		os.remove("/usr/local/bin/gadis-remote")
-	if os.path.exists("/usr/local/sbin/gadisctl"):
-		os.remove("/usr/local/bin/gadisctl")
-	if os.path.exists("/usr/local/sbin/gadisdev"):
-		os.remove("/usr/local/bin/gadisdev")
-	if os.path.exists("/usr/local/sbin/gadis-server"):
-		os.remove("/usr/local/bin/gadis-server")
-	if os.path.exists("/usr/local/sbin/gadis-remote"):
-		os.remove("/usr/local/bin/gadis-remote")
-	shutil.move("bin/gadis-server", "/usr/local/bin/")
-	os.chmod("/usr/local/bin/gadis-server", 0o755)
-	shutil.move("bin/gadis-remote", "/usr/local/bin/")
-	os.chmod("/usr/local/bin/gadis-remote", 0o755)
-	shutil.copy("src/gadis", "/usr/local/bin/gadis")
-	os.chmod("/usr/local/bin/gadis", 0o755)
-	if instroot:
-		shutil.copy("src/gadisctl", "/usr/local/sbin/gadisctl")
-		os.chmod("/usr/local/sbin/gadisctl", 0o755)
-		shutil.copy("src/gadisdev", "/usr/local/sbin/gadisdev")
-		os.chmod("/usr/local/sbin/gadisdev", 0o755)
-	else:
-		shutil.copy("src/gadisctl", "/usr/local/bin/gadisctl")
-		os.chmod("/usr/local/bin/gadisctl", 0o755)
-		shutil.copy("src/gadisdev", "/usr/local/bin/gadisdev")
-		os.chmod("/usr/local/bin/gadisdev", 0o755)
-		print("NOTE: gadisdev was designed toward root use, this can be changed however and requires manually editing /usr/local/bin/gadisdev")
+	instuser = boolquestion("Install for all users? (requires root)")
+	if instuser:
+		if os.path.exists("~/.gadis/share/gadis"):
+			shutil.rmtree("~/.gadis/share/gadis")
+		os.makedirs("~/.gadis/share/gadis")
+		shutil.move("bin/modules", "~/.gadis/share/gadis/modules")
+		if os.path.exists("~/.gadis/bin/gadis"):
+			os.remove("~/.gadis/bin/gadis")
+		if os.path.exists("~/.gadis/bin/gadisctl"):
+			os.remove("~/.gadis/bin/gadisctl")
+		if os.path.exists("~/.gadis/bin/gadisdev") and instroot:
+			os.remove("~/.gadis/bin/gadisdev")
+		if os.path.exists("~/.gadis/bin/gadis-server"):
+			os.remove("~/.gadis/bin/gadis-server")
+		if os.path.exists("~/.gadis/bin/gadis-remote"):
+			os.remove("~/.gadis/bin/gadis-remote")
+		shutil.move("bin/gadis-server", "~/.gadis/bin/")
+		os.chmod("~/.gadis/bin/gadis-server", 0o755)
+		shutil.move("bin/gadis-remote", "~/.gadis/bin/")
+		os.chmod("~/.gadis/bin/gadis-remote", 0o755)
+		shutil.copy("src/gadis", "~/.gadis/bin/gadis")
+		os.chmod("~/.gadis/bin/gadis", 0o755)
+		shutil.copy("src/gadisctl", "~/.gadis/bin/gadisctl")
+		os.chmod("~/.gadis/bin/gadisctl", 0o755)
+		shutil.copy("src/gadisdev", "~/.gadis/bin/gadisdev")
+		os.chmod("~/.gadis/bin/gadisdev", 0o755)
+		print("As a user only install, you may want to add ~/.gadis/bin to your PATH environment variable.")
+		print("NOTE: gadisdev was designed toward root use, this can be changed however and requires manually editing ~/.gadis/bin/gadisdev")
 		print("Future updates will allow for easier detection on environment on gadisdev, apologies for the inconvenience.")
-	files = [f for f in listdir("bin") if isfile(join("bin", f))]
-	for file in files:
-		shutil.move(join("bin", file), join("/usr/local/share/gadis", file))
+		files = [f for f in listdir("bin") if isfile(join("bin", f))]
+		for file in files:
+			shutil.move(join("bin", file), join("~/.gadis/share/gadis", file))
+	else:
+		instroot = boolquestion("Will root manage Gadis?")
+		if os.path.exists("/usr/local/share/gadis"):
+			shutil.rmtree("/usr/local/share/gadis")
+		os.makedirs("/usr/local/share/gadis")
+		shutil.move("bin/modules", "/usr/local/share/gadis/modules")
+		if os.path.exists("/usr/local/sbin/gadis"):
+			os.remove("/usr/local/sbin/gadis")
+		if os.path.exists("/usr/local/bin/gadis"):
+			os.remove("/usr/local/bin/gadis")
+		if os.path.exists("/usr/local/bin/gadisctl"):
+			os.remove("/usr/local/bin/gadisctl")
+		if os.path.exists("/usr/local/bin/gadisdev") and instroot:
+			os.remove("/usr/local/bin/gadisdev")
+		if os.path.exists("/usr/local/bin/gadis-server"):
+			os.remove("/usr/local/bin/gadis-server")
+		if os.path.exists("/usr/local/bin/gadis-remote"):
+			os.remove("/usr/local/bin/gadis-remote")
+		if os.path.exists("/usr/local/sbin/gadisctl"):
+			os.remove("/usr/local/bin/gadisctl")
+		if os.path.exists("/usr/local/sbin/gadisdev"):
+			os.remove("/usr/local/bin/gadisdev")
+		if os.path.exists("/usr/local/sbin/gadis-server"):
+			os.remove("/usr/local/bin/gadis-server")
+		if os.path.exists("/usr/local/sbin/gadis-remote"):
+			os.remove("/usr/local/bin/gadis-remote")
+		shutil.move("bin/gadis-server", "/usr/local/bin/")
+		os.chmod("/usr/local/bin/gadis-server", 0o755)
+		shutil.move("bin/gadis-remote", "/usr/local/bin/")
+		os.chmod("/usr/local/bin/gadis-remote", 0o755)
+		shutil.copy("src/gadis", "/usr/local/bin/gadis")
+		os.chmod("/usr/local/bin/gadis", 0o755)
+		if instroot:
+			shutil.copy("src/gadisctl", "/usr/local/sbin/gadisctl")
+			os.chmod("/usr/local/sbin/gadisctl", 0o755)
+			shutil.copy("src/gadisdev", "/usr/local/sbin/gadisdev")
+			os.chmod("/usr/local/sbin/gadisdev", 0o755)
+		else:
+			shutil.copy("src/gadisctl", "/usr/local/bin/gadisctl")
+			os.chmod("/usr/local/bin/gadisctl", 0o755)
+			shutil.copy("src/gadisdev", "/usr/local/bin/gadisdev")
+			os.chmod("/usr/local/bin/gadisdev", 0o755)
+			print("NOTE: gadisdev was designed toward root use, this can be changed however and requires manually editing /usr/local/bin/gadisdev")
+			print("Future updates will allow for easier detection on environment on gadisdev, apologies for the inconvenience.")
+		files = [f for f in listdir("bin") if isfile(join("bin", f))]
+		for file in files:
+			shutil.move(join("bin", file), join("/usr/local/share/gadis", file))
