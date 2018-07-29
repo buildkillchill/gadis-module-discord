@@ -11,7 +11,7 @@ else:
 f.seek(0)
 exec(f.read(), globals(), locals())
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-addr = ('127.0.0.1', Settings.Remote["port"])
+addr = (Settings.Remote["host"], Settings.Remote["port"])
 sock.connect(addr)
 
 cmd = sys.argv[1]
