@@ -38,7 +38,7 @@ formatter = logging.Formatter('[%(asctime)s][%(levelname)s][%(name)s] %(message)
 ch = logging.StreamHandler(sys.stdout)
 if userinst:
 	fh = logging.FileHandler(filename=os.path.expanduser('~/.gadis/log/debug.log'), encoding='utf-8', mode='w')
-else
+else:
 	fh = logging.FileHandler(filename='/var/log/gadis/debug.log', encoding='utf-8', mode='w')
 ch.setLevel(logging.INFO)
 fh.setLevel(logging.DEBUG)
