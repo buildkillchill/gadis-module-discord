@@ -71,8 +71,8 @@ shutil.rmtree("src/modules/__pycache__")
 
 install = boolquestion("Install it now?")
 if install:
-	instuser = boolquestion("Install for all users? (requires root)")
-	if instuser:
+	installusers = boolquestion("Install for all users? (requires root)")
+	if not installusers:
 		if os.path.exists("~/.gadis/share/gadis"):
 			shutil.rmtree("~/.gadis/share/gadis")
 		os.makedirs("~/.gadis/share/gadis")
