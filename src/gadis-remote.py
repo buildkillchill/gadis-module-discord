@@ -1,7 +1,9 @@
 import socket
 import sys
 import uncompyle6
+import os
 from io import StringIO
+
 f = StringIO()
 if os.path.exists(os.path.expanduser("~/.gadis")):
 	uncompyle6.uncompyle_file('~/.gadis/share/gadis/settings.pyc', f)
