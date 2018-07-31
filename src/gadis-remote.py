@@ -7,7 +7,7 @@ from io import StringIO
 
 f = StringIO()
 if os.path.exists(os.path.expanduser("~/.gadis")):
-	uncompyle6.uncompyle_file('~/.gadis/share/gadis/settings.pyc', f)
+	uncompyle6.uncompyle_file(os.path.expanduser("~/.gadis/share/gadis/settings.pyc"), f)
 else:
 	uncompyle6.uncompyle_file('/usr/local/share/gadis/settings.pyc', f)
 f.seek(0)
