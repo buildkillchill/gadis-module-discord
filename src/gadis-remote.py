@@ -1,4 +1,3 @@
-#!/usr/bin/python
 import socket
 import sys
 import uncompyle6
