@@ -3,7 +3,7 @@ import sys
 import uncompyle6
 from io import StringIO
 f = StringIO()
-if not os.path.exists(os.path.expanduser("~/.gadis")):
+if os.path.exists(os.path.expanduser("~/.gadis")):
 	uncompyle6.uncompyle_file('~/.gadis/share/gadis/settings.pyc', f)
 else:
 	uncompyle6.uncompyle_file('/usr/local/share/gadis/settings.pyc', f)
