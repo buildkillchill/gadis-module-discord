@@ -27,7 +27,7 @@ stop()
 	echo -en "\e[0;32mGracefully \e[0;33mStopping Gadis... "
 	if test -n "`screen -ls|grep Gadis`"
 	then
-		gadis-remote shutdown
+		python3 `which gadis-remote` shutdown
 		sleep 0.2
 		if test -n "`screen -ls|grep Gadis`"
 		then
