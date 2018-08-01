@@ -12,7 +12,7 @@ class Module(common.BaseModule):
 		common.BaseModule.__init__(self, enabled, db, client, True)
 		self.addcmd("roles", self.roles, "View a list of roles with corrisponding IDs")
 		self.addcmd("report", self.report, "Report a someone", usage="`report USER`\nWhen prompted, give reason for report.")
-		self.addcmd("%clear", self.clear, "Clear channel with conditions", rank=Settings.OwnerRank)
+		self.addcmd("%clear", self.clear, "Clear channel with conditions", usage="`%clear [X messages]`\nJust `%clear` to begin clearing a channel.", rank=Settings.OwnerRank)
 		self.addcmd("gmod.say", self.say, "Say something through console", private=True, rank=Settings.OwnerRank)
 		self.addcmd("gmod.tsay", self.tsay, "Say something through console", private=True, rank=Settings.OwnerRank)
 		self.addcmd("gmod.csay", self.csay, "Say something through console", private=True, rank=Settings.OwnerRank)
@@ -78,7 +78,7 @@ class Module(common.BaseModule):
 				async for message in self.client.logs_from(channel, limit=max):
 					if self.check_author(message, mentions):
 						await self.client.delete_message(message)
-						await asyncio.sleep(0.5)
+						await asyncio.sleep(0.2)
 			except ValueError:
 				await self.send(channel, "{} is not a valid number".format(limit))
 	def check_author(self, message, mentions):
