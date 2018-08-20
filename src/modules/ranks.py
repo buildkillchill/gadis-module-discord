@@ -52,11 +52,10 @@ class Module(common.BaseModule):
 			user = common.User.from_discord_id(self.client, self.db, member.id)
 			if user == None: continue
 			donor = discord.utils.get(common.getserver(self.client).roles, name="Donator")
-			donated = len(self.db.query("SELECT `donated` FROM `accounts` WHERE `did`={}".format(member.id)))
 			if len(roles) == 0 or len(user.roles()) == 0:
 				continue
 			await self.client.add_roles(member, *common.getroles(self.client, self.db, user.previous_rank()))
-			if donor in roles and not donor in member.roles and donated == 1:
+			if donor in roles and not donor in member.roles and user.donated() == 1:
 				await self.send(self.getchannel("general"), "Thank you, {}, for donating. It's donations, like yours, that keep this server running.".format(member.mention))
 			for role in roles:
 				if role in member.roles: continue
@@ -65,6 +64,9 @@ class Module(common.BaseModule):
 				if user.rank() == 1: continue
 				await self.send(self.getchannel("general"), "Congratulations on making {}, {}!".format(role.name, member.mention))
 			await self.client.add_roles(member, *roles)
+			if donor in member.roles and user.donated() == 0:
+				await self.client.remove_roles(member, donor)
+				self.logger.info("Member {} exceeds Donator rank but hasn't donated, revoking...".format(member.id))
 			await asyncio.sleep(0.25)
 		self.logger.info("Finished checking for rank updates after {}s".format(int(time.time())-t))
 	async def auto_update(self):
