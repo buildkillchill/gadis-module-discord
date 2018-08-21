@@ -215,7 +215,9 @@ class User(BaseModule):
 	def setbday(self, date):
 		self.db.run("UPDATE `accounts` SET `birthday`=%s WHERE `id`={}".format(id), [date])
 	async def setrank(self, rank, reason=None, activate_lock=True):
-		if (self.rank() < rank and self.locked()) or self.rank() == rank: return
+		if (self.rank() < rank and self.locked()) or self.rank() == rank:
+			print("An attempt to set {}s rank from indexed rank {} to {} failed as it does not make sense, Aborting.".format(did, self.rank(), rank))
+			return
 
 		if self.rank() < rank:
 			await self.send(self.getchannel("general"), "Congratulations for your promotion, <@{}>!".format(self.discordID()))
