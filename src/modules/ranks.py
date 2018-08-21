@@ -88,7 +88,7 @@ class Module(common.BaseModule):
 		self.logger.info("WARNING: RETIREMENT PROCESS STARTED FOR MEMBER WITH ID {}".format(pmsg.author.id))
 		admin = common.User.from_discord_id(self.client, self.db, pmsg.author.id)
 		self.client.loop.create_task(self.tick_down(pmsg.channel, 60, "{} are you sure you want to retire? You will have to go through the whole application process again if you want your position back. You have {{}} seconds to reply with _EXACTLY_ `I HEREBY FORFEIT MY POSITION AND GO INTO RETIREMENT`. This is case sensitive.".format(pmsg.author.mention)))
-		reply = await self.getreply(60, pmsg.author, pmsg.channel)
+		reply = (await self.getreply(60, pmsg.author, pmsg.channel)).content
 		if reply == "I HEREBY FORFEIT MY POSITION AND GO INTO RETIREMENT":
 			self.logger.info("Member with ID {} has chosen to retire.".format(pmsg.author.id))
 			admin.setrank(admin.previous_rank(), "Thank you for your service. We're sorry to see you have chosen to step down.", False)
