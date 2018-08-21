@@ -90,7 +90,7 @@ class Module(common.BaseModule):
 		self.client.loop.create_task(self.tick_down(pmsg.channel, 60, "{} are you sure you want to retire? You will have to go through the whole application process again if you want your position back. You have {{}} seconds to reply with _EXACTLY_ `I HEREBY FORFEIT MY POSITION AND GO INTO RETIREMENT`. This is case sensitive.".format(pmsg.author.mention)))
 		reply = (await self.getreply(60, pmsg.author, pmsg.channel)).content
 		if reply == "I HEREBY FORFEIT MY POSITION AND GO INTO RETIREMENT":
-			admin.setrank(admin.previous_rank(), "Thank you for your service. We're sorry to see you have chosen to step down.", False)
+			await admin.setrank(admin.previous_rank(), "Thank you for your service. We're sorry to see you have chosen to step down.", False)
 			self.logger.info("Member with ID {} has chosen to retire.".format(pmsg.author.id))
 		else:
 			await self.send(pmsg.channel, "Glad to see you reconsidered, {}. Thank you for your ongoing service!".format(author.mention))
@@ -138,7 +138,7 @@ class Module(common.BaseModule):
 	async def StripRank(self, user):
 		self.logger.info("Stripping rank from {}".format(user.id["did"]))
 		await self.send(user.discord(), "You are hereby stripped of all rank and title.")
-		user.setrank(1)
+		await user.setrank(1)
 		member = common.getmember(self.client, user)
 		for role in member.roles:
 			if str(role) != "everyone" and str(role) != "@everyone":
