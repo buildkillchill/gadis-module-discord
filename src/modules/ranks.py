@@ -81,7 +81,7 @@ class Module(common.BaseModule):
 		msg = await self.send(channel, message.format(time))
 		remains = seconds
 		while remains > 0:
-			asyncio.sleep(1)
+			await asyncio.sleep(1)
 			remains = remains - 1
 			await self.edit(msg, message.format(remains))
 	async def retire(self, args, pmsg):
