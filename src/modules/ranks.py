@@ -73,8 +73,19 @@ class Module(common.BaseModule):
 		while True:
 			try:
 				await self.update()
-			except:
-				self.logger.error("Unhandled exception in update()")
+			except Exception as e:
+				self.logger.error("Unhandled exception in update(), attempting to log to error log...")
+				try:
+					f = open("/var/log/gadis/error.log", "a")
+					f.write(str(e))
+					f.close()
+				except:
+					try:
+						f = open(os.path.expanduser("~/.gadis/log/error.log", "a")
+						f.write(str(e))
+						f.close()
+					except:
+						self.logger.error("Could not log error.")
 			dt = datetime.datetime.now()
 			await asyncio.sleep((60-dt.minute)*60)
 	async def tick_down(self, channel, seconds, message):
