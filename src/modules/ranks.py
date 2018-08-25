@@ -80,12 +80,12 @@ class Module(common.BaseModule):
 					f = open("/var/log/gadis/error.log", "a")
 					f.write(str(e))
 					f.close()
-				except:
+				except Exception:
 					try:
 						f = open(os.path.expanduser("~/.gadis/log/error.log", "a")
-						f.write(str(secError))
+						f.write(str(e))
 						f.close()
-					except:
+					except Exception:
 						self.logger.error("Could not log error.")
 			dt = datetime.datetime.now()
 			await asyncio.sleep((60-dt.minute)*60)
