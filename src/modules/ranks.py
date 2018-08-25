@@ -74,7 +74,6 @@ class Module(common.BaseModule):
 			try:
 				await self.update()
 			except Exception as e:
-				secError = e
 				self.logger.error("Unhandled exception in update(), attempting to log to error log...")
 				try:
 					f = open("/var/log/gadis/error.log", "a")
@@ -82,7 +81,7 @@ class Module(common.BaseModule):
 					f.close()
 				except Exception:
 					try:
-						f = open(os.path.expanduser("~/.gadis/log/error.log", "a")
+						f = open(os.path.expanduser("~/.gadis/log/error.log", "a"))
 						f.write(str(e))
 						f.close()
 					except Exception:
