@@ -80,11 +80,8 @@ class Module(common.BaseModule):
 					with open("/var/log/gadis/updateerror.log", "a") as f:
 						f.write(str(e))
 				except Exception:
-					try:
-						with open(os.path.expanduser("~/.gadis/log/updateerror.log", "a")) as f:
-							f.write(str(e))
-					except Exception:
-						self.logger.error("Could not log error.")
+					with open(os.path.expanduser("~/.gadis/log/updateerror.log", "a")) as f:
+						f.write(str(e))
 			dt = datetime.datetime.now()
 			await asyncio.sleep((60-dt.minute)*60)
 	async def tick_down(self, channel, seconds, message):
