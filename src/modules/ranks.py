@@ -144,7 +144,7 @@ class Module(common.BaseModule):
 	async def approve(self, args, pmsg):
 		applicant = common.User.from_discord_id(self.client, self.db, args[1])
 		if IsApplicant(self.db, applicant.ID()):
-			self.db.run("UPDATE `applications` SET `accepted`=True WHERE `id`={}".format(applicant.ID()))
+			self.db.run("UPDATE `applications` SET `accepted`=TRUE WHERE `id`={}".format(applicant.ID()))
 			last = await self.send(pmsg.author, "Setting Rank...")
 			await applicant.setrank(Settings.Admin["rank"])
 			await self.edit(last, "Cleaning up...")
@@ -248,7 +248,6 @@ class Module(common.BaseModule):
 				await self.edit(lastmsg, "Getting applicant's Discord info...")
 				iapp = common.User.from_id(self.client, self.db, app[0])
 				iadm = common.User.from_discord_id(self.client, self.db, pmsg.author.id)
-				id = iapp.ID()
 				aid = iadm.ID()
 				applicant = await iapp.discord()
 				if applicant.avatar_url == "":
@@ -283,14 +282,16 @@ class Module(common.BaseModule):
 						self.db.run("INSERT INTO `recommends` (`id`,`admin`,`reason`,`positive`) VALUES (%s, %s, %s, FALSE) ON DUPLICATE KEY UPDATE `reason`=%s",(app[0], aid, msg.content, msg.content))
 						await self.send(pmsg.author, "Your disrecommendation has been submitted.")
 					elif subcmd == "approve" and rank >= Settings.OwnerRank:
+						self.db.run("UPDATE `applications` SET `accepted`=TRUE WHERE `id`={}".format(app[0]))
 						await self.edit(lastmsg, "Setting Rank...")
 						await iapp.setrank(Settings.Admin["rank"])
-						await self.edit(lastmsg, "Done.")
+						await self.edit(lastmsg, "Cleaning up...")
+						self.db.run("DELETE FROM `recommends` WHERE `id`={}".format(app[0]))
 					elif subcmd == "approve":
 						err = True
 						emsg = "Owner only command"
 					elif subcmd == "deny" and rank >= 9:
-						self.db.run("UPDATE `applications` SET `denied`=True WHERE `id`=%s", [app[0]])
+						self.db.run("UPDATE `applications` SET `denied`=TRUE WHERE `id`=%s", [app[0]])
 						await self.send(pmsg.author,"{} has been denied. What should the letter of denial contain? _Type `n` or `no` to silently deny. Waiting 5 minutes will also silently deny._".format(applicant.mention))
 						cont = await self.getreply(300, pmsg.author, pmsg.channel)
 						if cont == None or cont.content.lower() == "no" or cont.content.lower() == "n":
