@@ -1,4 +1,4 @@
-import datetime
+donated_query_resimport datetime
 import asyncio
 import discord
 import logging
@@ -53,16 +53,20 @@ class Module(common.BaseModule):
 			user = common.User.from_discord_id(self.client, self.db, member.id)
 			if user == None: continue
 			donor = discord.utils.get(common.getserver(self.client).roles, name="Donator")
-			if len(roles) == 0 or len(user.roles()) == 0:
+			donated_query_res = user.donated()
+			prev_roles = common.getroles(self.client, self.db, user.previous_rank())
+			if donor in prev_roles and donated_query_res == 0:
+				prev_roles.remove(donor)
+			if len(roles) == 0 or len(prev_roles) == 0 or len(user.roles()) == 0:
 				continue
-			await self.client.add_roles(member, *common.getroles(self.client, self.db, user.previous_rank()))
-			if donor in roles and not donor in member.roles and user.donated() == 1:
+			await self.client.add_roles(member, *prev_roles)
+			if donor in roles and not donor in member.roles and donated_query_res == 1:
 				await self.send(self.getchannel("general"), "Thank you, {}, for donating. It's donations, like yours, that keep this server running.".format(member.mention))
 			for role in roles:
 				if role in member.roles: continue
 				self.logger.info("Ranks are out of date for member with ID {}".format(member.id))
 				if role == donor:
-					if user.donated() == 0:
+					if donated_query_res == 0:
 						roles.remove(role)
 						self.logger.info("Member {} exceeds Donator rank but hasn't donated, not giving donator...".format(member.id))
 					continue
@@ -70,7 +74,7 @@ class Module(common.BaseModule):
 				await self.send(self.getchannel("general"), "Congratulations on making {}, {}!".format(role.name, member.mention))
 			await self.client.add_roles(member, *roles)
 			await asyncio.sleep(0.25)
-			if donor in member.roles and user.donated() == 0:
+			if donor in member.roles and donated_query_res == 0:
 				await self.client.remove_roles(member, donor)
 				self.logger.info("Member {} exceeds Donator rank but hasn't donated, revoking...".format(member.id))
 			await asyncio.sleep(0.25)
