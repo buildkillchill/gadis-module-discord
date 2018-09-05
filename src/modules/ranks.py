@@ -64,7 +64,7 @@ class Module(common.BaseModule):
 				if role == donor:
 					if user.donated() == 0:
 						roles.remove(role)
-						self.logger.info("Member {} exceeds Donator rank but hasn't donated, not giving donator...")
+						self.logger.info("Member {} exceeds Donator rank but hasn't donated, not giving donator...".format(member.id))
 					continue
 				if user.rank() == 1: continue
 				await self.send(self.getchannel("general"), "Congratulations on making {}, {}!".format(role.name, member.mention))
