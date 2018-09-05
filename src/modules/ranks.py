@@ -61,10 +61,14 @@ class Module(common.BaseModule):
 			for role in roles:
 				if role in member.roles: continue
 				self.logger.info("Ranks are out of date for member with ID {}".format(member.id))
-				if role == donor: continue
+				if role == donor:
+					if user.donated() == 0:
+						roles.remove(role)
+					continue
 				if user.rank() == 1: continue
 				await self.send(self.getchannel("general"), "Congratulations on making {}, {}!".format(role.name, member.mention))
 			await self.client.add_roles(member, *roles)
+			await asyncio.sleep(0.25)
 			if donor in member.roles and user.donated() == 0:
 				await self.client.remove_roles(member, donor)
 				self.logger.info("Member {} exceeds Donator rank but hasn't donated, revoking...".format(member.id))
