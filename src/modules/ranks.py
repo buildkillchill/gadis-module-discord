@@ -1,4 +1,4 @@
-donated_query_resimport datetime
+import datetime
 import asyncio
 import discord
 import logging
