@@ -168,6 +168,8 @@ class Module(common.BaseModule):
 		usr = common.User.from_discord_id(self.client, self.db, pmsg.author.id)
 		taken = len(self.db.query("SELECT `id` FROM `accounts` WHERE `rank` >= {}".format(Settings.Admin["rank"])))
 		appcount = len(self.db.query("SELECT * FROM `applications` WHERE `accepted`=FALSE AND `denied`=FALSE AND `interviewed`=FALSE"))
+		if usr == None:
+			await self.send(pmsg.channel, "Your account is not linked, please type `link` to begin.")
 		if usr.rank() >= Settings.Admin["rank"]:
 			await self.send(pmsg.channel, "Nice try, we don't accept applications for superadmin or developer.")
 		elif not usr.locked():
