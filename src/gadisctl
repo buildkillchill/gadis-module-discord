@@ -96,14 +96,14 @@ case $cmd in
 		start
 	;;
 	status)
-		echo -en "\e[0;33mGadis is "
+		[ "$1" != "-q" ] && echo -en "\e[0;33mGadis is "
 		if test -n "`screen -ls|grep Gadis`"
 		then
-			echo -e "\e[0;32mRunning\e[0m."
+			[ "$1" != "-q" ] && echo -e "\e[0;32mRunning\e[0m."
 			exit 0
 		else
-			echo -e "\e[0;31mNOT Running\e[0m."
-			exit 0
+			[ "$1" != "-q" ] && echo -e "\e[0;31mNOT Running\e[0m."
+			exit 1
 		fi
 	;;
 	-h|--help|help|h)
