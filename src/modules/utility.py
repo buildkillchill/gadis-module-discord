@@ -35,10 +35,10 @@ class Module(common.BaseModule):
 						v = "{}{},".format(v, col)
 					v = v[:-1]
 					text = "Row {}:\n`{}`".format(i, v)
-					await self.send(pmsg.author, text)
+					await self.send(pmsg.channel, text)
 					i += 1
 			else:
-				await self.send(pmsg.author, "No results")
+				await self.send(pmsg.channel, "No results")
 		else:
 			self.db.run(query)
 	async def clear(self, args, pmsg):
