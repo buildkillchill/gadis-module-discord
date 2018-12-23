@@ -113,7 +113,7 @@ class Module(common.BaseModule):
 			await admin.setrank(admin.previous_rank(), "Thank you for your service. We're sorry to see you have chosen to step down.", False)
 			self.logger.info("Member with ID {} has chosen to retire.".format(pmsg.author.id))
 		else:
-			await self.send(pmsg.channel, "Glad to see you reconsidered, {}. Thank you for your ongoing service!".format(author.mention))
+			await self.send(pmsg.channel, "Glad to see you reconsidered, {}. Thank you for your ongoing service!".format(pmsg.author.mention))
 			self.logger.info("Member with ID {} has not completed the retirement confirmation or has changed their mind".format(pmsg.author.id))
 	async def demote(self, args, pmsg):
 		reason = ""
