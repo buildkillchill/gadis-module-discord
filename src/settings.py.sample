@@ -63,11 +63,11 @@ class Settings():
 
 	# Version Code
 	# Type: STRING
-	Version["code"] = "3.07"
+	Version["code"] = "3.08"
 
 	# Version Name
 	# Type: STRING
-	Version["name"] = "DynaFly"
+	Version["name"] = "Cyrus"
 
 	####################################
 	###        Special People        ###
@@ -240,7 +240,7 @@ class Settings():
 	MaxInfractions[6]  = 2
 
 	####################################
-	###       Max  Infractions       ###
+	###           Repeats            ###
 	###==============================###
 	###  Instructions:               ###
 	###    These are FAQ responses.  ###
