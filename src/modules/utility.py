@@ -19,10 +19,8 @@ class Module(common.BaseModule):
 		self.addcmd("gmod.tsayc", self.tsayc, "Say something through console", private=True, rank=Settings.OwnerRank)
 		self.addcmd("+sqlq", self.sql, "Execute SQL query for results", rank=Settings.OwnerRank)
 		self.addcmd("+sqle", self.sql, "Execute SQL query", rank=Settings.OwnerRank)
-	async def on_message(self, message):
-		if not await common.BaseModule.on_message(self, message): return
-		if message.content.lower() in Settings.Repeats:
-			await self.send(message.channel, Settings.Repeats[message.content.lower()])
+		self.addcmd("inv", self.repeats, "Show the invite link")
+		self.addcmd("rtfa", self.repeats, "Read The Announcements", rank=Settings.Admin["rank"])
 	async def sql(self, args, pmsg):
 		query = " ".join(args[1:])
 		if args[0].lower() == "+sqlq":
@@ -41,6 +39,8 @@ class Module(common.BaseModule):
 				await self.send(pmsg.channel, "No results")
 		else:
 			self.db.run(query)
+	async def repeats(self, args, pmsg):
+		await self.send(pmsg.channel, Settings.Repeats[args[0].lower()])
 	async def clear(self, args, pmsg):
 		nargs = common.strip_mentions(" ".join(args[1:])).split(" ")
 		if len(nargs) == 0 or nargs[0] == "":
