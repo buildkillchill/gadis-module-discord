@@ -7,7 +7,7 @@ from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Utility"
-	__version__ = "1.08"
+	__version__ = "1.09"
 	def __init__(self, enabled, db, client=None):
 		common.BaseModule.__init__(self, enabled, db, client, True)
 		self.addcmd("roles", self.roles, "View a list of roles with corrisponding IDs")
@@ -21,6 +21,30 @@ class Module(common.BaseModule):
 		self.addcmd("+sqle", self.sql, "Execute SQL query", rank=Settings.OwnerRank)
 		self.addcmd("inv", self.repeats, "Show the invite link")
 		self.addcmd("rtfa", self.repeats, "Read The Announcements", rank=Settings.Admin["rank"])
+		self.addcmd("+subme", self.rolesubs, "Subscribe to role-specific notifications", usage="`+subme EligibleRole`; do not @mention the role")
+	async def rolesubs(self, args, pmsg)
+		if len(args) == 1
+			await self.send(pmsg.channel, "Please specify a role to subscribe to.")
+			return
+		selectedRole = " ".join(args[1:])
+		roleValid = False
+		for role in pmsg.server.roles:
+			if role.name == selectedRole and selectedRole in Settings.Subs:
+				roleValid = True
+				givenRole = [role]
+				try:
+					await self.client.add_roles(pmsg.author, *givenRole)
+					em = discord.Embed(title="You have subscribed to...", description=Settings.Subs[selectedRole])
+					em.set_author(name=server.name, icon_url=server.icon_url)
+					await self.client.send_message(pmsg.channel, embed=em)
+				except HTTPException:
+					await self.send(pmsg.channel, "I couldn't give you the role! Are you already subscribed?")
+				except Exception as e:
+					logger.error("Unhandled error happened in rolesubs: " + str(e))
+				finally:
+					break
+		if not roleValid:
+			await self.send(pmsg.channel, "Invalid input, please specify a subscriber role.")
 	async def sql(self, args, pmsg):
 		query = " ".join(args[1:])
 		if args[0].lower() == "+sqlq":

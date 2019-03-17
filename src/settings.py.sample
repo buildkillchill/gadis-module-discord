@@ -5,7 +5,7 @@
 #####                                                                                 #####
 #####                                                                                 #####
 #####   This file contains the global constant variables for the bot. Each variable   #####
-#####   will be marked with it's type and a description. 
+#####   will be marked with it's type and a description.
 #####                                                                                 #####
 ###########################################################################################
 ###########################################################################################
@@ -29,6 +29,7 @@ class Settings():
 		MaxInfractions = {}	#############
 		Repeats = {}		#############
 		Roles = {}		#############
+		Subs = {}			#############
 #####################################################
 #####################################################
 #####################################################
@@ -42,7 +43,7 @@ class Settings():
 
 	# Server ID
 	# Type: INTEGER
-	ServerID = 
+	ServerID =
 
 	# Owner Rank ID
 	#	Database Rank ID for the owner of the bot.
@@ -75,7 +76,7 @@ class Settings():
 
 	# Bot Owner's Discord ID
 	# Type: INTEGER
-	People["owner"] = 
+	People["owner"] =
 
 	# My Discord ID
 	# Type: INTEGER
@@ -89,17 +90,17 @@ class Settings():
 	# Admin Positions
 	#	This is the total number of admin positions, open and taken
 	# Type: INTEGER
-	Admin["positions"] = 
+	Admin["positions"] =
 
 	# Maximum Applications
 	#	Total number of applications to allow at one period
 	# Type: INTEGER
-	Admin["max_apps"]   = 
+	Admin["max_apps"]   =
 
 	# Required Hours
 	#	Hours required in-game to be allowed to apply for admin
 	# Type: INTEGER
-	Admin["req_hours"]  = 
+	Admin["req_hours"]  =
 
 	# Rank ID
 	#	Database Rank ID for server admins. It is explained
@@ -130,7 +131,7 @@ class Settings():
 	MySQL["host"] = "127.0.0.1"
 
 	# MySQL Port
-	# Type: INTEGER 
+	# Type: INTEGER
 	MySQL["port"] = 3306
 
 	# MySQL Database
@@ -143,7 +144,7 @@ class Settings():
 
 	# MySQL Password
 	# Type: STRING
-	MySQL["pass"] = 
+	MySQL["pass"] =
 
 	####################################
 	###       Garry's Mod RCON       ###
@@ -154,12 +155,12 @@ class Settings():
 	RCON["host"] = "127.0.0.1"
 
 	# Garry's Mod RCON Port
-	# Type: INTEGER 
+	# Type: INTEGER
 	RCON["port"] =
 
-	# Garry's Mod RCON Password 
+	# Garry's Mod RCON Password
 	# Type: STRING
-	RCON["pass"] = 
+	RCON["pass"] =
 
 	####################################
 	###        Discord  Ranks        ###
@@ -206,7 +207,7 @@ class Settings():
 	###                              ###
 	###    You will find an example  ###
 	###    below.                    ###
-	####################################	
+	####################################
 
 	RankName[1]  = "Anyone"
 	RankName[2]  = "Operator"
@@ -230,7 +231,7 @@ class Settings():
 	###                              ###
 	###    You will find an example  ###
 	###    below.                    ###
-	####################################	
+	####################################
 
 	MaxInfractions[1]  = 5
 	MaxInfractions[2]  = 5
@@ -265,3 +266,19 @@ class Settings():
 
 	Roles["notilt"] = 000000000000000000
 	Roles["silent"] = 000000000000000000
+
+	####################################
+	### Notification Subscriber Roles###
+	####################################
+	###==============================###
+	###  Instructions:               ###
+	###   The Key is role name, the  ###
+	###   value is a description of  ###
+	###   the type of notifications  ###
+	###   the user will be receiving.###
+	###                              ###
+	###   You will find an example   ###
+	###   below.                     ###
+	####################################
+
+	Subs["Server Resets"] = "Server Reset Notifications"

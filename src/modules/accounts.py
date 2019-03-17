@@ -63,8 +63,8 @@ class Module(common.BaseModule):
 			except ValueError:
 				await self.send(message.channel, "Could not convert {} to an integer".format(args[1]))
 				return
-			except:
-				logger.error("Unhandled error happened in userinfo")
+			except Exception as e:
+				logger.error("Unhandled error happened in userinfo: " + str(e))
 				return
 		else:
 			await self.send(message.channel, "Bad syntax")
