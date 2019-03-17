@@ -23,7 +23,7 @@ class Module(common.BaseModule):
 		self.addcmd("rtfa", self.repeats, "Read The Announcements", rank=Settings.Admin["rank"])
 		self.addcmd("+subme", self.role_subs, "Subscribe to role-specific notifications", usage="`+subme EligibleRole`; do not @mention the role")
 	async def role_subs(self, args, pmsg):
-		if len(args) == 1
+		if len(args) == 1:
 			await self.send(pmsg.channel, "Please specify a role to subscribe to.")
 			return
 		selectedRole = " ".join(args[1:])
