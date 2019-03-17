@@ -22,9 +22,10 @@ class Module(common.BaseModule):
 		self.addcmd("inv", self.repeats, "Show the invite link")
 		self.addcmd("rtfa", self.repeats, "Read The Announcements", rank=Settings.Admin["rank"])
 		self.addcmd("+subme", self.role_subs, "Subscribe to role-specific notifications", usage="`+subme EligibleRole`; do not @mention the role")
+		self.addcmd("-subme", self.role_subs, "Unsubscribe to role-specific notifications", usage="`-subme SubscribedRole`; do not @mention the role")
 	async def role_subs(self, args, pmsg):
 		if len(args) == 1:
-			await self.send(pmsg.channel, "Please specify a role to subscribe to.")
+			await self.send(pmsg.channel, "Please specify a role to (un)subscribe to.")
 			return
 		selectedRole = " ".join(args[1:])
 		roleValid = False
@@ -32,17 +33,30 @@ class Module(common.BaseModule):
 			if role.name == selectedRole and selectedRole in Settings.Subs:
 				roleValid = True
 				givenRole = [role]
-				try:
-					await self.client.add_roles(pmsg.author, *givenRole)
-					em = discord.Embed(title='You have subscribed to:', description=Settings.Subs[selectedRole] + '. To unsubscribe, use `+unsubme ' + role.name + '`')
-					em.set_author(name=pmsg.server.name, icon_url=pmsg.server.icon_url)
-					await self.send_embed(pmsg.channel, em)
-				except HTTPException:
-					await self.send(pmsg.channel, "I couldn't give you the role! Are you already subscribed?")
-				except Exception as e:
-					self.logger.exception('Unhandled error happened in rolesubs: ' + str(e))
-				finally:
-					break
+				if args[0].lower() == "+subme":
+					try:
+						await self.client.add_roles(pmsg.author, *givenRole)
+						em = discord.Embed(title='You have subscribed to:', description=Settings.Subs[selectedRole] + '. To unsubscribe, use `-subme ' + role.name + '`')
+						em.set_author(name=pmsg.server.name, icon_url=pmsg.server.icon_url)
+						await self.send_embed(pmsg.channel, em)
+					except HTTPException:
+						await self.send(pmsg.channel, "I couldn't give you the role! Are you already subscribed?")
+					except Exception as e:
+						self.logger.exception('Unhandled error happened in rolesubs: ' + str(e))
+					finally:
+						break
+				else:
+					try:
+						await self.client.remove_roles(pmsg.author, *givenRole)
+						em = discord.Embed(title='You have unsubscribed from:', description=Settings.Subs[selectedRole] + '. To resubscribe, use `+subme ' + role.name + '`')
+						em.set_author(name=pmsg.server.name, icon_url=pmsg.server.icon_url)
+						await self.send_embed(pmsg.channel, em)
+					except HTTPException:
+						await self.send(pmsg.channel, "I couldn't remove the role! Are you already unsubscribed?")
+					except Exception as e:
+						self.logger.exception('Unhandled error happened in rolesubs: ' + str(e))
+					finally:
+						break
 		if not roleValid:
 			await self.send(pmsg.channel, "Invalid input, please specify a subscriber role.")
 	async def sql(self, args, pmsg):
