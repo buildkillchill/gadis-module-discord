@@ -5,12 +5,12 @@ from settings import Settings
 
 class Module(common.BaseModule):
 	__name__ = "Mod Manager"
-	__version__ = "1.04"
+	__version__ = "1.05"
 	def __init__(self, enabled, client=None, modules={}):
-		common.BaseModule.__init__(self, None, enabled, client)
+		common.BaseModule.__init__(self, enabled, db, client)
 		self.mods = modules
-		self.addcmd("enmod", self.enable, "Enable module", rank=9)
-		self.addcmd("dismod", self.disable, "Disable module", rank=9)
+		self.addcmd("enmod", self.enable, "Enable module", rank=Settings.OwnerRank)
+		self.addcmd("dismod", self.disable, "Disable module", rank=Settings.OwnerRank)
 		self.addcmd("version", self.version, "Get version info")
 	async def enable(self, args, pmsg):
 		mod = ("".join(args[1:])).lower()
