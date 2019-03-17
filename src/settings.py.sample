@@ -281,4 +281,4 @@ class Settings():
 	###   below.                     ###
 	####################################
 
-	Subs["Server Resets"] = "Server Reset Notifications"
+	Subs["Server Resets"] = 'Server Reset Notifications'

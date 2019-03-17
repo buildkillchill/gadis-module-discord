@@ -34,7 +34,7 @@ class Module(common.BaseModule):
 				givenRole = [role]
 				try:
 					await self.client.add_roles(pmsg.author, *givenRole)
-					em = discord.Embed(title="You have subscribed to...", description=Settings.Subs[selectedRole])
+					em = discord.Embed(title='You have subscribed to:', description=Settings.Subs[selectedRole] + '. To unsubscribe, use `+unsubme ' + role.name + '`')
 					em.set_author(name=server.name, icon_url=server.icon_url)
 					await self.send_embed(pmsg.channel, em)
 				except HTTPException:
