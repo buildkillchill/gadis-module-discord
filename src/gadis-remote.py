@@ -28,5 +28,7 @@ elif cmd == "shutdown":
 	sock.send("shutdown".encode('utf-8'))
 elif cmd == "noadmin":
 	sock.send("noadmin {}".format(args[0]).encode('utf-8'))
+elif cmd == "immreset":
+	sock.send("immreset") # this specific case can be removed, it is for BKC shutdown notifications.
 
 sock.close()

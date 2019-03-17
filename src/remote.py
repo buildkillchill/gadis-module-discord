@@ -34,6 +34,9 @@ class Module(asyncio.Protocol, common.BaseModule):
 		elif words[0] == "noadmin":
 			server = words[1]
 			self.run(self.no_admin(server))
+		elif words[0] == "immreset":
+			self.run(self.send(self.getchannel("general"), "<@&556413731488268288> BKC restarts in 5 minutes!"))
+#			Above condition is BKC's remote for cron based subscriber notifications, this can be removed/modified.
 		self.logger.info("Closing network transport...")
 		self.transport.close()
 		self.transport = None
