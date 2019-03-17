@@ -34,13 +34,14 @@ class Module(common.BaseModule):
 				givenRole = [role]
 				try:
 					await self.client.add_roles(pmsg.author, *givenRole)
+					self.logger.debug("We got past adding roles.")
 					em = discord.Embed(title="You have subscribed to...", description=Settings.Subs[selectedRole])
 					em.set_author(name=server.name, icon_url=server.icon_url)
 					await self.client.send_message(pmsg.channel, embed=em)
 				except HTTPException:
 					await self.send(pmsg.channel, "I couldn't give you the role! Are you already subscribed?")
 				except Exception as e:
-					logger.error("Unhandled error happened in rolesubs: " + str(e))
+					self.logger.error("Unhandled error happened in rolesubs: " + str(e))
 				finally:
 					break
 		if not roleValid:
