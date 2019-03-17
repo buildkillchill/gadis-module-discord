@@ -64,11 +64,11 @@ class Settings():
 
 	# Version Code
 	# Type: STRING
-	Version["code"] = "3.08"
+	Version["code"] = "3.09"
 
 	# Version Name
 	# Type: STRING
-	Version["name"] = "Cyrus"
+	Version["name"] = "Chiral"
 
 	####################################
 	###        Special People        ###
