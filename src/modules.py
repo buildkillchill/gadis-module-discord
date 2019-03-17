@@ -42,7 +42,7 @@ class Module(common.BaseModule):
 		creator = discord.utils.get(server.members, id=str(Settings.People["creator"]))
 		ver = "```\nVersion : {}\nCodename: {}```"
 		em = discord.Embed(title="Version Info", description=ver.format(Settings.Version["code"], Settings.Version["name"]))
-		em.set_author(name=creator.nick, icon_url=creator.avatar_url)
+		em.set_author(name=creator.name, icon_url=creator.avatar_url)
 		ver = "```\nSafe Name: {}\nVersion  : {}\nBound    : {}\nCommands : {}```"
 		em.add_field(name=self.__name__,value=ver.format(__name__, self.__version__, hasattr(self, 'on_message') and callable(getattr(self, 'on_message')), self.has_commands()), inline=False)
 		for mod in l:
