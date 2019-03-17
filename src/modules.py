@@ -7,7 +7,7 @@ class Module(common.BaseModule):
 	__name__ = "Mod Manager"
 	__version__ = "1.05"
 	def __init__(self, enabled, client=None, modules={}):
-		common.BaseModule.__init__(self, enabled, db, client)
+		common.BaseModule.__init__(self, enabled, None, client)
 		self.mods = modules
 		self.addcmd("enmod", self.enable, "Enable module", rank=Settings.OwnerRank)
 		self.addcmd("dismod", self.disable, "Disable module", rank=Settings.OwnerRank)
