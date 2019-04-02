@@ -90,6 +90,8 @@ class BaseModule():
 		setmodulestatus(self.db, __file__[:-4], False)
 	async def send(self, channel, message):
 		return await self.client.send_message(channel, message)
+	async def send_data(self, channel, data):
+		return await self.client.send_file(channel, data)
 	async def edit(self, message, new_message):
 		return await self.client.edit_message(message, new_message)
 	async def send_embed(self, channel, message):

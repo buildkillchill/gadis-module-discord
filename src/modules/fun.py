@@ -15,7 +15,7 @@ class Module(common.BaseModule):
 		# data = json.loads(resp.text)
 		# url = data["file"]
 		# await self.send(pmsg.channel, url)
-		await self.send_file(pmsg.channel, resp.content)
+		await self.send_data(pmsg.channel, resp.content)
 	async def woof(self, args, pmsg):
 		resp = requests.get(url="https://random.dog/woof")
 		url = "https://random.dog/{}".format(resp.text)
