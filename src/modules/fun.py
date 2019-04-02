@@ -11,11 +11,10 @@ class Module(common.BaseModule):
 		self.horses = {}
 	async def meow(self, args, pmsg):
 		# resp = requests.get(url="http://aws.random.cat/meow") -- currently broken
-		resp = requests.get("http://thecatapi.com/api/images/get?format=src&type=png") # temporary til aws.random.cat is fixed
+		# resp = requests.get("http://thecatapi.com/api/images/get?format=src&type=png") # temporary til aws.random.cat is fixed
 		# data = json.loads(resp.text)
 		# url = data["file"]
 		# await self.send(pmsg.channel, url)
-		await self.send_data(pmsg.channel, resp.content)
 	async def woof(self, args, pmsg):
 		resp = requests.get(url="https://random.dog/woof")
 		url = "https://random.dog/{}".format(resp.text)
