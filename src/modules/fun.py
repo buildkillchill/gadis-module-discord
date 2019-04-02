@@ -10,7 +10,8 @@ class Module(common.BaseModule):
 		self.addcmd("meow", self.meow, "Lovely kitties...")
 		self.horses = {}
 	async def meow(self, args, pmsg):
-		resp = requests.get(url="http://aws.random.cat/meow")
+		# resp = requests.get(url="http://aws.random.cat/meow") -- currently broken
+		resp = requests.get("http://thecatapi.com/api/images/get?format=src&type=png") # temporary til aws.random.cat is fixed
 		data = json.loads(resp.text)
 		url = data["file"]
 		await self.send(pmsg.channel, url)
