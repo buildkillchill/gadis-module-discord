@@ -16,14 +16,14 @@ class Module(common.BaseModule):
 		# url = data["file"]
 		# await self.send(pmsg.channel, url)
 		try:
-        	response = requests.get(url="http://aws.random.cat/meow")
+			response = requests.get(url="http://aws.random.cat/meow")
 
-        	# If the response was successful, no Exception will be raised
-        	response.raise_for_status()
+	    	# If the response was successful, no Exception will be raised
+			response.raise_for_status()
 			data = json.loads(resp.text)
 			url = data["file"]
 			await self.send(pmsg.channel, url)
-	    except Exception:
+		except Exception:
 			await self.send(pmsg.channel, "http://thecatapi.com/api/images/get?format=src&type=png")
 	async def woof(self, args, pmsg):
 		resp = requests.get(url="https://random.dog/woof")
